@@ -51,4 +51,24 @@
     STAssertEqualObjects(employee.changedORMValues, @{}, nil);
 }
 
+- (void)testApplyChanges
+{
+    Employee *employee = [[Employee alloc] init];
+    
+    employee.firstName = @"John";
+    employee.lastName = @"Example";
+    employee.position = @"CEO";
+    
+    STAssertEqualObjects(employee.firstName, @"John", nil);
+    STAssertEqualObjects(employee.lastName, @"Example", nil);
+    STAssertEqualObjects(employee.position, @"CEO", nil);
+    
+    [employee applyChangedORMValues];
+    
+    STAssertEqualObjects(employee.firstName, @"John", nil);
+    STAssertEqualObjects(employee.lastName, @"Example", nil);
+    STAssertEqualObjects(employee.position, @"CEO", nil);
+    STAssertEqualObjects(employee.changedORMValues, @{}, nil);
+}
+
 @end

@@ -469,6 +469,14 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
     [[self temporaryORMValues] removeAllObjects];
 }
 
+- (void)applyChangedORMValues
+{
+    [[self temporaryORMValues] enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [[self persistentORMValues] setValue:obj forKey:key];
+    }];
+    [[self temporaryORMValues] removeAllObjects];
+}
+
 @end
 
 #pragma mark -

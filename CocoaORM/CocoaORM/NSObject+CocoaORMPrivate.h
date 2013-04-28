@@ -11,5 +11,6 @@
 @interface NSObject (CocoaORMPrivate)
 
 - (void)resetChangedORMValues;
+- (void)applyChangedORMValues;
 
 @end
