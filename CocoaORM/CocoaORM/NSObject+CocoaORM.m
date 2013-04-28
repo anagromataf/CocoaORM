@@ -14,6 +14,8 @@
 #import <FMDB/FMDatabaseAdditions.h>
 
 #import "NSObject+CocoaORM.h"
+#import "NSObject+CocoaORMPrivate.h"
+
 
 const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptionsKey";
 
@@ -456,6 +458,15 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
         }
         return NO;
     }
+}
+
+@end
+
+@implementation NSObject (CocoaORMPrivate)
+
+- (void)resetChangedORMValues
+{
+    [[self temporaryORMValues] removeAllObjects];
 }
 
 @end
