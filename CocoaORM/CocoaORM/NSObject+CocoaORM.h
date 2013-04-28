@@ -28,7 +28,7 @@
 - (void)setORMValue:(id)value forKey:(NSString *)key;
 
 #pragma mark -
-#pragma mark ORM SQL Schemata
+#pragma mark SQL Schemata
 
 + (BOOL)setupORMSchemataInDatabase:(FMDatabase *)database
                              error:(NSError **)error;
@@ -47,6 +47,17 @@
 + (BOOL)deleteORMObjectWithPrimaryKey:(int64_t)pk
                            inDatabase:(FMDatabase *)database
                                 error:(NSError **)error;
+
+#pragma mark Get Properties
+
++ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(int64_t)pk
+                                           inDatabase:(FMDatabase *)database
+                                                error:(NSError **)error;
+
++ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(int64_t)pk
+                                           inDatabase:(FMDatabase *)database
+                                                error:(NSError **)error
+                               includeSuperProperties:(BOOL)includeSuperProperties;
 
 @end
 

@@ -285,6 +285,60 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
     return YES;
 }
 
+#pragma mark Get Properties
+
++ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(int64_t)pk
+                                           inDatabase:(FMDatabase *)database
+                                                error:(NSError **)error
+{
+    return [self propertiesOfORMObjectWithPrimaryKey:pk inDatabase:database error:error includeSuperProperties:NO];
+}
+
++ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(int64_t)pk
+                                           inDatabase:(FMDatabase *)database
+                                                error:(NSError **)error
+                               includeSuperProperties:(BOOL)includeSuperProperties
+{
+    NSString *statement = nil;
+    if (includeSuperProperties) {
+        NSArray *classes = [[[self ORMClassHierarchy] reverseObjectEnumerator] allObjects];
+        statement = [NSString stringWithFormat:@"SELECT * FROM %@",
+                     [classes componentsJoinedByString:@" NATURAL JOIN "]];
+    } else {
+        statement = [NSString stringWithFormat:@"SELECT * FROM %@", NSStringFromClass(self)];
+    }
+    
+    NSLog(@"SQL: %@", statement);
+    
+    FMResultSet *result = [database executeQuery:statement];
+    if (result) {
+        if ([result next]) {
+            NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+            
+            NSDictionary *propertyDesctiptions = nil;
+            if (includeSuperProperties) {
+                propertyDesctiptions = [self allORMProperties];
+            } else {
+                propertyDesctiptions = [self ORMProperties];
+            }
+            
+            [propertyDesctiptions enumerateKeysAndObjectsUsingBlock:^(NSString *name, ORMAttributeDescription *attribute, BOOL *stop) {
+                id value = [result objectForColumnName:name];
+                [properties setObject:value forKey:name];
+            }];
+            return properties;
+        } else {
+            return nil;
+        }
+    } else {
+        if (error) {
+            *error = database.lastError;
+        }
+        return nil;
+    }
+}
+
+
 @end
 
 #pragma mark -
