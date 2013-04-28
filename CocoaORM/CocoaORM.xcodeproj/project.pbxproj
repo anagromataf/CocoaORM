@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA06123C04534835AA58BF23 /* libPods-CocoaORMTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CCEA1728B22041F794BDE03D /* libPods-CocoaORMTests.a */; };
+		CB0DCC344F974A6E86D6E30B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EB0015D57414CF396DE7C6B /* libPods.a */; };
 		F6034C0B172DA2C4002802F2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6034C0A172DA2C4002802F2 /* Cocoa.framework */; };
 		F6034C15172DA2C4002802F2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F6034C13172DA2C4002802F2 /* InfoPlist.strings */; };
 		F6034C19172DA2C4002802F2 /* CocoaORM.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C18172DA2C4002802F2 /* CocoaORM.m */; };
@@ -28,6 +30,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		05752A4344DA4481AEA6F6B6 /* Pods-CocoaORMTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CocoaORMTests.xcconfig"; path = "../Pods/Pods-CocoaORMTests.xcconfig"; sourceTree = SOURCE_ROOT; };
+		7EB0015D57414CF396DE7C6B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C361819789444B929A16FAF2 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = ../Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		CCEA1728B22041F794BDE03D /* libPods-CocoaORMTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CocoaORMTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6034C07172DA2C4002802F2 /* CocoaORM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaORM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6034C0A172DA2C4002802F2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		F6034C0D172DA2C4002802F2 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -52,6 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6034C0B172DA2C4002802F2 /* Cocoa.framework in Frameworks */,
+				CB0DCC344F974A6E86D6E30B /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +69,7 @@
 				F6034C21172DA2C4002802F2 /* SenTestingKit.framework in Frameworks */,
 				F6034C22172DA2C4002802F2 /* Cocoa.framework in Frameworks */,
 				F6034C25172DA2C4002802F2 /* CocoaORM.framework in Frameworks */,
+				AA06123C04534835AA58BF23 /* libPods-CocoaORMTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +83,8 @@
 				F6034C26172DA2C4002802F2 /* CocoaORMTests */,
 				F6034C09172DA2C4002802F2 /* Frameworks */,
 				F6034C08172DA2C4002802F2 /* Products */,
+				C361819789444B929A16FAF2 /* Pods.xcconfig */,
+				05752A4344DA4481AEA6F6B6 /* Pods-CocoaORMTests.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -93,6 +103,8 @@
 				F6034C0A172DA2C4002802F2 /* Cocoa.framework */,
 				F6034C20172DA2C4002802F2 /* SenTestingKit.framework */,
 				F6034C0C172DA2C4002802F2 /* Other Frameworks */,
+				7EB0015D57414CF396DE7C6B /* libPods.a */,
+				CCEA1728B22041F794BDE03D /* libPods-CocoaORMTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -163,10 +175,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F6034C31172DA2C4002802F2 /* Build configuration list for PBXNativeTarget "CocoaORM" */;
 			buildPhases = (
+				458CAF55560B49DFB3F225AC /* Check Pods Manifest.lock */,
 				F6034C02172DA2C4002802F2 /* Sources */,
 				F6034C03172DA2C4002802F2 /* Frameworks */,
 				F6034C04172DA2C4002802F2 /* Headers */,
 				F6034C05172DA2C4002802F2 /* Resources */,
+				90CC68484CA0470FA4A87016 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -181,10 +195,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F6034C34172DA2C4002802F2 /* Build configuration list for PBXNativeTarget "CocoaORMTests" */;
 			buildPhases = (
+				528AF482BABC4623AA02CAEA /* Check Pods Manifest.lock */,
 				F6034C1A172DA2C4002802F2 /* Sources */,
 				F6034C1B172DA2C4002802F2 /* Frameworks */,
 				F6034C1C172DA2C4002802F2 /* Resources */,
 				F6034C1D172DA2C4002802F2 /* ShellScript */,
+				26471158EB5F4270A733CA97 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -243,6 +259,62 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		26471158EB5F4270A733CA97 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Pods-CocoaORMTests-resources.sh\"\n";
+		};
+		458CAF55560B49DFB3F225AC /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sanbox is not in sync with the Podfile.lock. Run 'pod install'.\nEOM\n    exit 1\nfi\n";
+		};
+		528AF482BABC4623AA02CAEA /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sanbox is not in sync with the Podfile.lock. Run 'pod install'.\nEOM\n    exit 1\nfi\n";
+		};
+		90CC68484CA0470FA4A87016 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/../Pods/Pods-resources.sh\"\n";
+		};
 		F6034C1D172DA2C4002802F2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -366,6 +438,7 @@
 		};
 		F6034C32172DA2C4002802F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C361819789444B929A16FAF2 /* Pods.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -381,6 +454,7 @@
 		};
 		F6034C33172DA2C4002802F2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C361819789444B929A16FAF2 /* Pods.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -396,6 +470,7 @@
 		};
 		F6034C35172DA2C4002802F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05752A4344DA4481AEA6F6B6 /* Pods-CocoaORMTests.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
@@ -409,6 +484,7 @@
 		};
 		F6034C36172DA2C4002802F2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05752A4344DA4481AEA6F6B6 /* Pods-CocoaORMTests.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
@@ -439,6 +515,7 @@
 				F6034C33172DA2C4002802F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F6034C34172DA2C4002802F2 /* Build configuration list for PBXNativeTarget "CocoaORMTests" */ = {
 			isa = XCConfigurationList;
@@ -447,6 +524,7 @@
 				F6034C36172DA2C4002802F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
