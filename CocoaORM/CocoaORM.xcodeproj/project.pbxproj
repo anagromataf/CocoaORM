@@ -29,7 +29,7 @@
 		F6509EAF172DB118002A3067 /* CocoaORMDatabasePropertyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EAE172DB118002A3067 /* CocoaORMDatabasePropertyTests.m */; };
 		F6509EB2172DB757002A3067 /* CocoaORMDatabaseEnumerateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EB1172DB757002A3067 /* CocoaORMDatabaseEnumerateTests.m */; };
 		F6BBAC08172DBD10000B389D /* CocoaORMDatabaseRollbackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6BBAC07172DBD10000B389D /* CocoaORMDatabaseRollbackTests.m */; };
-		F6BBAC0C172DC49C000B389D /* CocoaORMObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6BBAC0B172DC49C000B389D /* CocoaORMObjectTests.m */; };
+		F6BBAC0C172DC49C000B389D /* CocoaORMObjectChangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6BBAC0B172DC49C000B389D /* CocoaORMObjectChangeTests.m */; };
 		F6BBAC0F172DCAE8000B389D /* NSObject+CocoaORMPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F6BBAC0D172DCAE8000B389D /* NSObject+CocoaORMPrivate.h */; };
 /* End PBXBuildFile section */
 
@@ -83,8 +83,8 @@
 		F6509EB1172DB757002A3067 /* CocoaORMDatabaseEnumerateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMDatabaseEnumerateTests.m; sourceTree = "<group>"; };
 		F6BBAC06172DBD10000B389D /* CocoaORMDatabaseRollbackTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMDatabaseRollbackTests.h; sourceTree = "<group>"; };
 		F6BBAC07172DBD10000B389D /* CocoaORMDatabaseRollbackTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMDatabaseRollbackTests.m; sourceTree = "<group>"; };
-		F6BBAC0A172DC49C000B389D /* CocoaORMObjectTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMObjectTests.h; sourceTree = "<group>"; };
-		F6BBAC0B172DC49C000B389D /* CocoaORMObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMObjectTests.m; sourceTree = "<group>"; };
+		F6BBAC0A172DC49C000B389D /* CocoaORMObjectChangeTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMObjectChangeTests.h; sourceTree = "<group>"; };
+		F6BBAC0B172DC49C000B389D /* CocoaORMObjectChangeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMObjectChangeTests.m; sourceTree = "<group>"; };
 		F6BBAC0D172DCAE8000B389D /* NSObject+CocoaORMPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CocoaORMPrivate.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -234,8 +234,8 @@
 		F6BBAC09172DC47D000B389D /* Object Tests */ = {
 			isa = PBXGroup;
 			children = (
-				F6BBAC0A172DC49C000B389D /* CocoaORMObjectTests.h */,
-				F6BBAC0B172DC49C000B389D /* CocoaORMObjectTests.m */,
+				F6BBAC0A172DC49C000B389D /* CocoaORMObjectChangeTests.h */,
+				F6BBAC0B172DC49C000B389D /* CocoaORMObjectChangeTests.m */,
 			);
 			name = "Object Tests";
 			sourceTree = "<group>";
@@ -439,7 +439,7 @@
 				F6509EAF172DB118002A3067 /* CocoaORMDatabasePropertyTests.m in Sources */,
 				F6509EB2172DB757002A3067 /* CocoaORMDatabaseEnumerateTests.m in Sources */,
 				F6BBAC08172DBD10000B389D /* CocoaORMDatabaseRollbackTests.m in Sources */,
-				F6BBAC0C172DC49C000B389D /* CocoaORMObjectTests.m in Sources */,
+				F6BBAC0C172DC49C000B389D /* CocoaORMObjectChangeTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,5 +1,5 @@
 //
-//  CocoaORMObjectTests.h
+//  CocoaORMObjectChangeTests.h
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
@@ -8,6 +8,6 @@
 
 #import "CocoaORMTestCase.h"
 
-@interface CocoaORMObjectTests : CocoaORMTestCase
+@interface CocoaORMObjectChangeTests : CocoaORMTestCase
 
 @end

@@ -1,5 +1,5 @@
 //
-//  CocoaORMObjectTests.m
+//  CocoaORMObjectChangeTests.m
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
@@ -8,9 +8,9 @@
 
 #import "NSObject+CocoaORMPrivate.h"
 
-#import "CocoaORMObjectTests.h"
+#import "CocoaORMObjectChangeTests.h"
 
-@implementation CocoaORMObjectTests
+@implementation CocoaORMObjectChangeTests
 
 - (void)testPropertySetterAndGetter
 {
