@@ -32,6 +32,12 @@
 + (BOOL)setupORMSchemataInDatabase:(FMDatabase *)database
                              error:(NSError **)error;
 
+#pragma mark Insert Properties
+
++ (int64_t)insertORMObjectProperties:(NSDictionary *)properties
+                        intoDatabase:(FMDatabase *)database
+                               error:(NSError **)error;
+
 @end
 
 ORMAttributeDescription * ORMAttribute(Class, NSString *name);

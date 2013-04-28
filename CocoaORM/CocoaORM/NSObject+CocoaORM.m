@@ -144,6 +144,73 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
     return success;
 }
 
++ (int64_t)insertORMObjectProperties:(NSDictionary *)properties
+                        intoDatabase:(FMDatabase *)database
+                               error:(NSError **)error
+{
+    if ([properties objectForKey:@"_class"] == nil) {
+        NSMutableDictionary *_properties = [properties mutableCopy];
+        [_properties setObject:[self class] forKey:@"_class"];
+        properties = _properties;
+    }
+    
+    sqlite_int64 pk = 0;
+    if ([[self superclass] isORMClass]) {
+        pk = [[self superclass] insertORMObjectProperties:properties
+                                             intoDatabase:database
+                                                    error:error];
+        if (pk == 0) {
+            return 0;
+        }
+    }
+    
+    NSMutableArray *columnNames = [[NSMutableArray alloc] init];
+    NSMutableArray *columnValues = [[NSMutableArray alloc] init];
+    NSMutableDictionary *columnProperties = [[NSMutableDictionary alloc] init];
+    if (pk == 0) {
+        [columnNames addObject:@"_class"];
+        [columnValues addObject:@":_class"];
+        [columnProperties setObject:[properties objectForKey:@"_class"]
+                             forKey:@"_class"];
+    } else {
+        [columnNames addObject:@"_id"];
+        [columnValues addObject:@":_id"];
+        [columnProperties setObject:@(pk)
+                             forKey:@"_id"];
+    }
+    
+    [[[self class] ORMProperties] enumerateKeysAndObjectsUsingBlock:^(NSString *name,
+                                                                      ORMAttributeDescription *attribute,
+                                                                      BOOL *stop) {
+        id value = [properties objectForKey:name];
+        if (value) {
+            [columnNames addObject:name];
+            [columnValues addObject:[NSString stringWithFormat:@":%@", name]];
+            [columnProperties setObject:value forKey:name];
+        }
+    }];
+    
+    NSString *statement = [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
+                           NSStringFromClass([self class]),
+                           [columnNames componentsJoinedByString:@", "],
+                           [columnValues componentsJoinedByString:@", "]];
+    
+    NSLog(@"SQL: %@", statement);
+    
+    if (![database executeUpdate:statement withParameterDictionary:columnProperties]) {
+        if (error) {
+            *error = database.lastError;
+        }
+        return 0;
+    }
+    
+    if (pk == 0) {
+        pk = database.lastInsertRowId;
+    }
+    
+    return pk;
+}
+
 @end
 
 #pragma mark -
