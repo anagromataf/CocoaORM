@@ -22,6 +22,7 @@
 		F6034C42172DA9BD002802F2 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C41172DA9BD002802F2 /* Person.m */; };
 		F6034C45172DAA2E002802F2 /* Employee.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C44172DAA2E002802F2 /* Employee.m */; };
 		F6034C48172DAA8E002802F2 /* Chef.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C47172DAA8E002802F2 /* Chef.m */; };
+		F618B900172DCE2C00F12666 /* ORMStore+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F618B8FE172DCE2C00F12666 /* ORMStore+Private.h */; };
 		F6509EA1172DACF8002A3067 /* CocoaORMDatabaseSchemataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EA0172DACF8002A3067 /* CocoaORMDatabaseSchemataTests.m */; };
 		F6509EA8172DAD85002A3067 /* ORMStore.h in Headers */ = {isa = PBXBuildFile; fileRef = F6509EA6172DAD85002A3067 /* ORMStore.h */; };
 		F6509EA9172DAD85002A3067 /* ORMStore.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EA7172DAD85002A3067 /* ORMStore.m */; };
@@ -71,6 +72,7 @@
 		F6034C44172DAA2E002802F2 /* Employee.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Employee.m; sourceTree = "<group>"; };
 		F6034C46172DAA8E002802F2 /* Chef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chef.h; sourceTree = "<group>"; };
 		F6034C47172DAA8E002802F2 /* Chef.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chef.m; sourceTree = "<group>"; };
+		F618B8FE172DCE2C00F12666 /* ORMStore+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ORMStore+Private.h"; sourceTree = "<group>"; };
 		F6509E9F172DACF8002A3067 /* CocoaORMDatabaseSchemataTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMDatabaseSchemataTests.h; sourceTree = "<group>"; };
 		F6509EA0172DACF8002A3067 /* CocoaORMDatabaseSchemataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMDatabaseSchemataTests.m; sourceTree = "<group>"; };
 		F6509EA6172DAD85002A3067 /* ORMStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORMStore.h; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 				F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */,
 				F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */,
 				F6509EA6172DAD85002A3067 /* ORMStore.h */,
+				F618B8FE172DCE2C00F12666 /* ORMStore+Private.h */,
 				F6509EA7172DAD85002A3067 /* ORMStore.m */,
 				F6034C11172DA2C4002802F2 /* Supporting Files */,
 			);
@@ -251,6 +254,7 @@
 				F6034C3D172DA602002802F2 /* ORMAttributeDescription.h in Headers */,
 				F6509EA8172DAD85002A3067 /* ORMStore.h in Headers */,
 				F6BBAC0F172DCAE8000B389D /* NSObject+CocoaORMPrivate.h in Headers */,
+				F618B900172DCE2C00F12666 /* ORMStore+Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

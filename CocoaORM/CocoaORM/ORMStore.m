@@ -7,6 +7,7 @@
 //
 
 #import "ORMStore.h"
+#import "ORMStore+Private.h"
 
 @interface ORMStore ()
 @property (nonatomic, readonly) dispatch_queue_t queue;
@@ -33,6 +34,44 @@
     }
     return self;
 }
+
+#pragma mark Transactions
+
+- (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block
+{
+    [self commitTransaction:block andWait:NO];
+}
+
+- (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block
+{
+    [self commitTransaction:block andWait:YES];
+}
+
+- (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block andWait:(BOOL)wait
+{
+    [self commitTransactionInDatabase:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+        
+        BOOL _rollback = NO;
+        ORMStoreTransactionCompletionHalndler completionHalndler = block(&_rollback);
+        
+        __block NSError *error = nil;
+        *rollback = _rollback;
+        
+        return ^(NSError *_error) {
+            
+            if (completionHalndler) {
+                completionHalndler(error);
+            }
+        };
+        
+    } andWait:wait];
+}
+
+@end
+
+
+
+@implementation ORMStore (Private)
 
 #pragma mark Database Transaction
 
