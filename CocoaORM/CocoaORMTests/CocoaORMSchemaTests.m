@@ -10,35 +10,9 @@
 #import <FMDB/FMDatabase.h>
 #import <FMDB/FMDatabaseAdditions.h>
 
-// CocoaORM
-#import "CocoaORM.h"
-
-// Test Model
-#import "Person.h"
-#import "Employee.h"
-#import "Chef.h"
-
 #import "CocoaORMSchemaTests.h"
 
-@interface CocoaORMSchemaTests ()
-@property (nonatomic, strong) ORMStore *store;
-@end
-
 @implementation CocoaORMSchemaTests
-
-- (void)setUp
-{
-    [super setUp];
-    self.store = [[ORMStore alloc] init];
-}
-
-- (void)tearDown
-{
-    self.store = nil;
-    [super tearDown];
-}
-
-#pragma mark Tests
 
 - (void)testSetupSchemata
 {

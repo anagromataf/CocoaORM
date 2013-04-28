@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import "CocoaORMTestCase.h"
 
-@interface CocoaORMSchemaTests : SenTestCase
+@interface CocoaORMSchemaTests : CocoaORMTestCase
 
 @end
