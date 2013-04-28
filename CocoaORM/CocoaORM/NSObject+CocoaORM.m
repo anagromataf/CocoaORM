@@ -262,6 +262,29 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
     return YES;
 }
 
++ (BOOL)deleteORMObjectWithPrimaryKey:(int64_t)pk
+                           inDatabase:(FMDatabase *)database
+                                error:(NSError **)error
+{
+    if ([[self superclass] isORMClass]) {
+        return [[self superclass] deleteORMObjectWithPrimaryKey:pk inDatabase:database error:error];
+    }
+    
+    NSString *statement = [NSString stringWithFormat:@"DELETE FROM %@ WHERE _id = :_id",
+                           NSStringFromClass(self)];
+    
+    NSLog(@"SQL: %@", statement);
+    
+    if (![database executeUpdate:statement withParameterDictionary:@{@"_id":@(pk)}]) {
+        if (error) {
+            *error = database.lastError;
+        }
+        return NO;
+    }
+    
+    return YES;
+}
+
 @end
 
 #pragma mark -

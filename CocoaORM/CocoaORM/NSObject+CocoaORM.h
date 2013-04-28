@@ -33,7 +33,7 @@
 + (BOOL)setupORMSchemataInDatabase:(FMDatabase *)database
                              error:(NSError **)error;
 
-#pragma mark Insert and Update Properties
+#pragma mark Insert, Update & Delete Properties
 
 + (int64_t)insertORMObjectProperties:(NSDictionary *)properties
                         intoDatabase:(FMDatabase *)database
@@ -41,6 +41,10 @@
 
 + (BOOL)updateORMObjectWithPrimaryKey:(int64_t)pk
                        withProperties:(NSDictionary *)properties
+                           inDatabase:(FMDatabase *)database
+                                error:(NSError **)error;
+
++ (BOOL)deleteORMObjectWithPrimaryKey:(int64_t)pk
                            inDatabase:(FMDatabase *)database
                                 error:(NSError **)error;
 

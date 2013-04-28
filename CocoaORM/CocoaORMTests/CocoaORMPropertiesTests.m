@@ -113,5 +113,52 @@
     }];
 }
 
+- (void)testDeleteProperties
+{
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+        
+        NSError *error = nil;
+        BOOL success = YES;
+        
+        // Setup Schemata
+        
+        success = [Employee setupORMSchemataInDatabase:db error:&error];
+        STAssertTrue(success, [error localizedDescription]);
+        
+        // Insert Properties
+        
+        NSDictionary *properties = @{@"firstName":@"Jim",
+                                     @"lastName":@"Example",
+                                     @"position":@"CEO"
+                                     };
+        
+        int64_t pk = [Employee insertORMObjectProperties:properties
+                                            intoDatabase:db
+                                                   error:&error];
+        STAssertTrue(pk != 0, [error localizedDescription]);
+        
+        // Delete Properties
+        
+        success = [Employee deleteORMObjectWithPrimaryKey:pk
+                                               inDatabase:db
+                                                    error:&error];
+        STAssertTrue(success, [error localizedDescription]);
+        
+        return ^(NSError *error) {
+            STAssertNil(error, [error localizedDescription]);
+            
+            FMResultSet *result = nil;
+            
+            result = [db executeQuery:@"SELECT * FROM Person WHERE _id = :_id" withParameterDictionary:@{@"_id":@(pk)}];
+            STAssertNotNil(result, [db.lastError localizedDescription]);
+            STAssertFalse([result next], nil);
+            
+            result = [db executeQuery:@"SELECT * FROM Employee WHERE _id = :_id" withParameterDictionary:@{@"_id":@(pk)}];
+            STAssertNotNil(result, [db.lastError localizedDescription]);
+            STAssertFalse([result next], nil);
+        };
+    }];
+}
+
 
 @end
