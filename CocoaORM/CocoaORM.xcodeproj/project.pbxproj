@@ -11,12 +11,13 @@
 		CB0DCC344F974A6E86D6E30B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EB0015D57414CF396DE7C6B /* libPods.a */; };
 		F6034C0B172DA2C4002802F2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6034C0A172DA2C4002802F2 /* Cocoa.framework */; };
 		F6034C15172DA2C4002802F2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F6034C13172DA2C4002802F2 /* InfoPlist.strings */; };
-		F6034C19172DA2C4002802F2 /* CocoaORM.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C18172DA2C4002802F2 /* CocoaORM.m */; };
 		F6034C21172DA2C4002802F2 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6034C20172DA2C4002802F2 /* SenTestingKit.framework */; };
 		F6034C22172DA2C4002802F2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6034C0A172DA2C4002802F2 /* Cocoa.framework */; };
 		F6034C25172DA2C4002802F2 /* CocoaORM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6034C07172DA2C4002802F2 /* CocoaORM.framework */; };
 		F6034C2B172DA2C4002802F2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F6034C29172DA2C4002802F2 /* InfoPlist.strings */; };
 		F6034C2E172DA2C4002802F2 /* CocoaORMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C2D172DA2C4002802F2 /* CocoaORMTests.m */; };
+		F6034C39172DA425002802F2 /* NSObject+CocoaORM.h in Headers */ = {isa = PBXBuildFile; fileRef = F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */; };
+		F6034C3A172DA425002802F2 /* NSObject+CocoaORM.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,13 +44,14 @@
 		F6034C14172DA2C4002802F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F6034C16172DA2C4002802F2 /* CocoaORM-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CocoaORM-Prefix.pch"; sourceTree = "<group>"; };
 		F6034C17172DA2C4002802F2 /* CocoaORM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CocoaORM.h; sourceTree = "<group>"; };
-		F6034C18172DA2C4002802F2 /* CocoaORM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CocoaORM.m; sourceTree = "<group>"; };
 		F6034C1F172DA2C4002802F2 /* CocoaORMTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CocoaORMTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6034C20172DA2C4002802F2 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		F6034C28172DA2C4002802F2 /* CocoaORMTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CocoaORMTests-Info.plist"; sourceTree = "<group>"; };
 		F6034C2A172DA2C4002802F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F6034C2C172DA2C4002802F2 /* CocoaORMTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CocoaORMTests.h; sourceTree = "<group>"; };
 		F6034C2D172DA2C4002802F2 /* CocoaORMTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CocoaORMTests.m; sourceTree = "<group>"; };
+		F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CocoaORM.h"; sourceTree = "<group>"; };
+		F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+CocoaORM.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +125,8 @@
 			isa = PBXGroup;
 			children = (
 				F6034C17172DA2C4002802F2 /* CocoaORM.h */,
-				F6034C18172DA2C4002802F2 /* CocoaORM.m */,
+				F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */,
+				F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */,
 				F6034C11172DA2C4002802F2 /* Supporting Files */,
 			);
 			path = CocoaORM;
@@ -165,6 +168,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6034C39172DA425002802F2 /* NSObject+CocoaORM.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,7 +339,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6034C19172DA2C4002802F2 /* CocoaORM.m in Sources */,
+				F6034C3A172DA425002802F2 /* NSObject+CocoaORM.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
