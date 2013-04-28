@@ -1,26 +1,24 @@
 //
-//  CocoaORMTests.m
-//  CocoaORMTests
+//  CocoaORMTestCase.m
+//  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import "CocoaORMTests.h"
+#import "CocoaORMTestCase.h"
 
-@implementation CocoaORMTests
+@implementation CocoaORMTestCase
 
 - (void)setUp
 {
     [super setUp];
-    
-    // Set-up code here.
+    self.store = [[ORMStore alloc] init];
 }
 
 - (void)tearDown
 {
-    // Tear-down code here.
-    
+    self.store = nil;
     [super tearDown];
 }
 

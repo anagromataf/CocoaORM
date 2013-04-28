@@ -15,9 +15,17 @@
 		F6034C22172DA2C4002802F2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6034C0A172DA2C4002802F2 /* Cocoa.framework */; };
 		F6034C25172DA2C4002802F2 /* CocoaORM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6034C07172DA2C4002802F2 /* CocoaORM.framework */; };
 		F6034C2B172DA2C4002802F2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F6034C29172DA2C4002802F2 /* InfoPlist.strings */; };
-		F6034C2E172DA2C4002802F2 /* CocoaORMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C2D172DA2C4002802F2 /* CocoaORMTests.m */; };
 		F6034C39172DA425002802F2 /* NSObject+CocoaORM.h in Headers */ = {isa = PBXBuildFile; fileRef = F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */; };
 		F6034C3A172DA425002802F2 /* NSObject+CocoaORM.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */; };
+		F6034C3D172DA602002802F2 /* ORMAttributeDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */; };
+		F6034C3E172DA602002802F2 /* ORMAttributeDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */; };
+		F6034C42172DA9BD002802F2 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C41172DA9BD002802F2 /* Person.m */; };
+		F6034C45172DAA2E002802F2 /* Employee.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C44172DAA2E002802F2 /* Employee.m */; };
+		F6034C48172DAA8E002802F2 /* Chef.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C47172DAA8E002802F2 /* Chef.m */; };
+		F6509EA1172DACF8002A3067 /* CocoaORMSchemaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EA0172DACF8002A3067 /* CocoaORMSchemaTests.m */; };
+		F6509EA8172DAD85002A3067 /* ORMStore.h in Headers */ = {isa = PBXBuildFile; fileRef = F6509EA6172DAD85002A3067 /* ORMStore.h */; };
+		F6509EA9172DAD85002A3067 /* ORMStore.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EA7172DAD85002A3067 /* ORMStore.m */; };
+		F6509EAC172DB072002A3067 /* CocoaORMTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EAB172DB072002A3067 /* CocoaORMTestCase.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,10 +56,22 @@
 		F6034C20172DA2C4002802F2 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		F6034C28172DA2C4002802F2 /* CocoaORMTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CocoaORMTests-Info.plist"; sourceTree = "<group>"; };
 		F6034C2A172DA2C4002802F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F6034C2C172DA2C4002802F2 /* CocoaORMTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CocoaORMTests.h; sourceTree = "<group>"; };
-		F6034C2D172DA2C4002802F2 /* CocoaORMTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CocoaORMTests.m; sourceTree = "<group>"; };
 		F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CocoaORM.h"; sourceTree = "<group>"; };
 		F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+CocoaORM.m"; sourceTree = "<group>"; };
+		F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORMAttributeDescription.h; sourceTree = "<group>"; };
+		F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORMAttributeDescription.m; sourceTree = "<group>"; };
+		F6034C40172DA9BD002802F2 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		F6034C41172DA9BD002802F2 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		F6034C43172DAA2E002802F2 /* Employee.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Employee.h; sourceTree = "<group>"; };
+		F6034C44172DAA2E002802F2 /* Employee.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Employee.m; sourceTree = "<group>"; };
+		F6034C46172DAA8E002802F2 /* Chef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chef.h; sourceTree = "<group>"; };
+		F6034C47172DAA8E002802F2 /* Chef.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chef.m; sourceTree = "<group>"; };
+		F6509E9F172DACF8002A3067 /* CocoaORMSchemaTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMSchemaTests.h; sourceTree = "<group>"; };
+		F6509EA0172DACF8002A3067 /* CocoaORMSchemaTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMSchemaTests.m; sourceTree = "<group>"; };
+		F6509EA6172DAD85002A3067 /* ORMStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORMStore.h; sourceTree = "<group>"; };
+		F6509EA7172DAD85002A3067 /* ORMStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORMStore.m; sourceTree = "<group>"; };
+		F6509EAA172DB072002A3067 /* CocoaORMTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMTestCase.h; sourceTree = "<group>"; };
+		F6509EAB172DB072002A3067 /* CocoaORMTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMTestCase.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +147,10 @@
 				F6034C17172DA2C4002802F2 /* CocoaORM.h */,
 				F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */,
 				F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */,
+				F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */,
+				F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */,
+				F6509EA6172DAD85002A3067 /* ORMStore.h */,
+				F6509EA7172DAD85002A3067 /* ORMStore.m */,
 				F6034C11172DA2C4002802F2 /* Supporting Files */,
 			);
 			path = CocoaORM;
@@ -145,8 +169,11 @@
 		F6034C26172DA2C4002802F2 /* CocoaORMTests */ = {
 			isa = PBXGroup;
 			children = (
-				F6034C2C172DA2C4002802F2 /* CocoaORMTests.h */,
-				F6034C2D172DA2C4002802F2 /* CocoaORMTests.m */,
+				F6034C3F172DA9AD002802F2 /* Model */,
+				F6509EAA172DB072002A3067 /* CocoaORMTestCase.h */,
+				F6509EAB172DB072002A3067 /* CocoaORMTestCase.m */,
+				F6509E9F172DACF8002A3067 /* CocoaORMSchemaTests.h */,
+				F6509EA0172DACF8002A3067 /* CocoaORMSchemaTests.m */,
 				F6034C27172DA2C4002802F2 /* Supporting Files */,
 			);
 			path = CocoaORMTests;
@@ -161,6 +188,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		F6034C3F172DA9AD002802F2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F6034C40172DA9BD002802F2 /* Person.h */,
+				F6034C41172DA9BD002802F2 /* Person.m */,
+				F6034C43172DAA2E002802F2 /* Employee.h */,
+				F6034C44172DAA2E002802F2 /* Employee.m */,
+				F6034C46172DAA8E002802F2 /* Chef.h */,
+				F6034C47172DAA8E002802F2 /* Chef.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -169,6 +209,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6034C39172DA425002802F2 /* NSObject+CocoaORM.h in Headers */,
+				F6034C3D172DA602002802F2 /* ORMAttributeDescription.h in Headers */,
+				F6509EA8172DAD85002A3067 /* ORMStore.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +382,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6034C3A172DA425002802F2 /* NSObject+CocoaORM.m in Sources */,
+				F6034C3E172DA602002802F2 /* ORMAttributeDescription.m in Sources */,
+				F6509EA9172DAD85002A3067 /* ORMStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,7 +391,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6034C2E172DA2C4002802F2 /* CocoaORMTests.m in Sources */,
+				F6034C42172DA9BD002802F2 /* Person.m in Sources */,
+				F6034C45172DAA2E002802F2 /* Employee.m in Sources */,
+				F6034C48172DAA8E002802F2 /* Chef.m in Sources */,
+				F6509EA1172DACF8002A3067 /* CocoaORMSchemaTests.m in Sources */,
+				F6509EAC172DB072002A3067 /* CocoaORMTestCase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

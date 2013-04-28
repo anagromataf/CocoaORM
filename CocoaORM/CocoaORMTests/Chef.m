@@ -1,12 +1,13 @@
 //
-//  CocoaORM.h
+//  Chef.m
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import "NSObject+CocoaORM.h"
+#import "Chef.h"
 
-#import "ORMAttributeDescription.h"
-#import "ORMStore.h"
+@implementation Chef
+
+@end
