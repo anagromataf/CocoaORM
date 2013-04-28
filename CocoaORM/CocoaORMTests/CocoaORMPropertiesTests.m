@@ -66,4 +66,52 @@
     }];
 }
 
+- (void)testUpdateProperties
+{
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+        
+        NSError *error = nil;
+        BOOL success = YES;
+        
+        // Setup Schemata
+        
+        success = [Employee setupORMSchemataInDatabase:db error:&error];
+        STAssertTrue(success, [error localizedDescription]);
+        
+        // Insert Properties
+        
+        NSDictionary *properties = @{
+                                     @"firstName":@"Jim",
+                                     @"lastName":@"Example",
+                                     @"position":@"CEO"
+                                     };
+        
+        int64_t pk = [Employee insertORMObjectProperties:properties
+                                            intoDatabase:db
+                                                   error:&error];
+        STAssertTrue(pk != 0, [error localizedDescription]);
+        
+        // Update Properties
+        success = [Employee updateORMObjectWithPrimaryKey:pk
+                                           withProperties:@{@"firstName":@"John", @"position":@"CTO"}
+                                               inDatabase:db
+                                                    error:&error];
+        STAssertTrue(success, [error localizedDescription]);
+        
+        return ^(NSError *error) {
+            STAssertNil(error, [error localizedDescription]);
+            
+            FMResultSet *result = nil;
+            
+            result = [db executeQuery:@"SELECT * FROM Person NATURAL JOIN Employee WHERE _id = :_id" withParameterDictionary:@{@"_id":@(pk)}];
+            STAssertNotNil(result, [db.lastError localizedDescription]);
+            
+            STAssertTrue([result next], nil);
+            STAssertEqualObjects([result objectForColumnName:@"firstName"], @"John", nil);
+            STAssertEqualObjects([result objectForColumnName:@"position"], @"CTO", nil);
+        };
+    }];
+}
+
+
 @end

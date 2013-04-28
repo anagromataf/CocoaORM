@@ -144,6 +144,8 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
     return success;
 }
 
+#pragma mark Insert and Update Properties
+
 + (int64_t)insertORMObjectProperties:(NSDictionary *)properties
                         intoDatabase:(FMDatabase *)database
                                error:(NSError **)error
@@ -209,6 +211,55 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
     }
     
     return pk;
+}
+
+
++ (BOOL)updateORMObjectWithPrimaryKey:(int64_t)pk
+                       withProperties:(NSDictionary *)properties
+                           inDatabase:(FMDatabase *)database
+                                error:(NSError **)error
+{
+    if ([[self superclass] isORMClass]) {
+        BOOL success = [[self superclass] updateORMObjectWithPrimaryKey:pk
+                                                         withProperties:properties
+                                                             inDatabase:database
+                                                                  error:error];
+        if (!success) {
+            return NO;
+        }
+    }
+    
+    NSMutableArray *columns = [[NSMutableArray alloc] init];
+    NSMutableDictionary *columnProperties = [[NSMutableDictionary alloc] init];
+    
+    [[[self class] ORMProperties] enumerateKeysAndObjectsUsingBlock:^(NSString *name,
+                                                                      ORMAttributeDescription *attribute,
+                                                                      BOOL *stop) {
+        id value = [properties objectForKey:name];
+        if (value) {
+            [columns addObject:[NSString stringWithFormat:@"%@ = :%@", name, name]];
+            [columnProperties setObject:value forKey:name];
+        }
+    }];
+    
+    if ([columnProperties count] > 0) {
+        [columnProperties setObject:@(pk) forKey:@"_id"];
+        
+        NSString *statement = [NSString stringWithFormat:@"UPDATE %@ SET %@ WHERE _id == :_id",
+                               NSStringFromClass([self class]),
+                               [columns componentsJoinedByString:@", "]];
+        
+        NSLog(@"SQL: %@", statement);
+        
+        if (![database executeUpdate:statement withParameterDictionary:columnProperties]) {
+            if (error) {
+                *error = database.lastError;
+            }
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 @end

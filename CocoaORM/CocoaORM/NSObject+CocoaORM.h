@@ -29,14 +29,20 @@
 
 #pragma mark -
 #pragma mark ORM SQL Schemata
+
 + (BOOL)setupORMSchemataInDatabase:(FMDatabase *)database
                              error:(NSError **)error;
 
-#pragma mark Insert Properties
+#pragma mark Insert and Update Properties
 
 + (int64_t)insertORMObjectProperties:(NSDictionary *)properties
                         intoDatabase:(FMDatabase *)database
                                error:(NSError **)error;
+
++ (BOOL)updateORMObjectWithPrimaryKey:(int64_t)pk
+                       withProperties:(NSDictionary *)properties
+                           inDatabase:(FMDatabase *)database
+                                error:(NSError **)error;
 
 @end
 
