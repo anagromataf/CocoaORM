@@ -9,6 +9,9 @@
 // Cocoa
 #import <Foundation/Foundation.h>
 
+// 3rdParty
+#import <FMDB/FMDatabase.h>
+
 // CocoaORM
 #import "ORMAttributeDescription.h"
 
@@ -23,6 +26,11 @@
 #pragma mark ORM Values
 - (id)ORMValueForKey:(NSString *)key;
 - (void)setORMValue:(id)value forKey:(NSString *)key;
+
+#pragma mark -
+#pragma mark ORM SQL Schemata
++ (BOOL)setupORMSchemataInDatabase:(FMDatabase *)database
+                             error:(NSError **)error;
 
 @end
 

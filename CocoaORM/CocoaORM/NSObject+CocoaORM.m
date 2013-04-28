@@ -9,6 +9,10 @@
 // Cocoa
 #import <objc/runtime.h>
 
+// 3rdParty
+#import <FMDB/FMDatabase.h>
+#import <FMDB/FMDatabaseAdditions.h>
+
 #import "NSObject+CocoaORM.h"
 
 const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptionsKey";
@@ -80,6 +84,64 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
 
 - (void)setORMValue:(id)value forKey:(NSString *)key;
 {
+}
+
+#pragma mark Setup ORM Schema
+
++ (BOOL)setupORMSchemataInDatabase:(FMDatabase *)database
+                             error:(NSError **)error
+{
+    BOOL success = YES;
+    BOOL baseClass = ![[self superclass] isORMClass];
+    
+    if (!baseClass) {
+        success = [[self superclass] setupORMSchemataInDatabase:database
+                                                          error:error];
+    }
+    
+    if (success) {
+        
+        if ([database tableExists:NSStringFromClass(self)]) {
+            return YES;
+        } else {
+            
+            NSMutableArray *columns = [[NSMutableArray alloc] init];
+            
+            if (baseClass) {
+                [columns addObject:@"_id INTEGER NOT NULL PRIMARY KEY"];
+                [columns addObject:@"_class TEXT NOT NULL"];
+            } else {
+                [columns addObject:[NSString stringWithFormat:@"_id INTEGER NOT NULL PRIMARY KEY REFERENCES %@(_id) ON DELETE CASCADE", NSStringFromClass([self superclass])]];
+            }
+            
+            [[self ORMProperties] enumerateKeysAndObjectsUsingBlock:^(NSString *name, ORMAttributeDescription *attribute, BOOL *stop) {
+                
+                NSMutableArray *column = [[NSMutableArray alloc] init];
+                
+                [column addObject:attribute.attributeName];
+                [column addObject:attribute.typeName];
+                
+                if (attribute.required) {
+                    [column addObject:@"NOT NULL"];
+                }
+                
+                [columns addObject:[column componentsJoinedByString:@" "]];
+            }];
+            
+            NSString *statement = [NSString stringWithFormat:@"CREATE TABLE %@ (%@)",
+                                   NSStringFromClass(self),
+                                   [columns componentsJoinedByString:@", "]];
+            
+            NSLog(@"SQL: %@", statement);
+            
+            success = [database executeUpdate:statement];
+            if (!success && error) {
+                *error = database.lastError;
+            }
+        }
+    }
+    
+    return success;
 }
 
 @end

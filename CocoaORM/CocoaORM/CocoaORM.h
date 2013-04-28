@@ -9,3 +9,4 @@
 #import "NSObject+CocoaORM.h"
 
 #import "ORMAttributeDescription.h"
+#import "ORMStore.h"
