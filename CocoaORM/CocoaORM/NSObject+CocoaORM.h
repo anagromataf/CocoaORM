@@ -6,8 +6,24 @@
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
+// Cocoa
 #import <Foundation/Foundation.h>
+
+// CocoaORM
+#import "ORMAttributeDescription.h"
 
 @interface NSObject (CocoaORM)
 
+#pragma mark ORM Descriptions
++ (BOOL)isORMClass;
++ (NSArray *)ORMClassHierarchy;
++ (NSDictionary *)ORMProperties;
++ (NSDictionary *)allORMProperties;
+
+#pragma mark ORM Values
+- (id)ORMValueForKey:(NSString *)key;
+- (void)setORMValue:(id)value forKey:(NSString *)key;
+
 @end
+
+ORMAttributeDescription * ORMAttribute(Class, NSString *name);

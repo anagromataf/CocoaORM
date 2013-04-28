@@ -18,6 +18,11 @@
 		F6034C2E172DA2C4002802F2 /* CocoaORMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C2D172DA2C4002802F2 /* CocoaORMTests.m */; };
 		F6034C39172DA425002802F2 /* NSObject+CocoaORM.h in Headers */ = {isa = PBXBuildFile; fileRef = F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */; };
 		F6034C3A172DA425002802F2 /* NSObject+CocoaORM.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */; };
+		F6034C3D172DA602002802F2 /* ORMAttributeDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */; };
+		F6034C3E172DA602002802F2 /* ORMAttributeDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */; };
+		F6034C42172DA9BD002802F2 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C41172DA9BD002802F2 /* Person.m */; };
+		F6034C45172DAA2E002802F2 /* Employee.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C44172DAA2E002802F2 /* Employee.m */; };
+		F6034C48172DAA8E002802F2 /* Chef.m in Sources */ = {isa = PBXBuildFile; fileRef = F6034C47172DAA8E002802F2 /* Chef.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +57,14 @@
 		F6034C2D172DA2C4002802F2 /* CocoaORMTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CocoaORMTests.m; sourceTree = "<group>"; };
 		F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CocoaORM.h"; sourceTree = "<group>"; };
 		F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+CocoaORM.m"; sourceTree = "<group>"; };
+		F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORMAttributeDescription.h; sourceTree = "<group>"; };
+		F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORMAttributeDescription.m; sourceTree = "<group>"; };
+		F6034C40172DA9BD002802F2 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		F6034C41172DA9BD002802F2 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		F6034C43172DAA2E002802F2 /* Employee.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Employee.h; sourceTree = "<group>"; };
+		F6034C44172DAA2E002802F2 /* Employee.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Employee.m; sourceTree = "<group>"; };
+		F6034C46172DAA8E002802F2 /* Chef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chef.h; sourceTree = "<group>"; };
+		F6034C47172DAA8E002802F2 /* Chef.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chef.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +140,8 @@
 				F6034C17172DA2C4002802F2 /* CocoaORM.h */,
 				F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */,
 				F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */,
+				F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */,
+				F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */,
 				F6034C11172DA2C4002802F2 /* Supporting Files */,
 			);
 			path = CocoaORM;
@@ -145,6 +160,7 @@
 		F6034C26172DA2C4002802F2 /* CocoaORMTests */ = {
 			isa = PBXGroup;
 			children = (
+				F6034C3F172DA9AD002802F2 /* Model */,
 				F6034C2C172DA2C4002802F2 /* CocoaORMTests.h */,
 				F6034C2D172DA2C4002802F2 /* CocoaORMTests.m */,
 				F6034C27172DA2C4002802F2 /* Supporting Files */,
@@ -161,6 +177,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		F6034C3F172DA9AD002802F2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F6034C40172DA9BD002802F2 /* Person.h */,
+				F6034C41172DA9BD002802F2 /* Person.m */,
+				F6034C43172DAA2E002802F2 /* Employee.h */,
+				F6034C44172DAA2E002802F2 /* Employee.m */,
+				F6034C46172DAA8E002802F2 /* Chef.h */,
+				F6034C47172DAA8E002802F2 /* Chef.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -169,6 +198,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6034C39172DA425002802F2 /* NSObject+CocoaORM.h in Headers */,
+				F6034C3D172DA602002802F2 /* ORMAttributeDescription.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +370,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6034C3A172DA425002802F2 /* NSObject+CocoaORM.m in Sources */,
+				F6034C3E172DA602002802F2 /* ORMAttributeDescription.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,6 +379,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6034C2E172DA2C4002802F2 /* CocoaORMTests.m in Sources */,
+				F6034C42172DA9BD002802F2 /* Person.m in Sources */,
+				F6034C45172DAA2E002802F2 /* Employee.m in Sources */,
+				F6034C48172DAA8E002802F2 /* Chef.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
