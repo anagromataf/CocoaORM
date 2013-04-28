@@ -338,6 +338,80 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
     }
 }
 
+#pragma mark Enumerate ORM Objects
+
++ (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
+                                error:(NSError **)error
+                           enumerator:(void(^)(int64_t pk, Class klass, BOOL *stop))enumerator
+{
+    return [self enumerateORMObjectsInDatabase:database
+                            fetchingProperties:@[]
+                                         error:error
+                                    enumerator:^(int64_t pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
+                                        enumerator(pk, klass, stop);
+                                    }];
+}
+
++ (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
+                   fetchingProperties:(NSArray *)propertyNames
+                                error:(NSError **)error
+                           enumerator:(void(^)(int64_t pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator
+{
+    return [self enumerateORMObjectsInDatabase:database
+                             matchingCondition:nil
+                                 withArguments:nil
+                            fetchingProperties:propertyNames
+                                         error:error
+                                    enumerator:enumerator];
+}
+
++ (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
+                    matchingCondition:(NSString *)condition
+                        withArguments:(NSDictionary *)arguments
+                   fetchingProperties:(NSArray *)propertyNames
+                                error:(NSError **)error
+                           enumerator:(void (^)(int64_t pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator
+{
+    if (propertyNames == nil) {
+        propertyNames = @[];
+    }
+    
+    NSArray *classes = [[[self ORMClassHierarchy] reverseObjectEnumerator] allObjects];
+    
+    NSString *statement = [NSString stringWithFormat:@"SELECT %@ FROM %@",
+                           [[propertyNames arrayByAddingObjectsFromArray:@[@"_id", @"_class"]] componentsJoinedByString:@", "],
+                           [classes componentsJoinedByString:@" NATURAL JOIN "]];
+    
+    if (condition) {
+        statement = [statement stringByAppendingFormat:@" WHERE %@", condition];
+    }
+    
+    NSLog(@"SQL: %@", statement);
+    
+    FMResultSet *result = [database executeQuery:statement withParameterDictionary:arguments];
+    if (result) {
+        
+        BOOL stop = NO;
+        while (stop || [result next]) {
+            int64_t pk = [[result objectForColumnName:@"_id"] integerValue];
+            Class klass = NSClassFromString([result objectForColumnName:@"_class"]);
+            
+            NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+            [propertyNames enumerateObjectsUsingBlock:^(NSString *name, NSUInteger idx, BOOL *stop) {
+                id value = [result objectForColumnName:name];
+                [properties setObject:value forKey:name];
+            }];
+            enumerator(pk, klass, properties, &stop);
+        }
+        
+        return YES;
+    } else {
+        if (error) {
+            *error = database.lastError;
+        }
+        return NO;
+    }
+}
 
 @end
 

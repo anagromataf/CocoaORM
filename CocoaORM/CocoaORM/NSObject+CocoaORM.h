@@ -59,6 +59,24 @@
                                                 error:(NSError **)error
                                includeSuperProperties:(BOOL)includeSuperProperties;
 
+#pragma mark Enumerate ORM Objects
+
++ (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
+                                error:(NSError **)error
+                           enumerator:(void(^)(int64_t pk, Class klass, BOOL *stop))enumerator;
+
++ (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
+                   fetchingProperties:(NSArray *)propertyNames
+                                error:(NSError **)error
+                           enumerator:(void(^)(int64_t pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
+
++ (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
+                    matchingCondition:(NSString *)condition
+                        withArguments:(NSDictionary *)arguments
+                   fetchingProperties:(NSArray *)propertyNames
+                                error:(NSError **)error
+                           enumerator:(void (^)(int64_t pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
+
 @end
 
 ORMAttributeDescription * ORMAttribute(Class, NSString *name);

@@ -27,6 +27,7 @@
 		F6509EA9172DAD85002A3067 /* ORMStore.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EA7172DAD85002A3067 /* ORMStore.m */; };
 		F6509EAC172DB072002A3067 /* CocoaORMTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EAB172DB072002A3067 /* CocoaORMTestCase.m */; };
 		F6509EAF172DB118002A3067 /* CocoaORMPropertiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EAE172DB118002A3067 /* CocoaORMPropertiesTests.m */; };
+		F6509EB2172DB757002A3067 /* CocoaORMEnumeratorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EB1172DB757002A3067 /* CocoaORMEnumeratorTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,8 @@
 		F6509EAB172DB072002A3067 /* CocoaORMTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMTestCase.m; sourceTree = "<group>"; };
 		F6509EAD172DB118002A3067 /* CocoaORMPropertiesTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMPropertiesTests.h; sourceTree = "<group>"; };
 		F6509EAE172DB118002A3067 /* CocoaORMPropertiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMPropertiesTests.m; sourceTree = "<group>"; };
+		F6509EB0172DB757002A3067 /* CocoaORMEnumeratorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMEnumeratorTests.h; sourceTree = "<group>"; };
+		F6509EB1172DB757002A3067 /* CocoaORMEnumeratorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMEnumeratorTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +182,8 @@
 				F6509EA0172DACF8002A3067 /* CocoaORMSchemaTests.m */,
 				F6509EAD172DB118002A3067 /* CocoaORMPropertiesTests.h */,
 				F6509EAE172DB118002A3067 /* CocoaORMPropertiesTests.m */,
+				F6509EB0172DB757002A3067 /* CocoaORMEnumeratorTests.h */,
+				F6509EB1172DB757002A3067 /* CocoaORMEnumeratorTests.m */,
 				F6034C27172DA2C4002802F2 /* Supporting Files */,
 			);
 			path = CocoaORMTests;
@@ -402,6 +407,7 @@
 				F6509EA1172DACF8002A3067 /* CocoaORMSchemaTests.m in Sources */,
 				F6509EAC172DB072002A3067 /* CocoaORMTestCase.m in Sources */,
 				F6509EAF172DB118002A3067 /* CocoaORMPropertiesTests.m in Sources */,
+				F6509EB2172DB757002A3067 /* CocoaORMEnumeratorTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
