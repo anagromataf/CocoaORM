@@ -1,5 +1,5 @@
 //
-//  CocoaORMSchemaTests.m
+//  CocoaORMDatabaseSchemataTests.m
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
@@ -10,9 +10,9 @@
 #import <FMDB/FMDatabase.h>
 #import <FMDB/FMDatabaseAdditions.h>
 
-#import "CocoaORMSchemaTests.h"
+#import "CocoaORMDatabaseSchemataTests.h"
 
-@implementation CocoaORMSchemaTests
+@implementation CocoaORMDatabaseSchemataTests
 
 - (void)testSetupSchemata
 {

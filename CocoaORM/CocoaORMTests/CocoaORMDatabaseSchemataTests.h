@@ -1,5 +1,5 @@
 //
-//  CocoaORMPropertiesTests.h
+//  CocoaORMDatabaseSchemataTests.h
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
@@ -8,6 +8,6 @@
 
 #import "CocoaORMTestCase.h"
 
-@interface CocoaORMPropertiesTests : CocoaORMTestCase
+@interface CocoaORMDatabaseSchemataTests : CocoaORMTestCase
 
 @end

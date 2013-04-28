@@ -1,14 +1,14 @@
 //
-//  CocoaORMPropertiesTests.m
+//  CocoaORMDatabasePropertyTests.m
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import "CocoaORMPropertiesTests.h"
+#import "CocoaORMDatabasePropertyTests.h"
 
-@implementation CocoaORMPropertiesTests
+@implementation CocoaORMDatabasePropertyTests
 
 #pragma mark Test Insert, Update & Delete Properties
 
@@ -161,7 +161,6 @@
         };
     }];
 }
-
 #pragma mark Test Get Properties
 
 - (void)testGetProperties

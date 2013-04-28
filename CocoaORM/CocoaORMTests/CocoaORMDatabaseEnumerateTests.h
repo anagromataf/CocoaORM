@@ -1,5 +1,5 @@
 //
-//  CocoaORMEnumeratorTests.h
+//  CocoaORMDatabaseEnumerateTests.h
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
@@ -8,6 +8,6 @@
 
 #import "CocoaORMTestCase.h"
 
-@interface CocoaORMEnumeratorTests : CocoaORMTestCase
+@interface CocoaORMDatabaseEnumerateTests : CocoaORMTestCase
 
 @end

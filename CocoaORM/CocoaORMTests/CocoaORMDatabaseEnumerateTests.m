@@ -1,19 +1,19 @@
 //
-//  CocoaORMEnumeratorTests.m
+//  CocoaORMDatabaseEnumerateTests.m
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import "CocoaORMEnumeratorTests.h"
+#import "CocoaORMDatabaseEnumerateTests.h"
 
-@interface CocoaORMEnumeratorTests ()
+@interface CocoaORMDatabaseEnumerateTests ()
 @property (nonatomic, assign) int64_t employeePK;
 @property (nonatomic, assign) int64_t personPK;
 @end
 
-@implementation CocoaORMEnumeratorTests
+@implementation CocoaORMDatabaseEnumerateTests
 
 - (void)setUp
 {
