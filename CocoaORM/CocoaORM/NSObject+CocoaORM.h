@@ -24,6 +24,7 @@
 + (NSDictionary *)allORMProperties;
 
 #pragma mark ORM Values
+@property (nonatomic, readonly) NSDictionary *changedORMValues;
 - (id)ORMValueForKey:(NSString *)key;
 - (void)setORMValue:(id)value forKey:(NSString *)key;
 

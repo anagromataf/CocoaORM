@@ -75,17 +75,62 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
     return propertyDescriptions;
 }
 
+#pragma mark Persistent & Temporary ORM Values
+
+- (NSMutableDictionary *)persistentORMValues
+{
+    NSMutableDictionary *cache = objc_getAssociatedObject(self, _cmd);
+    if (cache == nil) {
+        cache = [[NSMutableDictionary alloc] init];
+        objc_setAssociatedObject(self, _cmd, cache, OBJC_ASSOCIATION_RETAIN);
+    }
+    return cache;
+}
+
+- (NSMutableDictionary *)temporaryORMValues
+{
+    NSMutableDictionary *cache = objc_getAssociatedObject(self, _cmd);
+    if (cache == nil) {
+        cache = [[NSMutableDictionary alloc] init];
+        objc_setAssociatedObject(self, _cmd, cache, OBJC_ASSOCIATION_RETAIN);
+    }
+    return cache;
+}
+
 #pragma mark ORM Values
 
-- (id)ORMValueForKey:(NSString *)key;
+- (NSDictionary *)changedORMValues
 {
-    return nil;
+    return [[self temporaryORMValues] copy];
 }
 
-- (void)setORMValue:(id)value forKey:(NSString *)key;
+- (void)setORMValue:(id)value forKey:(NSString *)key
 {
+    if (value == nil) {
+        if ([[self persistentORMValues] objectForKey:key]) {
+            [[self temporaryORMValues] setObject:[NSNull null] forKey:key];
+        } else {
+            [[self temporaryORMValues] removeObjectForKey:key];
+        }
+    }
+    [[self temporaryORMValues] setObject:value forKey:key];
 }
 
+- (id)ORMValueForKey:(NSString *)key
+{
+    id value = [[self temporaryORMValues] objectForKey:key];
+    if (!value) {
+        value = [[self persistentORMValues] objectForKey:key];
+    }
+    
+    if ([value isEqual:[NSNull null]]) {
+        return nil;
+    } else {
+        return value;
+    }
+}
+
+#pragma mark -
 #pragma mark Setup ORM Schema
 
 + (BOOL)setupORMSchemataInDatabase:(FMDatabase *)database
