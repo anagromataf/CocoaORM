@@ -26,12 +26,12 @@
         // Insert Properties
         
         NSDictionary *properties = @{@"firstName":@"Jim",
-                                      @"lastName":@"Example",
-                                      @"position":@"CEO"};
+                                     @"lastName":@"Example",
+                                     @"position":@"CEO"};
         
-        int64_t pk = [Employee insertORMObjectProperties:properties
-                                            intoDatabase:db
-                                                   error:&error];
+        ORMPrimaryKey pk = [Employee insertORMObjectProperties:properties
+                                                  intoDatabase:db
+                                                         error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
         
         return ^(NSError *error) {
@@ -88,9 +88,9 @@
                                      @"position":@"CEO"
                                      };
         
-        int64_t pk = [Employee insertORMObjectProperties:properties
-                                            intoDatabase:db
-                                                   error:&error];
+        ORMPrimaryKey pk = [Employee insertORMObjectProperties:properties
+                                                  intoDatabase:db
+                                                         error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
         
         // Update Properties
@@ -134,9 +134,9 @@
                                      @"position":@"CEO"
                                      };
         
-        int64_t pk = [Employee insertORMObjectProperties:properties
-                                            intoDatabase:db
-                                                   error:&error];
+        ORMPrimaryKey pk = [Employee insertORMObjectProperties:properties
+                                                  intoDatabase:db
+                                                         error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
         
         // Delete Properties
@@ -177,11 +177,11 @@
         // Insert Properties
         
         NSDictionary *properties = @{@"firstName":@"Jim",
-                                      @"lastName":@"Example",
-                                      @"position":@"CEO"};
-        int64_t pk = [Employee insertORMObjectProperties:properties
-                                       intoDatabase:db
-                                              error:&error];
+                                     @"lastName":@"Example",
+                                     @"position":@"CEO"};
+        ORMPrimaryKey pk = [Employee insertORMObjectProperties:properties
+                                                  intoDatabase:db
+                                                         error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
         
         return ^(NSError *error) {

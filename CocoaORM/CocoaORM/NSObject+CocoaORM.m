@@ -216,9 +216,9 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
 
 #pragma mark Insert and Update Properties
 
-+ (int64_t)insertORMObjectProperties:(NSDictionary *)properties
-                        intoDatabase:(FMDatabase *)database
-                               error:(NSError **)error
++ (ORMPrimaryKey)insertORMObjectProperties:(NSDictionary *)properties
+                              intoDatabase:(FMDatabase *)database
+                                     error:(NSError **)error
 {
     if ([properties objectForKey:@"_class"] == nil) {
         NSMutableDictionary *_properties = [properties mutableCopy];
@@ -284,7 +284,7 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
 }
 
 
-+ (BOOL)updateORMObjectWithPrimaryKey:(int64_t)pk
++ (BOOL)updateORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                        withProperties:(NSDictionary *)properties
                            inDatabase:(FMDatabase *)database
                                 error:(NSError **)error
@@ -332,7 +332,7 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
     return YES;
 }
 
-+ (BOOL)deleteORMObjectWithPrimaryKey:(int64_t)pk
++ (BOOL)deleteORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                            inDatabase:(FMDatabase *)database
                                 error:(NSError **)error
 {
@@ -357,14 +357,14 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
 
 #pragma mark Get Properties
 
-+ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(int64_t)pk
++ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                                            inDatabase:(FMDatabase *)database
                                                 error:(NSError **)error
 {
     return [self propertiesOfORMObjectWithPrimaryKey:pk inDatabase:database error:error includeSuperProperties:NO];
 }
 
-+ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(int64_t)pk
++ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                                            inDatabase:(FMDatabase *)database
                                                 error:(NSError **)error
                                includeSuperProperties:(BOOL)includeSuperProperties
@@ -412,12 +412,12 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
 
 + (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
                                 error:(NSError **)error
-                           enumerator:(void(^)(int64_t pk, Class klass, BOOL *stop))enumerator
+                           enumerator:(void(^)(ORMPrimaryKey pk, Class klass, BOOL *stop))enumerator
 {
     return [self enumerateORMObjectsInDatabase:database
                             fetchingProperties:@[]
                                          error:error
-                                    enumerator:^(int64_t pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
+                                    enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
                                         enumerator(pk, klass, stop);
                                     }];
 }
@@ -425,7 +425,7 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
 + (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
                    fetchingProperties:(NSArray *)propertyNames
                                 error:(NSError **)error
-                           enumerator:(void(^)(int64_t pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator
+                           enumerator:(void(^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator
 {
     return [self enumerateORMObjectsInDatabase:database
                              matchingCondition:nil
@@ -440,7 +440,7 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
                         withArguments:(NSDictionary *)arguments
                    fetchingProperties:(NSArray *)propertyNames
                                 error:(NSError **)error
-                           enumerator:(void (^)(int64_t pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator
+                           enumerator:(void (^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator
 {
     if (propertyNames == nil) {
         propertyNames = @[];
@@ -463,7 +463,7 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
         
         BOOL stop = NO;
         while (stop || [result next]) {
-            int64_t pk = [[result objectForColumnName:@"_id"] integerValue];
+            ORMPrimaryKey pk = [[result objectForColumnName:@"_id"] integerValue];
             Class klass = NSClassFromString([result objectForColumnName:@"_class"]);
             
             NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];

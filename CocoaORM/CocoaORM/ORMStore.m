@@ -78,7 +78,7 @@
         // Insert Objects into Database
         if (!_rollback) {
             [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
-
+                
                 ORMPrimaryKey pk = [[obj class] insertORMObjectProperties:[obj changedORMValues]
                                                              intoDatabase:self.db
                                                                     error:&error];

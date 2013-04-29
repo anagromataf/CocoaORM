@@ -43,26 +43,26 @@
 
 #pragma mark Insert, Update & Delete Properties
 
-+ (int64_t)insertORMObjectProperties:(NSDictionary *)properties
-                        intoDatabase:(FMDatabase *)database
-                               error:(NSError **)error;
++ (ORMPrimaryKey)insertORMObjectProperties:(NSDictionary *)properties
+                              intoDatabase:(FMDatabase *)database
+                                     error:(NSError **)error;
 
-+ (BOOL)updateORMObjectWithPrimaryKey:(int64_t)pk
++ (BOOL)updateORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                        withProperties:(NSDictionary *)properties
                            inDatabase:(FMDatabase *)database
                                 error:(NSError **)error;
 
-+ (BOOL)deleteORMObjectWithPrimaryKey:(int64_t)pk
++ (BOOL)deleteORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                            inDatabase:(FMDatabase *)database
                                 error:(NSError **)error;
 
 #pragma mark Get Properties
 
-+ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(int64_t)pk
++ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                                            inDatabase:(FMDatabase *)database
                                                 error:(NSError **)error;
 
-+ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(int64_t)pk
++ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                                            inDatabase:(FMDatabase *)database
                                                 error:(NSError **)error
                                includeSuperProperties:(BOOL)includeSuperProperties;
@@ -71,19 +71,19 @@
 
 + (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
                                 error:(NSError **)error
-                           enumerator:(void(^)(int64_t pk, Class klass, BOOL *stop))enumerator;
+                           enumerator:(void(^)(ORMPrimaryKey pk, Class klass, BOOL *stop))enumerator;
 
 + (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
                    fetchingProperties:(NSArray *)propertyNames
                                 error:(NSError **)error
-                           enumerator:(void(^)(int64_t pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
+                           enumerator:(void(^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
 
 + (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
                     matchingCondition:(NSString *)condition
                         withArguments:(NSDictionary *)arguments
                    fetchingProperties:(NSArray *)propertyNames
                                 error:(NSError **)error
-                           enumerator:(void (^)(int64_t pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
+                           enumerator:(void (^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
 
 @end
 

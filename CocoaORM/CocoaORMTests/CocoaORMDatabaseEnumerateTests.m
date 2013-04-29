@@ -9,8 +9,8 @@
 #import "CocoaORMDatabaseEnumerateTests.h"
 
 @interface CocoaORMDatabaseEnumerateTests ()
-@property (nonatomic, assign) int64_t employeePK;
-@property (nonatomic, assign) int64_t personPK;
+@property (nonatomic, assign) ORMPrimaryKey employeePK;
+@property (nonatomic, assign) ORMPrimaryKey personPK;
 @end
 
 @implementation CocoaORMDatabaseEnumerateTests
@@ -43,8 +43,8 @@
         NSDictionary *properties2 = @{@"firstName":@"John",
                                       @"lastName":@"Example"};
         self.personPK = [Person insertORMObjectProperties:properties2
-                                           intoDatabase:db
-                                                  error:&error];
+                                             intoDatabase:db
+                                                    error:&error];
         STAssertTrue(self.personPK, [error localizedDescription]);
         
         return ^(NSError *error) {
@@ -64,11 +64,11 @@
         
         NSError *error = nil;
         BOOL success = [Person enumerateORMObjectsInDatabase:db
-                                                        error:&error
-                                                    enumerator:^(int64_t pk, __unsafe_unretained Class klass, BOOL *stop) {
-                                                        [primaryKeys addObject:@(pk)];
-                                                        [classes addObject:klass];
-                                                    }];
+                                                       error:&error
+                                                  enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
+                                                      [primaryKeys addObject:@(pk)];
+                                                      [classes addObject:klass];
+                                                  }];
         STAssertTrue(success, [error localizedDescription]);
         
         NSSet *_p = [NSSet setWithObjects:@(self.employeePK), @(self.personPK), nil];
@@ -92,7 +92,7 @@
         BOOL success = [Person enumerateORMObjectsInDatabase:db
                                           fetchingProperties:@[@"lastName"]
                                                        error:&error
-                                                  enumerator:^(int64_t pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
+                                                  enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
                                                       [primaryKeys addObject:@(pk)];
                                                       [classes addObject:klass];
                                                       STAssertEqualObjects(properties, @{@"lastName":@"Example"}, nil);
@@ -113,9 +113,9 @@
 {
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         NSError *error = nil;
-        int64_t pk = [Person insertORMObjectProperties:@{@"firstName":@"John",  @"lastName":@"Tester"}
-                                          intoDatabase:db
-                                                 error:&error];
+        ORMPrimaryKey pk = [Person insertORMObjectProperties:@{@"firstName":@"John",  @"lastName":@"Tester"}
+                                                intoDatabase:db
+                                                       error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
         return nil;
     }];
@@ -128,9 +128,9 @@
                                                withArguments:@{@"lastName":@"Example"}
                                           fetchingProperties:@[@"lastName"]
                                                        error:&error
-                                                  enumerator:^(int64_t pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
+                                                  enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
                                                       STAssertEqualObjects(properties, @{@"lastName":@"Example"}, nil);
-                                               }];
+                                                  }];
         STAssertTrue(success, [error localizedDescription]);
         
         return nil;

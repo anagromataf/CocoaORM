@@ -9,7 +9,7 @@
 #import "CocoaORMDatabaseRollbackTests.h"
 
 @interface CocoaORMDatabaseRollbackTests ()
-@property (nonatomic, assign) int64_t employeePK;
+@property (nonatomic, assign) ORMPrimaryKey employeePK;
 @end
 
 @implementation CocoaORMDatabaseRollbackTests
