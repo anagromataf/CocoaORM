@@ -18,9 +18,10 @@
 
 NSString * const NSObjectORMValuesDidChangeNotification = @"NSObjectORMValuesDidChangeNotification";
 
-const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptionsKey";
-const char * NSObjectORMObjectIDKey             = "NSObjectORMObjectIDKey";
-const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
+const char * NSObjectORMPropertyDescriptionsKey         = "NSObjectORMPropertyDescriptionsKey";
+const char * NSObjectORMUniqueTogetherPropertyNamesKey  = "NSObjectORMUniqueTogetherPropertyNamesKey";
+const char * NSObjectORMObjectIDKey                     = "NSObjectORMObjectIDKey";
+const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
 
 @implementation NSObject (CocoaORM)
 
@@ -64,6 +65,22 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
     }
 }
 
++ (NSSet *)ORMUniqueConstraints
+{
+    return [[self ORMUniqueTogetherPropertyNames] copy];
+}
+
++ (NSSet *)allORMUniqueConstraints
+{
+    if ([[self superclass] isORMClass]) {
+        NSMutableSet *constraints = [[[self superclass] allORMUniqueConstraints] mutableCopy];
+        [constraints unionSet:[self ORMUniqueConstraints]];
+        return constraints;
+    } else {
+        return [self ORMUniqueConstraints];
+    }
+}
+
 #pragma mark ORM Property Descriptions
 
 + (NSMutableDictionary *)ORMPropertyDescriptions
@@ -77,6 +94,21 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
                                  OBJC_ASSOCIATION_RETAIN);
     }
     return propertyDescriptions;
+}
+
+#pragma mark Unique Property Names
+
++ (NSMutableSet *)ORMUniqueTogetherPropertyNames
+{
+    NSMutableSet *uniqueNames = objc_getAssociatedObject(self, NSObjectORMUniqueTogetherPropertyNamesKey);
+    if (!uniqueNames) {
+        uniqueNames = [[NSMutableSet alloc] init];
+        objc_setAssociatedObject(self,
+                                 NSObjectORMUniqueTogetherPropertyNamesKey,
+                                 uniqueNames,
+                                 OBJC_ASSOCIATION_RETAIN);
+    }
+    return uniqueNames;
 }
 
 #pragma mark ORM Object ID & Store
@@ -199,6 +231,10 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
                 }
                 
                 [columns addObject:[column componentsJoinedByString:@" "]];
+            }];
+            
+            [[self ORMUniqueConstraints] enumerateObjectsUsingBlock:^(NSSet *propertyNames, BOOL *stop) {
+                [columns addObject:[NSString stringWithFormat:@"UNIQUE (%@)", [[propertyNames allObjects] componentsJoinedByString:@", "]]];
             }];
             
             NSString *statement = [NSString stringWithFormat:@"CREATE TABLE %@ (%@)",
@@ -536,4 +572,10 @@ ORMAttribute(Class _class, NSString *name)
     }), "v@:@");
     
     return attribute;
+}
+
+void
+ORMUnique(Class klass, NSArray *propertyNames)
+{
+    [[klass ORMUniqueTogetherPropertyNames] addObject:[NSSet setWithArray:propertyNames]];
 }

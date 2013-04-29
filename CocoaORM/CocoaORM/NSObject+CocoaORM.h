@@ -27,6 +27,8 @@ extern NSString * const NSObjectORMValuesDidChangeNotification;
 + (NSArray *)ORMClassHierarchy;
 + (NSDictionary *)ORMProperties;
 + (NSDictionary *)allORMProperties;
++ (NSSet *)ORMUniqueConstraints;
++ (NSSet *)allORMUniqueConstraints;
 
 #pragma mark ORM Object ID & Store
 @property (nonatomic, readonly) ORMObjectID *ORMObjectID;
@@ -89,4 +91,5 @@ extern NSString * const NSObjectORMValuesDidChangeNotification;
 
 @end
 
-ORMAttributeDescription * ORMAttribute(Class, NSString *name);
+ORMAttributeDescription * ORMAttribute(Class klass, NSString *name);
+void ORMUnique(Class klass, NSArray *propertyNames);

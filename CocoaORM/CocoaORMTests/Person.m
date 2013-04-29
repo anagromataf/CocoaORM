@@ -16,6 +16,7 @@
 {
     ORMAttribute(self, @"firstName").text().notNull();
     ORMAttribute(self, @"lastName").text().notNull();
+    ORMUnique(self, @[@"firstName", @"lastName"]);
 }
 
 @dynamic firstName;

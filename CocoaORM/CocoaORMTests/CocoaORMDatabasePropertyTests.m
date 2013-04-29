@@ -27,7 +27,8 @@
         
         NSDictionary *properties = @{@"firstName":@"Jim",
                                      @"lastName":@"Example",
-                                     @"position":@"CEO"};
+                                     @"position":@"CEO",
+                                     @"employeeID":@(12)};
         
         ORMPrimaryKey pk = [Employee insertORMObjectProperties:properties
                                                   intoDatabase:db
@@ -56,12 +57,13 @@
             result = [db executeQuery:@"SELECT * FROM Employee WHERE _id = :_id" withParameterDictionary:@{@"_id":@(pk)}];
             STAssertNotNil(result, [db.lastError localizedDescription]);
             
-            STAssertEquals([result columnCount], 3, nil);
+            STAssertEquals([result columnCount], 4, nil);
             
             STAssertTrue([result next], nil);
             STAssertEqualObjects([result objectForColumnName:@"_id"], @(pk), nil);
             STAssertEqualObjects([result objectForColumnName:@"position"], @"CEO", nil);
             STAssertEqualObjects([result objectForColumnName:@"fired"], [NSNull null], nil);
+            STAssertEqualObjects([result objectForColumnName:@"employeeID"], @(12), nil);
             
             STAssertFalse([result next], nil);
         };
@@ -178,7 +180,8 @@
         
         NSDictionary *properties = @{@"firstName":@"Jim",
                                      @"lastName":@"Example",
-                                     @"position":@"CEO"};
+                                     @"position":@"CEO",
+                                     @"employeeID":@(12)};
         ORMPrimaryKey pk = [Employee insertORMObjectProperties:properties
                                                   intoDatabase:db
                                                          error:&error];
@@ -206,7 +209,7 @@
                                                                                        error:&_error];
             STAssertNotNil(employeeProperties, [_error localizedDescription]);
             
-            NSDictionary *_ep = @{@"position":@"CEO", @"fired":[NSNull null]};
+            NSDictionary *_ep = @{@"position":@"CEO", @"fired":[NSNull null], @"employeeID":@(12)};
             STAssertEqualObjects(employeeProperties, _ep, nil);
             
             // All Properties
@@ -217,8 +220,106 @@
                                                                  includeSuperProperties:YES];
             STAssertNotNil(allProperties, [_error localizedDescription]);
             
-            NSDictionary *_ap = @{@"firstName":@"Jim", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null]};
+            NSDictionary *_ap = @{@"firstName":@"Jim", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null], @"employeeID":@(12)};
             STAssertEqualObjects(allProperties, _ap, nil);
+        };
+    }];
+}
+
+#pragma mark Test Unique Constraint
+
+- (void)testUniqueConstraint
+{
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+        
+        NSError *error = nil;
+        
+        // Setup Schemata
+        
+        BOOL success = [Employee setupORMSchemataInDatabase:db error:&error];
+        STAssertTrue(success, [error localizedDescription]);
+        
+        // Insert Properties
+        
+        NSDictionary *properties = @{@"firstName":@"Jim",
+                                     @"lastName":@"Example",
+                                     @"position":@"CEO",
+                                     @"employeeID":@(12)};
+        
+        ORMPrimaryKey pk = [Employee insertORMObjectProperties:properties
+                                                  intoDatabase:db
+                                                         error:&error];
+        STAssertTrue(pk != 0, [error localizedDescription]);
+        
+        return ^(NSError *error) {
+            STAssertNil(error, [error localizedDescription]);
+        };
+    }];
+    
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+        
+        NSError *error = nil;
+        
+        // Insert Properties
+        
+        NSDictionary *properties = @{@"firstName":@"John",
+                                     @"lastName":@"Example",
+                                     @"position":@"CEO",
+                                     @"employeeID":@(12)};
+        
+        ORMPrimaryKey pk = [Employee insertORMObjectProperties:properties
+                                                  intoDatabase:db
+                                                         error:&error];
+        STAssertTrue(pk == 0, nil);
+        
+        return ^(NSError *error) {
+            STAssertNil(error, [error localizedDescription]);
+        };
+    }];
+}
+
+- (void)testUniqueTogetherConstraint
+{
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+        
+        NSError *error = nil;
+        
+        // Setup Schemata
+        
+        BOOL success = [Person setupORMSchemataInDatabase:db error:&error];
+        STAssertTrue(success, [error localizedDescription]);
+        
+        // Insert Properties
+        
+        NSDictionary *properties = @{@"firstName":@"Jim",
+                                     @"lastName":@"Example"};
+        
+        ORMPrimaryKey pk = [Person insertORMObjectProperties:properties
+                                                intoDatabase:db
+                                                       error:&error];
+        STAssertTrue(pk != 0, [error localizedDescription]);
+        
+        return ^(NSError *error) {
+            STAssertNil(error, [error localizedDescription]);
+        };
+    }];
+    
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+        
+        NSError *error = nil;
+        
+        // Insert Properties
+        
+        NSDictionary *properties = @{@"firstName":@"Jim",
+                                     @"lastName":@"Example"};
+        
+        ORMPrimaryKey pk = [Person insertORMObjectProperties:properties
+                                                intoDatabase:db
+                                                       error:&error];
+        STAssertTrue(pk == 0, nil);
+        
+        return ^(NSError *error) {
+            STAssertNil(error, [error localizedDescription]);
         };
     }];
 }

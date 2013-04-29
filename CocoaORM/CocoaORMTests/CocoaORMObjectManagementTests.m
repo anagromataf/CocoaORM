@@ -41,7 +41,7 @@
                                                              includeSuperProperties:YES];
         STAssertNotNil(allProperties, [error localizedDescription]);
         
-        NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null]};
+        NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null], @"employeeID":[NSNull null]};
         STAssertEqualObjects(allProperties, p, nil);
         
         return nil;
@@ -84,7 +84,7 @@
                                                              includeSuperProperties:YES];
         STAssertNotNil(allProperties, [error localizedDescription]);
         
-        NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":@YES};
+        NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":@YES, @"employeeID":[NSNull null]};
         STAssertEqualObjects(allProperties, p, nil);
         
         return nil;
@@ -128,7 +128,7 @@
                                                              includeSuperProperties:YES];
         STAssertNotNil(allProperties, [error localizedDescription]);
         
-        NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null]};
+        NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null], @"employeeID":[NSNull null]};
         STAssertEqualObjects(allProperties, p, nil);
         
         return nil;
