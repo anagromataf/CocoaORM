@@ -17,6 +17,8 @@
 @property (nonatomic, readonly) FMDatabase *db;
 
 @property (nonatomic, readonly) NSMutableSet *insertedObjects;
+@property (nonatomic, readonly) NSMutableSet *changedObjects;
+
 @property (nonatomic, readonly) NSMutableSet *managedObjects;
 @property (nonatomic, readonly) NSMutableSet *managedClasses;
 @end
@@ -31,6 +33,7 @@
     if (self) {
         
         _insertedObjects = [[NSMutableSet alloc] init];
+        _changedObjects = [[NSMutableSet alloc] init];
         _managedObjects = [[NSMutableSet alloc] init];
         _managedClasses = [[NSMutableSet alloc] init];
         
@@ -45,6 +48,11 @@
         NSAssert(success, @"Coud not enable foreign key support: %@", [_db.lastError localizedDescription]);
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark Transactions
@@ -80,7 +88,7 @@
             [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
                 
                 ORMPrimaryKey pk = [[obj class] insertORMObjectProperties:[obj changedORMValues]
-                                                             intoDatabase:self.db
+                                                             intoDatabase:db
                                                                     error:&error];
                 if (pk) {
                     obj.ORMObjectID = [[ORMObjectID alloc] initWithClass:[obj class] primaryKey:pk];
@@ -89,6 +97,20 @@
                     *stop = YES;
                     _rollback = YES;
                 }
+            }];
+        }
+        
+        // Update Objects in Database
+        if (!_rollback) {
+            [self.changedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+                
+                BOOL success = [[obj class] updateORMObjectWithPrimaryKey:obj.ORMObjectID.primaryKey
+                                                           withProperties:[obj changedORMValues]
+                                                               inDatabase:db
+                                                                    error:&error];
+                
+                *stop = !success;
+                _rollback = !success;
             }];
         }
         
@@ -129,23 +151,46 @@
 
 - (void)applyChanges
 {
+    // Insert
     [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
         [obj applyChangedORMValues];
         [self.managedObjects addObject:obj];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(objectORMValuesDidChange:)
+                                                     name:NSObjectORMValuesDidChangeNotification
+                                                   object:obj];
     }];
-    
     [self.insertedObjects removeAllObjects];
+
+    // Update
+    [self.changedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+        [obj applyChangedORMValues];
+    }];
+    [self.changedObjects removeAllObjects];
 }
 
 - (void)resetChanges
 {
+    // Insert
     [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
         [obj resetChangedORMValues];
         obj.ORMObjectID = nil;
         obj.ORMStore = nil;
     }];
-    
     [self.insertedObjects removeAllObjects];
+    
+    // Update
+    [self.changedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+        [obj resetChangedORMValues];
+    }];
+    [self.changedObjects removeAllObjects];
+}
+
+#pragma mark Handle Object Change Notification
+
+- (void)objectORMValuesDidChange:(NSNotification *)aNotification
+{
+    [self.changedObjects addObject:aNotification.object];
 }
 
 #pragma mark Setup Schemata

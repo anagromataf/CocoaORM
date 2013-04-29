@@ -18,6 +18,8 @@
 #import "ORMStore.h"
 #import "ORMAttributeDescription.h"
 
+extern NSString * const NSObjectORMValuesDidChangeNotification;
+
 @interface NSObject (CocoaORM)
 
 #pragma mark ORM Descriptions

@@ -16,6 +16,7 @@
 #import "NSObject+CocoaORM.h"
 #import "NSObject+CocoaORMPrivate.h"
 
+NSString * const NSObjectORMValuesDidChangeNotification = @"NSObjectORMValuesDidChangeNotification";
 
 const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptionsKey";
 const char * NSObjectORMObjectIDKey             = "NSObjectORMObjectIDKey";
@@ -139,6 +140,8 @@ const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
         }
     }
     [[self temporaryORMValues] setObject:value forKey:key];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSObjectORMValuesDidChangeNotification object:self];
 }
 
 - (id)ORMValueForKey:(NSString *)key
