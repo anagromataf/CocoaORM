@@ -92,4 +92,4 @@ extern NSString * const NSObjectORMValuesDidChangeNotification;
 @end
 
 ORMAttributeDescription * ORMAttribute(Class klass, NSString *name);
-void ORMUnique(Class klass, NSArray *propertyNames);
+void ORMUniqueTogether(Class klass, NSArray *propertyNames);

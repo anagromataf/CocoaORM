@@ -581,7 +581,7 @@ ORMAttribute(Class _class, NSString *name)
 }
 
 void
-ORMUnique(Class klass, NSArray *propertyNames)
+ORMUniqueTogether(Class klass, NSArray *propertyNames)
 {
     [[klass ORMUniqueTogetherPropertyNames] addObject:[NSSet setWithArray:propertyNames]];
 }
