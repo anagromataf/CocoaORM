@@ -135,4 +135,51 @@
     }];
 }
 
+- (void)testDeleteObject
+{
+    __block Employee *employee = nil;
+    
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+        
+        employee = [[Employee alloc] init];
+        
+        employee.firstName = @"John";
+        employee.lastName = @"Example";
+        employee.position = @"CEO";
+        
+        [self.store insertObject:employee];
+        
+        return ^(NSError *error){
+            STAssertNil(error, [error localizedDescription]);
+        };
+    }];
+    
+    ORMPrimaryKey pk = employee.ORMObjectID.primaryKey;
+    
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+        
+        [self.store deleteObject:employee];
+        
+        return nil;
+    }];
+    
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+        
+        NSError *error = nil;
+        NSDictionary *properties = [Employee propertiesOfORMObjectWithPrimaryKey:pk
+                                                                      inDatabase:db                                                                              error:&error];
+        STAssertNil(error, [error localizedDescription]);
+        STAssertNil(properties, nil);
+        
+        STAssertNil(employee.ORMObjectID, nil);
+        STAssertNil(employee.ORMStore, nil);
+        
+        STAssertEqualObjects(employee.firstName, @"John", nil);
+        STAssertEqualObjects(employee.lastName, @"Example", nil);
+        STAssertEqualObjects(employee.position, @"CEO", nil);
+        
+        return nil;
+    }];
+}
+
 @end

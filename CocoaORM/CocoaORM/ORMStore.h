@@ -20,5 +20,6 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 
 #pragma mark Object Management
 - (void)insertObject:(NSObject *)object;
+- (void)deleteObject:(NSObject *)object;
 
 @end

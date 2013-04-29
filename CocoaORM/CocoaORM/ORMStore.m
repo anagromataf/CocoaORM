@@ -18,6 +18,7 @@
 
 @property (nonatomic, readonly) NSMutableSet *insertedObjects;
 @property (nonatomic, readonly) NSMutableSet *changedObjects;
+@property (nonatomic, readonly) NSMutableSet *deletedObjects;
 
 @property (nonatomic, readonly) NSMutableSet *managedObjects;
 @property (nonatomic, readonly) NSMutableSet *managedClasses;
@@ -34,6 +35,7 @@
         
         _insertedObjects = [[NSMutableSet alloc] init];
         _changedObjects = [[NSMutableSet alloc] init];
+        _deletedObjects = [[NSMutableSet alloc] init];
         _managedObjects = [[NSMutableSet alloc] init];
         _managedClasses = [[NSMutableSet alloc] init];
         
@@ -114,6 +116,18 @@
             }];
         }
         
+        // Delete Objects in Database
+        if (!_rollback) {
+            [self.deletedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+                BOOL success = [[obj class] deleteORMObjectWithPrimaryKey:obj.ORMObjectID.primaryKey
+                                                               inDatabase:db
+                                                                    error:&error];
+            
+                *stop = !success;
+                _rollback = !success;
+            }];
+        }
+        
         *rollback = _rollback;
         
         return ^(NSError *_error) {
@@ -147,6 +161,12 @@
     [self.insertedObjects addObject:object];
 }
 
+- (void)deleteObject:(NSObject *)object
+{
+    NSAssert([self.managedObjects containsObject:object], @"Object '%@' not managed by this store.", object);
+    [self.deletedObjects addObject:object];
+}
+
 #pragma Apply or Reset Changes
 
 - (void)applyChanges
@@ -167,6 +187,16 @@
         [obj applyChangedORMValues];
     }];
     [self.changedObjects removeAllObjects];
+    
+    // Delete
+    [self.deletedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+        obj.ORMObjectID = nil;
+        obj.ORMStore = nil;
+        [[NSNotificationCenter defaultCenter]removeObserver:self
+                                                       name:NSObjectORMValuesDidChangeNotification
+                                                     object:obj];
+    }];
+    [self.deletedObjects removeAllObjects];
 }
 
 - (void)resetChanges
@@ -184,6 +214,9 @@
         [obj resetChangedORMValues];
     }];
     [self.changedObjects removeAllObjects];
+    
+    // Delete
+    [self.deletedObjects removeAllObjects];
 }
 
 #pragma mark Handle Object Change Notification
