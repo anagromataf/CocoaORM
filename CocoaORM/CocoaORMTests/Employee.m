@@ -21,5 +21,6 @@
 
 @dynamic position;
 @dynamic fired;
+@dynamic employeeID;
 
 @end
