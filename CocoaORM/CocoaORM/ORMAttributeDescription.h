@@ -18,9 +18,11 @@
 @property (nonatomic, readonly) ORMAttributeDescription *(^blob)();
 @property (nonatomic, readonly) ORMAttributeDescription *(^boolean)();
 @property (nonatomic, readonly) ORMAttributeDescription *(^notNull)();
+@property (nonatomic, readonly) ORMAttributeDescription *(^unique)();
 
 @property (nonatomic, readonly) NSString *attributeName;
 @property (nonatomic, readonly) NSString *typeName;
 @property (nonatomic, readonly) BOOL required;
+@property (nonatomic, readonly) BOOL uniqueProperty;
 
 @end

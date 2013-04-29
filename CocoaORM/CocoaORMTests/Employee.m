@@ -16,8 +16,7 @@
 {
     ORMAttribute(self, @"position").text().notNull();
     ORMAttribute(self, @"fired").boolean();
-    ORMAttribute(self, @"employeeID").integer();
-    ORMUnique(self, @[@"employeeID"]);
+    ORMAttribute(self, @"employeeID").integer().unique();
 }
 
 @dynamic position;

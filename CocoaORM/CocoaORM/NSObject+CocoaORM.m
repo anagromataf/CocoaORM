@@ -219,6 +219,8 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
                 [columns addObject:[NSString stringWithFormat:@"_id INTEGER NOT NULL PRIMARY KEY REFERENCES %@(_id) ON DELETE CASCADE", NSStringFromClass([self superclass])]];
             }
             
+            NSMutableSet *uniqueConstraints = [[self ORMUniqueConstraints] mutableCopy];
+            
             [[self ORMProperties] enumerateKeysAndObjectsUsingBlock:^(NSString *name, ORMAttributeDescription *attribute, BOOL *stop) {
                 
                 NSMutableArray *column = [[NSMutableArray alloc] init];
@@ -230,10 +232,14 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
                     [column addObject:@"NOT NULL"];
                 }
                 
+                if (attribute.uniqueProperty) {
+                    [uniqueConstraints addObject:[NSSet setWithObject:name]];
+                }
+                
                 [columns addObject:[column componentsJoinedByString:@" "]];
             }];
             
-            [[self ORMUniqueConstraints] enumerateObjectsUsingBlock:^(NSSet *propertyNames, BOOL *stop) {
+            [uniqueConstraints enumerateObjectsUsingBlock:^(NSSet *propertyNames, BOOL *stop) {
                 [columns addObject:[NSString stringWithFormat:@"UNIQUE (%@)", [[propertyNames allObjects] componentsJoinedByString:@", "]]];
             }];
             

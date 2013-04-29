@@ -12,6 +12,7 @@
 @property (nonatomic, readwrite) NSString *attributeName;
 @property (nonatomic, readwrite) NSString *typeName;
 @property (nonatomic, readwrite) BOOL required;
+@property (nonatomic, readwrite) BOOL uniqueProperty;
 @end
 
 @implementation ORMAttributeDescription
@@ -70,6 +71,14 @@
 {
     return ^{
         self.required = YES;
+        return self;
+    };
+}
+
+- (ORMAttributeDescription *(^)())unique
+{
+    return ^{
+        self.uniqueProperty = YES;
         return self;
     };
 }
