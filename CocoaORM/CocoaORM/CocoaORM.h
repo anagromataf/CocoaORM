@@ -11,4 +11,5 @@
 #import "NSObject+CocoaORM.h"
 
 #import "ORMAttributeDescription.h"
+#import "ORMObjectID.h"
 #import "ORMStore.h"
