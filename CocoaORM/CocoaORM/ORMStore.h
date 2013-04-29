@@ -18,4 +18,7 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 - (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block;
 - (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block andWait:(BOOL)wait;
 
+#pragma mark Object Management
+- (void)insertObject:(NSObject *)object;
+
 @end

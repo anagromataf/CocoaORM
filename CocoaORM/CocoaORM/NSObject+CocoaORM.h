@@ -13,6 +13,9 @@
 #import <FMDB/FMDatabase.h>
 
 // CocoaORM
+#import "ORMConstants.h"
+#import "ORMObjectID.h"
+#import "ORMStore.h"
 #import "ORMAttributeDescription.h"
 
 @interface NSObject (CocoaORM)
@@ -22,6 +25,10 @@
 + (NSArray *)ORMClassHierarchy;
 + (NSDictionary *)ORMProperties;
 + (NSDictionary *)allORMProperties;
+
+#pragma mark ORM Object ID & Store
+@property (nonatomic, readonly) ORMObjectID *ORMObjectID;
+@property (nonatomic, readonly) ORMStore *ORMStore;
 
 #pragma mark ORM Values
 @property (nonatomic, readonly) NSDictionary *changedORMValues;

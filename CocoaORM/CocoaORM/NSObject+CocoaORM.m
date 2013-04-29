@@ -18,7 +18,8 @@
 
 
 const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptionsKey";
-
+const char * NSObjectORMObjectIDKey             = "NSObjectORMObjectIDKey";
+const char * NSObjectORMStoreKey                = "NSObjectORMStoreKey";
 
 @implementation NSObject (CocoaORM)
 
@@ -75,6 +76,28 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
                                  OBJC_ASSOCIATION_RETAIN);
     }
     return propertyDescriptions;
+}
+
+#pragma mark ORM Object ID & Store
+
+- (ORMObjectID *)ORMObjectID
+{
+    return objc_getAssociatedObject(self, NSObjectORMObjectIDKey);
+}
+
+- (void)setORMObjectID:(ORMObjectID *)ORMObjectID
+{
+    objc_setAssociatedObject(self, NSObjectORMObjectIDKey, ORMObjectID, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (ORMStore *)ORMStore
+{
+    return objc_getAssociatedObject(self, NSObjectORMStoreKey);
+}
+
+- (void)setORMStore:(ORMStore *)ORMStore
+{
+    objc_setAssociatedObject(self, NSObjectORMStoreKey, ORMStore, OBJC_ASSOCIATION_ASSIGN);
 }
 
 #pragma mark Persistent & Temporary ORM Values
@@ -463,6 +486,9 @@ const char * NSObjectORMPropertyDescriptionsKey = "NSObjectORMPropertyDescriptio
 @end
 
 @implementation NSObject (CocoaORMPrivate)
+
+@dynamic ORMObjectID;
+@dynamic ORMStore;
 
 - (void)resetChangedORMValues
 {

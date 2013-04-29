@@ -6,12 +6,19 @@
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
+#import "NSObject+CocoaORM.h"
+#import "NSObject+CocoaORMPrivate.h"
+
 #import "ORMStore.h"
 #import "ORMStore+Private.h"
 
 @interface ORMStore ()
 @property (nonatomic, readonly) dispatch_queue_t queue;
 @property (nonatomic, readonly) FMDatabase *db;
+
+@property (nonatomic, readonly) NSMutableSet *insertedObjects;
+@property (nonatomic, readonly) NSMutableSet *managedObjects;
+@property (nonatomic, readonly) NSMutableSet *managedClasses;
 @end
 
 @implementation ORMStore
@@ -22,6 +29,11 @@
 {
     self = [super init];
     if (self) {
+        
+        _insertedObjects = [[NSMutableSet alloc] init];
+        _managedObjects = [[NSMutableSet alloc] init];
+        _managedClasses = [[NSMutableSet alloc] init];
+        
         _queue = dispatch_queue_create("de.tobias-kraentzer.CocoaORM (ORMStore)", DISPATCH_QUEUE_SERIAL);
         
         _db = [[FMDatabase alloc] initWithPath:nil];
@@ -51,20 +63,114 @@
 {
     [self commitTransactionInDatabase:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
-        BOOL _rollback = NO;
+        __block BOOL _rollback = NO;
+        __block NSError *error = nil;
+        
         ORMStoreTransactionCompletionHalndler completionHalndler = block(&_rollback);
         
-        __block NSError *error = nil;
+        // Setup Schemata
+        if (!_rollback) {
+            if (![self setupSchemataInDatabase:db error:&error]) {
+                _rollback = YES;
+            }
+        }
+        
+        // Insert Objects into Database
+        if (!_rollback) {
+            [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+
+                ORMPrimaryKey pk = [[obj class] insertORMObjectProperties:[obj changedORMValues]
+                                                             intoDatabase:self.db
+                                                                    error:&error];
+                if (pk) {
+                    obj.ORMObjectID = [[ORMObjectID alloc] initWithClass:[obj class] primaryKey:pk];
+                    obj.ORMStore = self;
+                } else {
+                    *stop = YES;
+                    _rollback = YES;
+                }
+            }];
+        }
+        
         *rollback = _rollback;
         
         return ^(NSError *_error) {
             
-            if (completionHalndler) {
-                completionHalndler(error);
+            if (_error) {
+                [self resetChanges];
+                if (completionHalndler) {
+                    completionHalndler(_error);
+                }
+            } else {
+                if (_rollback) {
+                    [self resetChanges];
+                } else {
+                    [self applyChanges];
+                }
+                
+                if (completionHalndler) {
+                    completionHalndler(error);
+                }
             }
         };
         
     } andWait:wait];
+}
+
+#pragma mark Object Management
+
+- (void)insertObject:(NSObject *)object
+{
+    NSAssert([self.managedObjects containsObject:object] == NO, @"Object '%@' already managed by this store.", object);
+    [self.insertedObjects addObject:object];
+}
+
+#pragma Apply or Reset Changes
+
+- (void)applyChanges
+{
+    [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+        [obj applyChangedORMValues];
+        [self.managedObjects addObject:obj];
+    }];
+    
+    [self.insertedObjects removeAllObjects];
+}
+
+- (void)resetChanges
+{
+    [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+        [obj resetChangedORMValues];
+        obj.ORMObjectID = nil;
+        obj.ORMStore = nil;
+    }];
+    
+    [self.insertedObjects removeAllObjects];
+}
+
+#pragma mark Setup Schemata
+
+- (BOOL)setupSchemataInDatabase:(FMDatabase *)database error:(NSError **)error
+{
+    NSMutableSet *classes = [[NSMutableSet alloc] init];
+    [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+        if (![self.managedClasses containsObject:[obj class]]) {
+            [classes addObject:[obj class]];
+        }
+    }];
+    
+    __block BOOL success = YES;
+    [classes enumerateObjectsUsingBlock:^(Class klass, BOOL *stop) {
+        NSAssert([klass isORMClass], @"Class %@ is not managed by CocoaORM.", klass);
+        success = [klass setupORMSchemataInDatabase:self.db error:error];
+        *stop = !success;
+    }];
+    
+    if (success) {
+        [self.managedClasses unionSet:classes];
+    }
+    
+    return success;
 }
 
 @end

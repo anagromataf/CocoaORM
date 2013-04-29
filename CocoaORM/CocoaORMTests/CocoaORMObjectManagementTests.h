@@ -1,14 +1,13 @@
 //
-//  CocoaORM.h
+//  CocoaORMObjectManagementTests.h
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import "ORMConstants.h"
+#import "CocoaORMTestCase.h"
 
-#import "NSObject+CocoaORM.h"
+@interface CocoaORMObjectManagementTests : CocoaORMTestCase
 
-#import "ORMAttributeDescription.h"
-#import "ORMStore.h"
+@end

@@ -8,7 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+#import "NSObject+CocoaORM.h"
+
 @interface NSObject (CocoaORMPrivate)
+
+@property (nonatomic, readwrite) ORMObjectID *ORMObjectID;
+@property (nonatomic, readwrite, weak) ORMStore *ORMStore;
 
 - (void)resetChangedORMValues;
 - (void)applyChangedORMValues;
