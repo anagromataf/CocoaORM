@@ -38,6 +38,7 @@
 		F6BBAC0C172DC49C000B389D /* CocoaORMObjectChangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6BBAC0B172DC49C000B389D /* CocoaORMObjectChangeTests.m */; };
 		F6BBAC0F172DCAE8000B389D /* NSObject+CocoaORMPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F6BBAC0D172DCAE8000B389D /* NSObject+CocoaORMPrivate.h */; };
 		F6FEB6EA172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FEB6E9172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.m */; };
+		F6FEB6ED172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FEB6EC172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +104,8 @@
 		F6BBAC0D172DCAE8000B389D /* NSObject+CocoaORMPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CocoaORMPrivate.h"; sourceTree = "<group>"; };
 		F6FEB6E8172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMObjectPropertyLoadingTests.h; sourceTree = "<group>"; };
 		F6FEB6E9172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMObjectPropertyLoadingTests.m; sourceTree = "<group>"; };
+		F6FEB6EB172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMObjectEnumeratorTests.h; sourceTree = "<group>"; };
+		F6FEB6EC172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMObjectEnumeratorTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -271,6 +274,8 @@
 				F618B90E172E9E5300F12666 /* CocoaORMObjectConstraintTests.m */,
 				F6FEB6E8172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.h */,
 				F6FEB6E9172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.m */,
+				F6FEB6EB172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.h */,
+				F6FEB6EC172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.m */,
 			);
 			name = "Object Tests";
 			sourceTree = "<group>";
@@ -482,6 +487,7 @@
 				F618B904172DCF6600F12666 /* CocoaORMObjectManagementTests.m in Sources */,
 				F618B90F172E9E5300F12666 /* CocoaORMObjectConstraintTests.m in Sources */,
 				F6FEB6EA172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.m in Sources */,
+				F6FEB6ED172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

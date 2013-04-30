@@ -29,4 +29,6 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 
 - (id)objectWithID:(ORMObjectID *)objectID;
 
+- (void)enumerateObjectsWithClass:(Class)aClass
+                       enumerator:(void(^)(id object, BOOL *stop))enumerator;
 @end

@@ -20,7 +20,7 @@
 @property (nonatomic, readonly) NSMutableSet *changedObjects;
 @property (nonatomic, readonly) NSMutableSet *deletedObjects;
 
-@property (nonatomic, readonly) NSMutableSet *managedObjects;
+@property (nonatomic, readonly) NSMapTable *managedObjects;
 @property (nonatomic, readonly) NSMutableSet *managedClasses;
 @end
 
@@ -36,7 +36,7 @@
         _insertedObjects = [[NSMutableSet alloc] init];
         _changedObjects = [[NSMutableSet alloc] init];
         _deletedObjects = [[NSMutableSet alloc] init];
-        _managedObjects = [[NSMutableSet alloc] init];
+        _managedObjects = [NSMapTable strongToWeakObjectsMapTable];
         _managedClasses = [[NSMutableSet alloc] init];
         
         _queue = dispatch_queue_create("de.tobias-kraentzer.CocoaORM (ORMStore)", DISPATCH_QUEUE_SERIAL);
@@ -157,29 +157,50 @@
 
 - (void)insertObject:(NSObject *)object
 {
-    NSAssert([self.managedObjects containsObject:object] == NO, @"Object '%@' already managed by this store.", object);
+    NSAssert([object ORMObjectID] == nil, @"Object '%@' already managed by a store.", object);
     [self.insertedObjects addObject:object];
 }
 
 - (void)deleteObject:(NSObject *)object
 {
-    NSAssert([self.managedObjects containsObject:object], @"Object '%@' not managed by this store.", object);
+    NSAssert([self.managedObjects objectForKey:object.ORMObjectID] != nil, @"Object '%@' not managed by this store.", object);
     [self.deletedObjects addObject:object];
 }
 
 - (BOOL)existsObjectWithID:(ORMObjectID *)objectID
 {
-    NSError *error = nil;
-    return [objectID.ORMClass existsORMObjectWithPrimaryKey:objectID.primaryKey
-                                                 inDatabase:self.db
-                                                      error:&error];
+    if ([self.managedObjects objectForKey:objectID]) {
+        return YES;
+    } else {
+        NSError *error = nil;
+        return [objectID.ORMClass existsORMObjectWithPrimaryKey:objectID.primaryKey
+                                                     inDatabase:self.db
+                                                          error:&error];
+    }
 }
 
 - (id)objectWithID:(ORMObjectID *)objectID
 {
-    return [[objectID.ORMClass alloc] initWithORMObjectID:objectID
-                                                  inStore:self
-                                               properties:@{}];
+    NSObject *object = [self.managedObjects objectForKey:objectID];
+    if (object == nil) {
+        object = [[objectID.ORMClass alloc] initWithORMObjectID:objectID
+                                                        inStore:self
+                                                     properties:@{}];
+        [self.managedObjects setObject:object forKey:objectID];
+    }
+    return object;
+}
+
+- (void)enumerateObjectsWithClass:(Class)aClass
+                       enumerator:(void(^)(id object, BOOL *stop))enumerator
+{
+    NSError *error = nil;
+    [aClass enumerateORMObjectsInDatabase:self.db
+                                    error:&error
+                               enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
+                                   ORMObjectID *objectID = [[ORMObjectID alloc] initWithClass:klass primaryKey:pk];
+                                   enumerator([self objectWithID:objectID], stop);
+    }];
 }
 
 #pragma mark Apply or Reset Changes
@@ -189,14 +210,14 @@
     // Insert
     [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
         [obj applyChangedORMValues];
-        [self.managedObjects addObject:obj];
+        [self.managedObjects setObject:obj forKey:obj.ORMObjectID];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(objectORMValuesDidChange:)
                                                      name:NSObjectORMValuesDidChangeNotification
                                                    object:obj];
     }];
     [self.insertedObjects removeAllObjects];
-
+    
     // Update
     [self.changedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
         [obj applyChangedORMValues];
@@ -207,9 +228,9 @@
     [self.deletedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
         obj.ORMObjectID = nil;
         obj.ORMStore = nil;
-        [[NSNotificationCenter defaultCenter]removeObserver:self
-                                                       name:NSObjectORMValuesDidChangeNotification
-                                                     object:obj];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:NSObjectORMValuesDidChangeNotification
+                                                      object:obj];
     }];
     [self.deletedObjects removeAllObjects];
 }

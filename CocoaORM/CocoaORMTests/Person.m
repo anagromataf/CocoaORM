@@ -22,4 +22,14 @@
 @dynamic firstName;
 @dynamic lastName;
 
+- (id)initWithFirstName:(NSString *)firstName lastName:(NSString *)lastName
+{
+    self = [self init];
+    if (self) {
+        self.firstName = firstName;
+        self.lastName = lastName;
+    }
+    return self;
+}
+
 @end

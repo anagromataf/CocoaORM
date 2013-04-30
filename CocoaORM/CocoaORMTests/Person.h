@@ -11,4 +11,7 @@
 @interface Person : NSObject
 @property (nonatomic, readwrite) NSString *firstName;
 @property (nonatomic, readwrite) NSString *lastName;
+
+- (id)initWithFirstName:(NSString *)firstName lastName:(NSString *)lastName;
+
 @end
