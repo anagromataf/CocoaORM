@@ -60,7 +60,7 @@
         }];
         
         STAssertEquals([result count], (NSUInteger)7, nil);
-        STAssertEquals(result, self.objects, nil);
+        STAssertEqualObjects(result, self.objects, nil);
         return nil;
     }];
 }
