@@ -167,7 +167,22 @@
     [self.deletedObjects addObject:object];
 }
 
-#pragma Apply or Reset Changes
+- (BOOL)existsObjectWithID:(ORMObjectID *)objectID
+{
+    NSError *error = nil;
+    return [objectID.ORMClass existsORMObjectWithPrimaryKey:objectID.primaryKey
+                                                 inDatabase:self.db
+                                                      error:&error];
+}
+
+- (id)objectWithID:(ORMObjectID *)objectID
+{
+    return [[objectID.ORMClass alloc] initWithORMObjectID:objectID
+                                                  inStore:self
+                                               properties:@{}];
+}
+
+#pragma mark Apply or Reset Changes
 
 - (void)applyChanges
 {

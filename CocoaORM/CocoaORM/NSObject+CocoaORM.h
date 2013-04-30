@@ -60,6 +60,12 @@ extern NSString * const NSObjectORMValuesDidChangeNotification;
                            inDatabase:(FMDatabase *)database
                                 error:(NSError **)error;
 
+#pragma mark Check Exsitance
+
++ (BOOL)existsORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
+                           inDatabase:(FMDatabase *)database
+                                error:(NSError **)error;
+
 #pragma mark Get Properties
 
 + (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(ORMPrimaryKey)pk

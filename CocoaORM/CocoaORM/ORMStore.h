@@ -9,6 +9,9 @@
 // Cocoa
 #import <Foundation/Foundation.h>
 
+// CocoaORM
+#import "ORMObjectID.h"
+
 typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 
 @interface ORMStore : NSObject
@@ -21,5 +24,9 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 #pragma mark Object Management
 - (void)insertObject:(NSObject *)object;
 - (void)deleteObject:(NSObject *)object;
+
+- (BOOL)existsObjectWithID:(ORMObjectID *)objectID;
+
+- (id)objectWithID:(ORMObjectID *)objectID;
 
 @end

@@ -15,6 +15,8 @@
 @property (nonatomic, readwrite) ORMObjectID *ORMObjectID;
 @property (nonatomic, readwrite, weak) ORMStore *ORMStore;
 
+- (instancetype)initWithORMObjectID:(ORMObjectID *)objectID inStore:(ORMStore *)store properties:(NSDictionary *)properties;
+
 - (void)resetChangedORMValues;
 - (void)applyChangedORMValues;
 

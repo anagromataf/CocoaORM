@@ -182,4 +182,65 @@
     }];
 }
 
+- (void)testObjectExistence
+{
+    __block ORMObjectID *employeeID = nil;
+    
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+        
+        Employee *employee = [[Employee alloc] init];
+        
+        employee.firstName = @"John";
+        employee.lastName = @"Example";
+        employee.position = @"CEO";
+        
+        [self.store insertObject:employee];
+        
+        return ^(NSError *error){
+            STAssertNil(error, [error localizedDescription]);
+            employeeID = employee.ORMObjectID;
+        };
+    }];
+    
+    STAssertNotNil(employeeID, nil);
+    
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+        BOOL exsit = [self.store existsObjectWithID:employeeID];
+        STAssertTrue(exsit, nil);
+        return nil;
+    }];
+}
+
+- (void)testGetObjectWithObjectID
+{
+    __block ORMObjectID *employeeID = nil;
+    
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+        
+        Employee *employee = [[Employee alloc] init];
+        
+        employee.firstName = @"John";
+        employee.lastName = @"Example";
+        employee.position = @"CEO";
+        
+        [self.store insertObject:employee];
+        
+        return ^(NSError *error){
+            STAssertNil(error, [error localizedDescription]);
+            employeeID = employee.ORMObjectID;
+        };
+    }];
+    
+    STAssertNotNil(employeeID, nil);
+    
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+        
+        Employee *employee = [self.store objectWithID:employeeID];
+        STAssertNotNil(employee, nil);
+        STAssertEqualObjects(employee.ORMObjectID, employeeID, nil);
+        
+        return nil;
+    }];
+}
+
 @end

@@ -400,6 +400,30 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
     return YES;
 }
 
+#pragma mark Check Exsitance
+
++ (BOOL)existsORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
+                           inDatabase:(FMDatabase *)database
+                                error:(NSError **)error
+{
+    NSString *statement = [NSString stringWithFormat:@"SELECT _id FROM %@ WHERE _id = :_id", NSStringFromClass(self)];
+    NSLog(@"SQL: %@", statement);
+    
+    FMResultSet *result = [database executeQuery:statement withParameterDictionary:@{@"_id":@(pk)}];
+    if (result) {
+        if ([result next]) {
+            return YES;
+        } else {
+            return NO;
+        }
+    } else {
+        if (error) {
+            *error = database.lastError;
+        }
+        return NO;
+    }
+}
+
 #pragma mark Get Properties
 
 + (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
@@ -534,6 +558,17 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
 
 @dynamic ORMObjectID;
 @dynamic ORMStore;
+
+- (instancetype)initWithORMObjectID:(ORMObjectID *)objectID inStore:(ORMStore *)store properties:(NSDictionary *)properties
+{
+    self = [self init];
+    if (self) {
+        self.ORMObjectID = objectID;
+        self.ORMStore = store;
+        [[self persistentORMValues] addEntriesFromDictionary:properties];
+    }
+    return self;
+}
 
 - (void)resetChangedORMValues
 {
