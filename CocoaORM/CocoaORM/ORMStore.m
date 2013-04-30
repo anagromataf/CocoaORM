@@ -272,6 +272,8 @@
 
 @implementation ORMStore (Private)
 
+@dynamic db;
+
 #pragma mark Database Transaction
 
 - (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;

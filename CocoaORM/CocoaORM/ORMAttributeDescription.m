@@ -10,6 +10,8 @@
 
 @interface ORMAttributeDescription ()
 @property (nonatomic, readwrite) NSString *attributeName;
+@property (nonatomic, readwrite) Class ORMClass;
+
 @property (nonatomic, readwrite) NSString *typeName;
 @property (nonatomic, readwrite) BOOL required;
 @property (nonatomic, readwrite) BOOL uniqueProperty;
@@ -17,11 +19,12 @@
 
 @implementation ORMAttributeDescription
 
-- (id)initWithName:(NSString *)name
+- (id)initWithName:(NSString *)name ORMClass:(Class)aClass;
 {
     self = [super init];
     if (self) {
         _attributeName = name;
+        _ORMClass = aClass;
         _typeName = @"TEXT";
     }
     return self;

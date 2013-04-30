@@ -13,6 +13,9 @@
 #import <FMDB/FMDatabase.h>
 #import <FMDB/FMDatabaseAdditions.h>
 
+// CocoaORM
+#import "ORMStore+Private.h"
+
 #import "NSObject+CocoaORM.h"
 #import "NSObject+CocoaORMPrivate.h"
 
@@ -181,6 +184,21 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
     id value = [[self temporaryORMValues] objectForKey:key];
     if (!value) {
         value = [[self persistentORMValues] objectForKey:key];
+    }
+    
+    if (value == nil && [self ORMObjectID] && [self ORMStore]) {
+        ORMAttributeDescription *attributeDescription = [[[self class] allORMProperties] objectForKey:key];
+        
+        if (attributeDescription) {
+            NSError *error = nil;
+            NSDictionary *properties = [attributeDescription.ORMClass propertiesOfORMObjectWithPrimaryKey:self.ORMObjectID.primaryKey
+                                                                                               inDatabase:self.ORMStore.db
+                                                                                                    error:&error];
+            
+            [[self persistentORMValues] addEntriesFromDictionary:properties];
+            
+            value = [properties objectForKey:key];
+        }
     }
     
     if ([value isEqual:[NSNull null]]) {
@@ -591,7 +609,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
 ORMAttributeDescription *
 ORMAttribute(Class _class, NSString *name)
 {
-    ORMAttributeDescription *attribute = [[ORMAttributeDescription alloc] initWithName:name];
+    ORMAttributeDescription *attribute = [[ORMAttributeDescription alloc] initWithName:name ORMClass:_class];
     
     [[_class ORMPropertyDescriptions] setObject:attribute forKey:name];
     

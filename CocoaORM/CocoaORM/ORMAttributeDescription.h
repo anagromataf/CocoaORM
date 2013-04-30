@@ -10,7 +10,10 @@
 
 @interface ORMAttributeDescription : NSObject
 
-- (id)initWithName:(NSString *)name;
+- (id)initWithName:(NSString *)name ORMClass:(Class)aClass;
+
+@property (nonatomic, readonly) NSString *attributeName;
+@property (nonatomic, readonly) Class ORMClass;
 
 @property (nonatomic, readonly) ORMAttributeDescription *(^integer)();
 @property (nonatomic, readonly) ORMAttributeDescription *(^real)();
@@ -20,7 +23,6 @@
 @property (nonatomic, readonly) ORMAttributeDescription *(^notNull)();
 @property (nonatomic, readonly) ORMAttributeDescription *(^unique)();
 
-@property (nonatomic, readonly) NSString *attributeName;
 @property (nonatomic, readonly) NSString *typeName;
 @property (nonatomic, readonly) BOOL required;
 @property (nonatomic, readonly) BOOL uniqueProperty;

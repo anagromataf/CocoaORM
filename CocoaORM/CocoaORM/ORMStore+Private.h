@@ -13,6 +13,8 @@
 
 @interface ORMStore (Private)
 
+@property (nonatomic, readonly) FMDatabase *db;
+
 #pragma mark Database Transaction
 - (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;
 - (void)commitTransactionInDatabaseAndWait:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;
