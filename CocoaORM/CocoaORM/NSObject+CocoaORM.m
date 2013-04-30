@@ -446,10 +446,11 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
     } else {
         statement = [NSString stringWithFormat:@"SELECT * FROM %@", NSStringFromClass(self)];
     }
+    statement = [statement stringByAppendingString:@" WHERE _id = :_id"];
     
     NSLog(@"SQL: %@", statement);
     
-    FMResultSet *result = [database executeQuery:statement];
+    FMResultSet *result = [database executeQuery:statement withParameterDictionary:@{@"_id":@(pk)}];
     if (result) {
         if ([result next]) {
             NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];

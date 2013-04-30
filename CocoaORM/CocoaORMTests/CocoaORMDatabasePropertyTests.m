@@ -177,15 +177,35 @@
         STAssertTrue(success, [error localizedDescription]);
         
         // Insert Properties
+
+        NSDictionary *properties1 = @{@"firstName":@"John",
+                                      @"lastName":@"Example",
+                                      @"position":@"CTO",
+                                      @"employeeID":@(13)};
+        ORMPrimaryKey pk1 = [Employee insertORMObjectProperties:properties1
+                                                   intoDatabase:db
+                                                          error:&error];
+        STAssertTrue(pk1 != 0, [error localizedDescription]);
         
-        NSDictionary *properties = @{@"firstName":@"Jim",
+        NSDictionary *properties2 = @{@"firstName":@"Jim",
                                      @"lastName":@"Example",
                                      @"position":@"CEO",
                                      @"employeeID":@(12)};
-        ORMPrimaryKey pk = [Employee insertORMObjectProperties:properties
+        ORMPrimaryKey pk2 = [Employee insertORMObjectProperties:properties2
                                                   intoDatabase:db
                                                          error:&error];
-        STAssertTrue(pk != 0, [error localizedDescription]);
+        STAssertTrue(pk2 != 0, [error localizedDescription]);
+
+        
+        NSDictionary *properties3 = @{@"firstName":@"Eva",
+                                      @"lastName":@"Example",
+                                      @"position":@"ETO",
+                                      @"employeeID":@(14)};
+        ORMPrimaryKey pk3 = [Employee insertORMObjectProperties:properties3
+                                                   intoDatabase:db
+                                                          error:&error];
+        STAssertTrue(pk3 != 0, [error localizedDescription]);
+        
         
         return ^(NSError *error) {
             STAssertNil(error, [error localizedDescription]);
@@ -194,7 +214,7 @@
             
             // Person Properties
             
-            NSDictionary *personProperties = [Person propertiesOfORMObjectWithPrimaryKey:pk
+            NSDictionary *personProperties = [Person propertiesOfORMObjectWithPrimaryKey:pk2
                                                                               inDatabase:db
                                                                                    error:&_error];
             STAssertNotNil(personProperties, [_error localizedDescription]);
@@ -204,7 +224,7 @@
             
             // Employee Properties
             
-            NSDictionary *employeeProperties = [Employee propertiesOfORMObjectWithPrimaryKey:pk
+            NSDictionary *employeeProperties = [Employee propertiesOfORMObjectWithPrimaryKey:pk2
                                                                                   inDatabase:db
                                                                                        error:&_error];
             STAssertNotNil(employeeProperties, [_error localizedDescription]);
@@ -214,7 +234,7 @@
             
             // All Properties
             
-            NSDictionary *allProperties = [Employee propertiesOfORMObjectWithPrimaryKey:pk
+            NSDictionary *allProperties = [Employee propertiesOfORMObjectWithPrimaryKey:pk2
                                                                              inDatabase:db
                                                                                   error:&_error
                                                                  includeSuperProperties:YES];
