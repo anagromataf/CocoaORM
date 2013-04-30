@@ -10,7 +10,7 @@
 
 #import "ORMConstants.h"
 
-@interface ORMObjectID : NSObject
+@interface ORMObjectID : NSObject <NSCopying>
 @property (nonatomic, readonly) Class ORMClass;
 @property (nonatomic, readonly) ORMPrimaryKey primaryKey;
 

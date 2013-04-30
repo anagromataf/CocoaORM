@@ -20,4 +20,37 @@
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+    return [[ORMObjectID allocWithZone:zone] initWithClass:self.ORMClass primaryKey:self.primaryKey];
+}
+
+- (NSUInteger)hash
+{
+    return self.primaryKey;
+}
+
+- (BOOL)isEqual:(id)object
+{
+    if ([object isKindOfClass:[ORMObjectID class]]) {
+        ORMObjectID *other = object;
+        
+        if (self.primaryKey != other.primaryKey) {
+            return NO;
+        }
+        
+        if (self.ORMClass != other.ORMClass) {
+            return NO;
+        }
+        
+        return YES;
+    }
+    return NO;
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<ORMObjectID: %p %@ %lld>", self, self.ORMClass, self.primaryKey];
+}
+
 @end
