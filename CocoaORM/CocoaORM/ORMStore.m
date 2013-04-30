@@ -310,29 +310,30 @@
 - (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block andWait:(BOOL)wait
 {
     void(^_block)() = ^{
-        
-        // Begin Transaction
-        
-        [self.db beginTransaction];
-        
-        BOOL rollback = NO;
-        ORMStoreTransactionCompletionHalndler completionHalndler = block(self.db, &rollback);
-        
-        BOOL success = YES;
-        
-        if (rollback) {
-            // Rollback Transaction
-            success = [self.db rollback];
-        } else {
-            // Commit Transaction
-            success = [self.db commit];
-        }
-        
-        if (completionHalndler) {
-            if (!success) {
-                completionHalndler(self.db.lastError);
+        @autoreleasepool {
+            // Begin Transaction
+            
+            [self.db beginTransaction];
+            
+            BOOL rollback = NO;
+            ORMStoreTransactionCompletionHalndler completionHalndler = block(self.db, &rollback);
+            
+            BOOL success = YES;
+            
+            if (rollback) {
+                // Rollback Transaction
+                success = [self.db rollback];
             } else {
-                completionHalndler(nil);
+                // Commit Transaction
+                success = [self.db commit];
+            }
+            
+            if (completionHalndler) {
+                if (!success) {
+                    completionHalndler(self.db.lastError);
+                } else {
+                    completionHalndler(nil);
+                }
             }
         }
     };
