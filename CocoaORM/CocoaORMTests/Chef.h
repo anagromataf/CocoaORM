@@ -1,13 +1,13 @@
 //
-//  CocoaORMTests.h
-//  CocoaORMTests
+//  Chef.h
+//  CocoaORM
 //
 //  Created by Tobias Kräntzer on 28.04.13.
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import "Employee.h"
 
-@interface CocoaORMTests : SenTestCase
+@interface Chef : Employee
 
 @end

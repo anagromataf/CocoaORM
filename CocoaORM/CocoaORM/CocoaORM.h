@@ -6,8 +6,10 @@
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "ORMConstants.h"
 
-@interface CocoaORM : NSObject
+#import "NSObject+CocoaORM.h"
 
-@end
+#import "ORMAttributeDescription.h"
+#import "ORMObjectID.h"
+#import "ORMStore.h"
