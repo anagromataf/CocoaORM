@@ -55,7 +55,7 @@
         
         NSMutableSet *result = [[NSMutableSet alloc] init];
         
-        [self.store enumerateObjectsWithClass:[Person class] enumerator:^(id object, BOOL *stop) {
+        [self.store enumerateObjectsOfClass:[Person class] enumerator:^(id object, BOOL *stop) {
             [result addObject:object];
         }];
         

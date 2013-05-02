@@ -191,8 +191,8 @@
     return object;
 }
 
-- (void)enumerateObjectsWithClass:(Class)aClass
-                       enumerator:(void(^)(id object, BOOL *stop))enumerator
+- (void)enumerateObjectsOfClass:(Class)aClass
+                     enumerator:(void(^)(id object, BOOL *stop))enumerator
 {
     NSError *error = nil;
     [aClass enumerateORMObjectsInDatabase:self.db
