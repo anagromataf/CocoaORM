@@ -31,4 +31,11 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 
 - (void)enumerateObjectsOfClass:(Class)aClass
                      enumerator:(void(^)(id object, BOOL *stop))enumerator;
+
+- (void)enumerateObjectsOfClass:(Class)aClass
+              matchingCondition:(NSString *)condition
+                  withArguments:(NSDictionary *)arguments
+             fetchingProperties:(NSArray *)propertyNames
+                     enumerator:(void(^)(id object, BOOL *stop))enumerator;
+
 @end

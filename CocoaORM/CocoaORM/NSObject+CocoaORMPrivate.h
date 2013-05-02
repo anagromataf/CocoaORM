@@ -20,4 +20,6 @@
 - (void)resetChangedORMValues;
 - (void)applyChangedORMValues;
 
+- (NSMutableDictionary *)persistentORMValues;
+
 @end

@@ -65,4 +65,29 @@
     }];
 }
 
+- (void)testEnumeratorWithCondition
+{
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+        
+        NSArray *lastNames = @[@"a", @"b", @"f"];
+        
+        NSMutableSet *result = [[NSMutableSet alloc] init];
+        
+        [self.store enumerateObjectsOfClass:[Person class]
+                          matchingCondition:@"lastName IN ('a', 'b', 'f')"
+                              withArguments:nil
+                         fetchingProperties:nil
+                                 enumerator:^(id object, BOOL *stop) {
+            [result addObject:object];
+        }];
+        
+        STAssertEquals([result count], (NSUInteger)3, nil);
+        STAssertEqualObjects(result, [self.objects filteredSetUsingPredicate:
+                                      [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            return [lastNames containsObject:[evaluatedObject lastName]];
+        }]], nil);
+        return nil;
+    }];
+}
+
 @end

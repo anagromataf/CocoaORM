@@ -194,13 +194,31 @@
 - (void)enumerateObjectsOfClass:(Class)aClass
                      enumerator:(void(^)(id object, BOOL *stop))enumerator
 {
+    [self enumerateObjectsOfClass:aClass
+                matchingCondition:nil
+                    withArguments:nil
+               fetchingProperties:nil
+                       enumerator:enumerator];
+}
+
+- (void)enumerateObjectsOfClass:(Class)aClass
+              matchingCondition:(NSString *)condition
+                  withArguments:(NSDictionary *)arguments
+             fetchingProperties:(NSArray *)propertyNames
+                     enumerator:(void(^)(id object, BOOL *stop))enumerator
+{
     NSError *error = nil;
     [aClass enumerateORMObjectsInDatabase:self.db
+                        matchingCondition:condition
+                            withArguments:arguments
+                       fetchingProperties:propertyNames
                                     error:&error
-                               enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
+                               enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
                                    ORMObjectID *objectID = [[ORMObjectID alloc] initWithClass:klass primaryKey:pk];
-                                   enumerator([self objectWithID:objectID], stop);
-    }];
+                                   NSObject *object = [self objectWithID:objectID];
+                                   [[self persistentORMValues] addEntriesFromDictionary:properties];
+                                   enumerator(object, stop);
+                               }];
 }
 
 #pragma mark Apply or Reset Changes
