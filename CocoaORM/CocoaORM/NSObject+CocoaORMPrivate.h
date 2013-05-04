@@ -20,6 +20,6 @@
 - (void)resetChangedORMValues;
 - (void)applyChangedORMValues;
 
-- (NSMutableDictionary *)persistentORMValues;
+@property (nonatomic, readonly) NSMutableDictionary *persistentORMValues;
 
 @end

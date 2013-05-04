@@ -577,6 +577,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
 
 @dynamic ORMObjectID;
 @dynamic ORMStore;
+@dynamic persistentORMValues;
 
 - (instancetype)initWithORMObjectID:(ORMObjectID *)objectID inStore:(ORMStore *)store properties:(NSDictionary *)properties
 {
