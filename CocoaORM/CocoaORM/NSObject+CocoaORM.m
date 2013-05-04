@@ -550,7 +550,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
     if (result) {
         
         BOOL stop = NO;
-        while (stop || [result next]) {
+        while (stop == NO && [result next]) {
             ORMPrimaryKey pk = [[result objectForColumnName:@"_id"] integerValue];
             Class klass = NSClassFromString([result objectForColumnName:@"_class"]);
             

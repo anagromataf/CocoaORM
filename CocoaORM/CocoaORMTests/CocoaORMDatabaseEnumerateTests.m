@@ -81,6 +81,26 @@
     }];
 }
 
+- (void)testEnumerateAndStop
+{
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+        
+        NSMutableSet *primaryKeys = [[NSMutableSet alloc] init];
+
+        NSError *error = nil;
+        BOOL success = [Person enumerateORMObjectsInDatabase:db
+                                                       error:&error
+                                                  enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
+                                                      [primaryKeys addObject:@(pk)];
+                                                      *stop = YES;
+                                                  }];
+        STAssertTrue(success, [error localizedDescription]);
+        STAssertEquals([primaryKeys count], (NSUInteger)1, nil);
+        return nil;
+    }];
+}
+
+
 - (void)testEnumerateWithProperties
 {
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
