@@ -30,6 +30,11 @@
 
 - (id)init
 {
+    return [self initWithSerialQueue:nil];
+}
+
+- (id)initWithSerialQueue:(dispatch_queue_t)queue;
+{
     self = [super init];
     if (self) {
         
@@ -39,7 +44,7 @@
         _managedObjects = [NSMapTable strongToWeakObjectsMapTable];
         _managedClasses = [[NSMutableSet alloc] init];
         
-        _queue = dispatch_queue_create("de.tobias-kraentzer.CocoaORM (ORMStore)", DISPATCH_QUEUE_SERIAL);
+        _queue = queue ? queue : dispatch_queue_create("de.tobias-kraentzer.CocoaORM (ORMStore)", DISPATCH_QUEUE_SERIAL);
         
         _db = [[FMDatabase alloc] initWithPath:nil];
         BOOL success = [_db open];
