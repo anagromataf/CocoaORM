@@ -16,6 +16,8 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 
 @interface ORMStore : NSObject
 
+- (id)initWithSerialQueue:(dispatch_queue_t)queue;
+
 #pragma mark Transactions
 - (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block;
 - (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block;

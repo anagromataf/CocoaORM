@@ -1,11 +1,11 @@
 Pod::Spec.new do |s|
   s.name         = "CocoaORM"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "Object-relational mapping for Cocoa."
   s.homepage     = "https://github.com/anagromataf/CocoaORM"
   s.license      = { :type => 'BSD', :file => 'LICENSE.md' }  
   s.author       = { "Tobias Kräntzer" => "info@tobias-kraentzer.de" }
-  s.source       = { :git => "https://github.com/anagromataf/CocoaORM.git", :tag => "0.0.1" }
+  s.source       = { :git => "https://github.com/anagromataf/CocoaORM.git", :tag => "0.0.2" }
   
   s.platform     = :osx
   s.source_files = 'CocoaORM/CocoaORM/*.{h,m}'
