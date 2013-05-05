@@ -149,9 +149,9 @@
         
         // Delete Properties
         
-        success = [Employee deleteORMObjectWithPrimaryKey:pk
-                                               inDatabase:db
-                                                    error:&error];
+        success = [self.employeeMapping deleteEntityWithPrimaryKey:pk
+                                                        inDatabase:db
+                                                             error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error) {

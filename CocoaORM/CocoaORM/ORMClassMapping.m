@@ -229,4 +229,28 @@
 
 }
 
+- (BOOL)deleteEntityWithPrimaryKey:(ORMPrimaryKey)pk
+                        inDatabase:(FMDatabase *)database
+                             error:(NSError **)error
+{
+    if ([[self.mappedClass superclass] isORMClass]) {
+        return [[ORMClassMapping mappingForClass:[self.mappedClass superclass]] deleteEntityWithPrimaryKey:pk inDatabase:database error:error];
+    }
+    
+    NSString *statement = [NSString stringWithFormat:@"DELETE FROM %@ WHERE _id = :_id",
+                           self.mappedClass.ORM.entityName];
+    
+    NSLog(@"SQL: %@", statement);
+    
+    if (![database executeUpdate:statement withParameterDictionary:@{@"_id":@(pk)}]) {
+        if (error) {
+            *error = database.lastError;
+        }
+        return NO;
+    }
+    
+    return YES;
+}
+
+
 @end

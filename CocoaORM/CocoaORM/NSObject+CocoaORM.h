@@ -50,7 +50,7 @@ extern NSString * const NSObjectORMValuesDidChangeNotification;
 
 + (BOOL)deleteORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                            inDatabase:(FMDatabase *)database
-                                error:(NSError **)error;
+                                error:(NSError **)error __attribute__ ((deprecated));
 
 #pragma mark Check Exsitance
 
