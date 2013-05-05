@@ -8,12 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+@class ORMClass;
+
 @interface ORMAttributeDescription : NSObject
 
-- (id)initWithName:(NSString *)name ORMClass:(Class)aClass;
+- (id)initWithName:(NSString *)name ORMClass:(ORMClass *)ORMClass;
 
 @property (nonatomic, readonly) NSString *attributeName;
-@property (nonatomic, readonly) Class ORMClass;
+@property (nonatomic, readonly) ORMClass *ORMClass;
+@property (nonatomic, readonly) Class managedClass;
 
 @property (nonatomic, readonly) ORMAttributeDescription *(^integer)();
 @property (nonatomic, readonly) ORMAttributeDescription *(^real)();

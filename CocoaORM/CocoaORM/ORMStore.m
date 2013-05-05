@@ -9,6 +9,8 @@
 #import "NSObject+CocoaORM.h"
 #import "NSObject+CocoaORMPrivate.h"
 
+#import "ORMClass.h"
+
 #import "ORMStore.h"
 #import "ORMStore+Private.h"
 

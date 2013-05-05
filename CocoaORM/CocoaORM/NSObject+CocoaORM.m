@@ -14,6 +14,7 @@
 #import <FMDB/FMDatabaseAdditions.h>
 
 // CocoaORM
+#import "ORMClass.h"
 #import "ORMStore+Private.h"
 
 #import "NSObject+CocoaORM.h"
@@ -27,92 +28,6 @@ const char * NSObjectORMObjectIDKey                     = "NSObjectORMObjectIDKe
 const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
 
 @implementation NSObject (CocoaORM)
-
-#pragma mark ORM Descriptions
-
-+ (BOOL)isORMClass
-{
-    if (self == [NSObject class]) {
-        return NO;
-    } else if (objc_getAssociatedObject(self, NSObjectORMPropertyDescriptionsKey) != nil) {
-        return YES;
-    } else {
-        return [[self superclass] isORMClass];
-    }
-}
-
-+ (NSArray *)ORMClassHierarchy
-{
-    if ([[self superclass] isORMClass]) {
-        return [[[self superclass] ORMClassHierarchy] arrayByAddingObject:[self class]];
-    } else if ([self isORMClass]) {
-        return @[[self class]];
-    } else {
-        return nil;
-    }
-}
-
-+ (NSDictionary *)ORMProperties
-{
-    return [[self ORMPropertyDescriptions] copy];
-}
-
-+ (NSDictionary *)allORMProperties
-{
-    if ([[self superclass] isORMClass]) {
-        NSMutableDictionary *properties = [[[self superclass] allORMProperties] mutableCopy];
-        [properties addEntriesFromDictionary:[self ORMProperties]];
-        return properties;
-    } else {
-        return [self ORMProperties];
-    }
-}
-
-+ (NSSet *)ORMUniqueConstraints
-{
-    return [[self ORMUniqueTogetherPropertyNames] copy];
-}
-
-+ (NSSet *)allORMUniqueConstraints
-{
-    if ([[self superclass] isORMClass]) {
-        NSMutableSet *constraints = [[[self superclass] allORMUniqueConstraints] mutableCopy];
-        [constraints unionSet:[self ORMUniqueConstraints]];
-        return constraints;
-    } else {
-        return [self ORMUniqueConstraints];
-    }
-}
-
-#pragma mark ORM Property Descriptions
-
-+ (NSMutableDictionary *)ORMPropertyDescriptions
-{
-    NSMutableDictionary *propertyDescriptions = objc_getAssociatedObject(self, NSObjectORMPropertyDescriptionsKey);
-    if (!propertyDescriptions) {
-        propertyDescriptions = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self,
-                                 NSObjectORMPropertyDescriptionsKey,
-                                 propertyDescriptions,
-                                 OBJC_ASSOCIATION_RETAIN);
-    }
-    return propertyDescriptions;
-}
-
-#pragma mark Unique Property Names
-
-+ (NSMutableSet *)ORMUniqueTogetherPropertyNames
-{
-    NSMutableSet *uniqueNames = objc_getAssociatedObject(self, NSObjectORMUniqueTogetherPropertyNamesKey);
-    if (!uniqueNames) {
-        uniqueNames = [[NSMutableSet alloc] init];
-        objc_setAssociatedObject(self,
-                                 NSObjectORMUniqueTogetherPropertyNamesKey,
-                                 uniqueNames,
-                                 OBJC_ASSOCIATION_RETAIN);
-    }
-    return uniqueNames;
-}
 
 #pragma mark ORM Object ID & Store
 
@@ -187,11 +102,12 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
     }
     
     if (value == nil && [self ORMObjectID] && [self ORMStore]) {
-        ORMAttributeDescription *attributeDescription = [[[self class] allORMProperties] objectForKey:key];
+        ORMAttributeDescription *attributeDescription = [[[[self class] ORM] allProperties] objectForKey:key];
         
         if (attributeDescription) {
             NSError *error = nil;
-            NSDictionary *properties = [attributeDescription.ORMClass propertiesOfORMObjectWithPrimaryKey:self.ORMObjectID.primaryKey
+            NSDictionary *properties = [attributeDescription.managedClass
+                                        propertiesOfORMObjectWithPrimaryKey:self.ORMObjectID.primaryKey
                                                                                                inDatabase:self.ORMStore.db
                                                                                                     error:&error];
             
@@ -237,9 +153,9 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
                 [columns addObject:[NSString stringWithFormat:@"_id INTEGER NOT NULL PRIMARY KEY REFERENCES %@(_id) ON DELETE CASCADE", NSStringFromClass([self superclass])]];
             }
             
-            NSMutableSet *uniqueConstraints = [[self ORMUniqueConstraints] mutableCopy];
+            NSMutableSet *uniqueConstraints = [[[self ORM] uniqueConstraints] mutableCopy];
             
-            [[self ORMProperties] enumerateKeysAndObjectsUsingBlock:^(NSString *name, ORMAttributeDescription *attribute, BOOL *stop) {
+            [[[self ORM] properties] enumerateKeysAndObjectsUsingBlock:^(NSString *name, ORMAttributeDescription *attribute, BOOL *stop) {
                 
                 NSMutableArray *column = [[NSMutableArray alloc] init];
                 
@@ -314,7 +230,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
                              forKey:@"_id"];
     }
     
-    [[[self class] ORMProperties] enumerateKeysAndObjectsUsingBlock:^(NSString *name,
+    [[[[self class] ORM] properties] enumerateKeysAndObjectsUsingBlock:^(NSString *name,
                                                                       ORMAttributeDescription *attribute,
                                                                       BOOL *stop) {
         id value = [properties objectForKey:name];
@@ -365,7 +281,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
     NSMutableArray *columns = [[NSMutableArray alloc] init];
     NSMutableDictionary *columnProperties = [[NSMutableDictionary alloc] init];
     
-    [[[self class] ORMProperties] enumerateKeysAndObjectsUsingBlock:^(NSString *name,
+    [[[[self class] ORM] properties] enumerateKeysAndObjectsUsingBlock:^(NSString *name,
                                                                       ORMAttributeDescription *attribute,
                                                                       BOOL *stop) {
         id value = [properties objectForKey:name];
@@ -458,7 +374,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
 {
     NSString *statement = nil;
     if (includeSuperProperties) {
-        NSArray *classes = [[[self ORMClassHierarchy] reverseObjectEnumerator] allObjects];
+        NSArray *classes = [[[[self ORM] classHierarchy] reverseObjectEnumerator] allObjects];
         statement = [NSString stringWithFormat:@"SELECT * FROM %@",
                      [classes componentsJoinedByString:@" NATURAL JOIN "]];
     } else {
@@ -475,9 +391,9 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
             
             NSDictionary *propertyDesctiptions = nil;
             if (includeSuperProperties) {
-                propertyDesctiptions = [self allORMProperties];
+                propertyDesctiptions = [[self ORM] allProperties];
             } else {
-                propertyDesctiptions = [self ORMProperties];
+                propertyDesctiptions = [[self ORM] properties];
             }
             
             [propertyDesctiptions enumerateKeysAndObjectsUsingBlock:^(NSString *name, ORMAttributeDescription *attribute, BOOL *stop) {
@@ -534,7 +450,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
         propertyNames = @[];
     }
     
-    NSArray *classes = [[[self ORMClassHierarchy] reverseObjectEnumerator] allObjects];
+    NSArray *classes = [[[[self ORM] classHierarchy] reverseObjectEnumerator] allObjects];
     
     NSString *statement = [NSString stringWithFormat:@"SELECT %@ FROM %@",
                            [[propertyNames arrayByAddingObjectsFromArray:@[@"_id", @"_class"]] componentsJoinedByString:@", "],
@@ -610,9 +526,8 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
 ORMAttributeDescription *
 ORMAttribute(Class _class, NSString *name)
 {
-    ORMAttributeDescription *attribute = [[ORMAttributeDescription alloc] initWithName:name ORMClass:_class];
-    
-    [[_class ORMPropertyDescriptions] setObject:attribute forKey:name];
+    ORMClass *ORM = [_class ORM];
+    ORMAttributeDescription *attribute = ORM.attribute(name);
     
     // Add Getter
     class_addMethod(_class,
@@ -636,7 +551,8 @@ ORMAttribute(Class _class, NSString *name)
 }
 
 void
-ORMUniqueTogether(Class klass, NSArray *propertyNames)
+ORMUniqueTogether(Class _class, NSArray *propertyNames)
 {
-    [[klass ORMUniqueTogetherPropertyNames] addObject:[NSSet setWithArray:propertyNames]];
+    ORMClass *ORM = [_class ORM];
+    ORM.unique(propertyNames);
 }

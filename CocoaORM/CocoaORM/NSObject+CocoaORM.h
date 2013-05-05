@@ -22,14 +22,6 @@ extern NSString * const NSObjectORMValuesDidChangeNotification;
 
 @interface NSObject (CocoaORM)
 
-#pragma mark ORM Descriptions
-+ (BOOL)isORMClass;
-+ (NSArray *)ORMClassHierarchy;
-+ (NSDictionary *)ORMProperties;
-+ (NSDictionary *)allORMProperties;
-+ (NSSet *)ORMUniqueConstraints;
-+ (NSSet *)allORMUniqueConstraints;
-
 #pragma mark ORM Object ID & Store
 @property (nonatomic, readonly) ORMObjectID *ORMObjectID;
 @property (nonatomic, readonly) ORMStore *ORMStore;

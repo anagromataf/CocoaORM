@@ -8,6 +8,9 @@
 
 #import "ORMConstants.h"
 
+#import "ORMClass.h"
+
+
 #import "NSObject+CocoaORM.h"
 
 #import "ORMAttributeDescription.h"
