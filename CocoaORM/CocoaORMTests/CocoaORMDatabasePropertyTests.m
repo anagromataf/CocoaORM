@@ -107,10 +107,10 @@
         STAssertTrue(pk != 0, [error localizedDescription]);
         
         // Update Properties
-        success = [Employee updateORMObjectWithPrimaryKey:pk
-                                           withProperties:@{@"firstName":@"John", @"position":@"CTO"}
-                                               inDatabase:db
-                                                    error:&error];
+        success = [self.employeeMapping updateEntityWithPrimaryKey:pk
+                                                    withProperties:@{@"firstName":@"John", @"position":@"CTO"}
+                                                        inDatabase:db
+                                                             error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error) {

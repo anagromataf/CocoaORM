@@ -46,7 +46,7 @@ extern NSString * const NSObjectORMValuesDidChangeNotification;
 + (BOOL)updateORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                        withProperties:(NSDictionary *)properties
                            inDatabase:(FMDatabase *)database
-                                error:(NSError **)error;
+                                error:(NSError **)error __attribute__ ((deprecated));
 
 + (BOOL)deleteORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                            inDatabase:(FMDatabase *)database

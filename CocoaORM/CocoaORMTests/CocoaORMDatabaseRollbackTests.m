@@ -55,10 +55,10 @@
         BOOL success = YES;
         
         // Update Properties
-        success = [Employee updateORMObjectWithPrimaryKey:self.employeePK
-                                           withProperties:@{@"firstName":@"John", @"position":@"CTO"}
-                                               inDatabase:db
-                                                    error:&error];
+        success = [self.employeeMapping updateEntityWithPrimaryKey:self.employeePK
+                                                    withProperties:@{@"firstName":@"John", @"position":@"CTO"}
+                                                        inDatabase:db
+                                                             error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         FMResultSet *result = nil;

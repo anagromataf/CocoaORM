@@ -119,7 +119,7 @@
 {
     if ([properties objectForKey:@"_class"] == nil) {
         NSMutableDictionary *_properties = [properties mutableCopy];
-        [_properties setObject:self.mappedClass.ORM.entityName forKey:@"_class"];
+        [_properties setObject:NSStringFromClass(self.mappedClass) forKey:@"_class"];
         properties = _properties;
     }
     
@@ -180,5 +180,53 @@
     return pk;
 }
 
+- (BOOL)updateEntityWithPrimaryKey:(ORMPrimaryKey)pk
+                    withProperties:(NSDictionary *)properties
+                        inDatabase:(FMDatabase *)database
+                             error:(NSError **)error
+{
+    if ([[self.mappedClass superclass] isORMClass]) {
+        BOOL success = [[ORMClassMapping mappingForClass:[self.mappedClass superclass]] updateEntityWithPrimaryKey:pk
+                                                                                                    withProperties:properties
+                                                                                                        inDatabase:database
+                                                                                                             error:error];
+        if (!success) {
+            return NO;
+        }
+    }
+    
+    NSMutableArray *columns = [[NSMutableArray alloc] init];
+    NSMutableDictionary *columnProperties = [[NSMutableDictionary alloc] init];
+    
+    [self.mappedClass.ORM.properties enumerateKeysAndObjectsUsingBlock:^(NSString *name,
+                                                                         ORMAttributeDescription *attribute,
+                                                                         BOOL *stop) {
+        id value = [properties objectForKey:name];
+        if (value) {
+            [columns addObject:[NSString stringWithFormat:@"%@ = :%@", name, name]];
+            [columnProperties setObject:value forKey:name];
+        }
+    }];
+    
+    if ([columnProperties count] > 0) {
+        [columnProperties setObject:@(pk) forKey:@"_id"];
+        
+        NSString *statement = [NSString stringWithFormat:@"UPDATE %@ SET %@ WHERE _id == :_id",
+                               self.mappedClass.ORM.entityName,
+                               [columns componentsJoinedByString:@", "]];
+        
+        NSLog(@"SQL: %@", statement);
+        
+        if (![database executeUpdate:statement withParameterDictionary:columnProperties]) {
+            if (error) {
+                *error = database.lastError;
+            }
+            return NO;
+        }
+    }
+    
+    return YES;
+
+}
 
 @end
