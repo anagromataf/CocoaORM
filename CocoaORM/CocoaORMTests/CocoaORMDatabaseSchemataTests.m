@@ -10,16 +10,22 @@
 #import <FMDB/FMDatabase.h>
 #import <FMDB/FMDatabaseAdditions.h>
 
+#import "ORMClassMapping.h"
+
 #import "CocoaORMDatabaseSchemataTests.h"
 
 @implementation CocoaORMDatabaseSchemataTests
 
 - (void)testSetupSchemata
 {
+    ORMClassMapping *personMapping = [ORMClassMapping mappingForClass:[Person class]];
+    ORMClassMapping *employeeMapping = [ORMClassMapping mappingForClass:[Employee class]];
+    ORMClassMapping *chefMapping = [ORMClassMapping mappingForClass:[Chef class]];
+    
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [Person setupORMSchemataInDatabase:db error:&error];
+        BOOL success = [personMapping setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error){
@@ -36,7 +42,7 @@
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [Employee setupORMSchemataInDatabase:db error:&error];
+        BOOL success = [employeeMapping setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error){
@@ -54,7 +60,7 @@
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [Chef setupORMSchemataInDatabase:db error:&error];
+        BOOL success = [chefMapping setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error){

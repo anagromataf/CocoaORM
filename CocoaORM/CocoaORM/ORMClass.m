@@ -44,6 +44,11 @@ const char * NSObjectORMClassKey = "NSObjectORMClassKey";
     }
 }
 
+- (NSString *)entityName
+{
+    return NSStringFromClass(self.managedClass);
+}
+
 #pragma mark Properties
 
 - (ORMAttributeDescription *(^)(NSString *))attribute
