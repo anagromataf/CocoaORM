@@ -25,7 +25,7 @@
         
         // Setup Schemata
         
-        success = [Employee setupORMSchemataInDatabase:db error:&error];
+        success = [self.employeeMapping setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         // Insert Properties
@@ -33,9 +33,10 @@
         NSDictionary *properties1 = @{@"firstName":@"Jim",
                                       @"lastName":@"Example",
                                       @"position":@"CEO"};
-        self.employeePK = [Employee insertORMObjectProperties:properties1
-                                                 intoDatabase:db
-                                                        error:&error];
+        
+        self.employeePK = [self.employeeMapping insertEntityWithProperties:properties1
+                                                              intoDatabase:db
+                                                                     error:&error];
         STAssertTrue(self.employeePK != 0, [error localizedDescription]);
         
         return ^(NSError *error) {

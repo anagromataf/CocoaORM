@@ -38,6 +38,7 @@
 		F699F7E0173676C4000F4276 /* ORMClass.m in Sources */ = {isa = PBXBuildFile; fileRef = F699F7DE173676C4000F4276 /* ORMClass.m */; };
 		F699F7E81736CF68000F4276 /* ORMClassMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = F699F7E61736CF68000F4276 /* ORMClassMapping.h */; };
 		F699F7E91736CF68000F4276 /* ORMClassMapping.m in Sources */ = {isa = PBXBuildFile; fileRef = F699F7E71736CF68000F4276 /* ORMClassMapping.m */; };
+		F699F7EE1736ECFD000F4276 /* CocoaORMDatabaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = F699F7ED1736ECFD000F4276 /* CocoaORMDatabaseTestCase.m */; };
 		F6BBAC08172DBD10000B389D /* CocoaORMDatabaseRollbackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6BBAC07172DBD10000B389D /* CocoaORMDatabaseRollbackTests.m */; };
 		F6BBAC0C172DC49C000B389D /* CocoaORMObjectChangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6BBAC0B172DC49C000B389D /* CocoaORMObjectChangeTests.m */; };
 		F6BBAC0F172DCAE8000B389D /* NSObject+CocoaORMPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F6BBAC0D172DCAE8000B389D /* NSObject+CocoaORMPrivate.h */; };
@@ -105,6 +106,8 @@
 		F699F7DE173676C4000F4276 /* ORMClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORMClass.m; sourceTree = "<group>"; };
 		F699F7E61736CF68000F4276 /* ORMClassMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORMClassMapping.h; sourceTree = "<group>"; };
 		F699F7E71736CF68000F4276 /* ORMClassMapping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORMClassMapping.m; sourceTree = "<group>"; };
+		F699F7EC1736ECFD000F4276 /* CocoaORMDatabaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMDatabaseTestCase.h; sourceTree = "<group>"; };
+		F699F7ED1736ECFD000F4276 /* CocoaORMDatabaseTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMDatabaseTestCase.m; sourceTree = "<group>"; };
 		F6BBAC06172DBD10000B389D /* CocoaORMDatabaseRollbackTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMDatabaseRollbackTests.h; sourceTree = "<group>"; };
 		F6BBAC07172DBD10000B389D /* CocoaORMDatabaseRollbackTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CocoaORMDatabaseRollbackTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F6BBAC0A172DC49C000B389D /* CocoaORMObjectChangeTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMObjectChangeTests.h; sourceTree = "<group>"; };
@@ -271,6 +274,8 @@
 		F6BBAC05172DBC9B000B389D /* Database Tests */ = {
 			isa = PBXGroup;
 			children = (
+				F699F7EC1736ECFD000F4276 /* CocoaORMDatabaseTestCase.h */,
+				F699F7ED1736ECFD000F4276 /* CocoaORMDatabaseTestCase.m */,
 				F6509E9F172DACF8002A3067 /* CocoaORMDatabaseSchemataTests.h */,
 				F6509EA0172DACF8002A3067 /* CocoaORMDatabaseSchemataTests.m */,
 				F6509EAD172DB118002A3067 /* CocoaORMDatabasePropertyTests.h */,
@@ -512,6 +517,7 @@
 				F618B90F172E9E5300F12666 /* CocoaORMObjectConstraintTests.m in Sources */,
 				F6FEB6EA172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.m in Sources */,
 				F6FEB6ED172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.m in Sources */,
+				F699F7EE1736ECFD000F4276 /* CocoaORMDatabaseTestCase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

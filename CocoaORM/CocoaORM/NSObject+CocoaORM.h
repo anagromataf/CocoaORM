@@ -35,13 +35,13 @@ extern NSString * const NSObjectORMValuesDidChangeNotification;
 #pragma mark SQL Schemata
 
 + (BOOL)setupORMSchemataInDatabase:(FMDatabase *)database
-                             error:(NSError **)error;
+                             error:(NSError **)error __attribute__ ((deprecated));
 
 #pragma mark Insert, Update & Delete Properties
 
 + (ORMPrimaryKey)insertORMObjectProperties:(NSDictionary *)properties
                               intoDatabase:(FMDatabase *)database
-                                     error:(NSError **)error;
+                                     error:(NSError **)error __attribute__ ((deprecated));
 
 + (BOOL)updateORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                        withProperties:(NSDictionary *)properties

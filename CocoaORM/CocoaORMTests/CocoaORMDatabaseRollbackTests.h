@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import "CocoaORMTestCase.h"
+#import "CocoaORMDatabaseTestCase.h"
 
-@interface CocoaORMDatabaseRollbackTests : CocoaORMTestCase
+@interface CocoaORMDatabaseRollbackTests : CocoaORMDatabaseTestCase
 
 @end

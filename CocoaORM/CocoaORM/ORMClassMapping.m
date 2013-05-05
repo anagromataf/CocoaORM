@@ -67,7 +67,8 @@
                 [columns addObject:@"_id INTEGER NOT NULL PRIMARY KEY"];
                 [columns addObject:@"_class TEXT NOT NULL"];
             } else {
-                [columns addObject:[NSString stringWithFormat:@"_id INTEGER NOT NULL PRIMARY KEY REFERENCES %@(_id) ON DELETE CASCADE", NSStringFromClass([self superclass])]];
+                [columns addObject:[NSString stringWithFormat:@"_id INTEGER NOT NULL PRIMARY KEY REFERENCES %@(_id) ON DELETE CASCADE",
+                                    [[[self.mappedClass superclass] ORM] entityName]]];
             }
             
             NSMutableSet *uniqueConstraints = [self.mappedClass.ORM.uniqueConstraints mutableCopy];
@@ -109,5 +110,75 @@
     
     return success;
 }
+
+#pragma mark Insert, Update & Delete Entity
+
+- (ORMPrimaryKey)insertEntityWithProperties:(NSDictionary *)properties
+                               intoDatabase:(FMDatabase *)database
+                                      error:(NSError **)error
+{
+    if ([properties objectForKey:@"_class"] == nil) {
+        NSMutableDictionary *_properties = [properties mutableCopy];
+        [_properties setObject:self.mappedClass.ORM.entityName forKey:@"_class"];
+        properties = _properties;
+    }
+    
+    sqlite_int64 pk = 0;
+    if ([[self.mappedClass superclass] isORMClass]) {
+        pk = [[ORMClassMapping mappingForClass:[self.mappedClass superclass]] insertEntityWithProperties:properties
+                                                                                            intoDatabase:database
+                                                                                                   error:error];
+        if (pk == 0) {
+            return 0;
+        }
+    }
+    
+    NSMutableArray *columnNames = [[NSMutableArray alloc] init];
+    NSMutableArray *columnValues = [[NSMutableArray alloc] init];
+    NSMutableDictionary *columnProperties = [[NSMutableDictionary alloc] init];
+    if (pk == 0) {
+        [columnNames addObject:@"_class"];
+        [columnValues addObject:@":_class"];
+        [columnProperties setObject:[properties objectForKey:@"_class"]
+                             forKey:@"_class"];
+    } else {
+        [columnNames addObject:@"_id"];
+        [columnValues addObject:@":_id"];
+        [columnProperties setObject:@(pk)
+                             forKey:@"_id"];
+    }
+    
+    [self.mappedClass.ORM.properties enumerateKeysAndObjectsUsingBlock:^(NSString *name,
+                                                                         ORMAttributeDescription *attribute,
+                                                                         BOOL *stop) {
+        id value = [properties objectForKey:name];
+        if (value) {
+            [columnNames addObject:name];
+            [columnValues addObject:[NSString stringWithFormat:@":%@", name]];
+            [columnProperties setObject:value forKey:name];
+        }
+    }];
+    
+    NSString *statement = [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
+                           self.mappedClass.ORM.entityName,
+                           [columnNames componentsJoinedByString:@", "],
+                           [columnValues componentsJoinedByString:@", "]];
+    
+    NSLog(@"SQL: %@", statement);
+    
+    if (![database executeUpdate:statement withParameterDictionary:columnProperties]) {
+        if (error) {
+            *error = database.lastError;
+        }
+        return 0;
+    }
+    
+    if (pk == 0) {
+        pk = database.lastInsertRowId;
+    }
+    
+    return pk;
+}
+
 
 @end

@@ -24,9 +24,13 @@
         NSError *error = nil;
         BOOL success = YES;
         
-        // Setup Schemata
+        success = [self.personMapping setupSchemataInDatabase:db error:&error];
+        STAssertTrue(success, [error localizedDescription]);
         
-        success = [Employee setupORMSchemataInDatabase:db error:&error];
+        success = [self.employeeMapping setupSchemataInDatabase:db error:&error];
+        STAssertTrue(success, [error localizedDescription]);
+        
+        success = [self.chefMapping setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         // Insert Properties
@@ -34,17 +38,18 @@
         NSDictionary *properties1 = @{@"firstName":@"Jim",
                                       @"lastName":@"Example",
                                       @"position":@"CEO"};
-        self.employeePK = [Employee insertORMObjectProperties:properties1
-                                                 intoDatabase:db
-                                                        error:&error];
+        
+        self.employeePK = [self.employeeMapping insertEntityWithProperties:properties1
+                                                              intoDatabase:db
+                                                                     error:&error];
         STAssertTrue(self.employeePK != 0, [error localizedDescription]);
         
         
         NSDictionary *properties2 = @{@"firstName":@"John",
                                       @"lastName":@"Example"};
-        self.personPK = [Person insertORMObjectProperties:properties2
-                                             intoDatabase:db
-                                                    error:&error];
+        self.personPK = [self.personMapping insertEntityWithProperties:properties2
+                                                          intoDatabase:db
+                                                                 error:&error];
         STAssertTrue(self.personPK, [error localizedDescription]);
         
         return ^(NSError *error) {
@@ -133,9 +138,9 @@
 {
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         NSError *error = nil;
-        ORMPrimaryKey pk = [Person insertORMObjectProperties:@{@"firstName":@"John",  @"lastName":@"Tester"}
-                                                intoDatabase:db
-                                                       error:&error];
+        ORMPrimaryKey pk = [self.personMapping insertEntityWithProperties:@{@"firstName":@"John",  @"lastName":@"Tester"}
+                                                             intoDatabase:db
+                                                                    error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
         return nil;
     }];
