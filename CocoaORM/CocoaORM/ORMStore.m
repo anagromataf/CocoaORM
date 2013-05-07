@@ -10,6 +10,7 @@
 #import "NSObject+CocoaORMPrivate.h"
 
 #import "ORMClass.h"
+#import "ORMClassMapping.h"
 
 #import "ORMStore.h"
 #import "ORMStore+Private.h"
@@ -96,9 +97,12 @@
         if (!_rollback) {
             [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
                 
-                ORMPrimaryKey pk = [[obj class] insertORMObjectProperties:[obj changedORMValues]
-                                                             intoDatabase:db
-                                                                    error:&error];
+                ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:[obj class]];
+                
+                ORMPrimaryKey pk = [mapping insertEntityWithProperties:[obj changedORMValues]
+                                                          intoDatabase:db
+                                                                 error:&error];
+                
                 if (pk) {
                     obj.ORMObjectID = [[ORMObjectID alloc] initWithClass:[obj class] primaryKey:pk];
                     obj.ORMStore = self;
@@ -113,10 +117,12 @@
         if (!_rollback) {
             [self.changedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
                 
-                BOOL success = [[obj class] updateORMObjectWithPrimaryKey:obj.ORMObjectID.primaryKey
-                                                           withProperties:[obj changedORMValues]
-                                                               inDatabase:db
-                                                                    error:&error];
+                ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:[obj class]];
+                
+                BOOL success = [mapping updateEntityWithPrimaryKey:obj.ORMObjectID.primaryKey
+                                                    withProperties:[obj changedORMValues]
+                                                        inDatabase:db
+                                                             error:&error];
                 
                 *stop = !success;
                 _rollback = !success;
@@ -126,10 +132,13 @@
         // Delete Objects in Database
         if (!_rollback) {
             [self.deletedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
-                BOOL success = [[obj class] deleteORMObjectWithPrimaryKey:obj.ORMObjectID.primaryKey
-                                                               inDatabase:db
-                                                                    error:&error];
-            
+                
+                ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:[obj class]];
+                
+                BOOL success = [mapping deleteEntityWithPrimaryKey:obj.ORMObjectID.primaryKey
+                                                        inDatabase:db
+                                                             error:&error];
+                
                 *stop = !success;
                 _rollback = !success;
             }];
@@ -180,9 +189,12 @@
         return YES;
     } else {
         NSError *error = nil;
-        return [objectID.ORMClass existsORMObjectWithPrimaryKey:objectID.primaryKey
-                                                     inDatabase:self.db
-                                                          error:&error];
+        
+        ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:objectID.ORMClass];
+        
+        return [mapping existsEntityWithPrimaryKey:objectID.primaryKey
+                                        inDatabase:self.db
+                                             error:&error];
     }
 }
 
@@ -215,17 +227,13 @@
                      enumerator:(void(^)(id object, BOOL *stop))enumerator
 {
     NSError *error = nil;
-    [aClass enumerateORMObjectsInDatabase:self.db
-                        matchingCondition:condition
-                            withArguments:arguments
-                       fetchingProperties:propertyNames
-                                    error:&error
-                               enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
-                                   ORMObjectID *objectID = [[ORMObjectID alloc] initWithClass:klass primaryKey:pk];
-                                   NSObject *object = [self objectWithID:objectID];
-                                   [[self persistentORMValues] addEntriesFromDictionary:properties];
-                                   enumerator(object, stop);
-                               }];
+    ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:aClass];
+    [mapping enumerateEntitiesInDatabase:self.db matchingCondition:condition withArguments:arguments fetchingProperties:propertyNames error:&error enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
+        ORMObjectID *objectID = [[ORMObjectID alloc] initWithClass:klass primaryKey:pk];
+        NSObject *object = [self objectWithID:objectID];
+        [[self persistentORMValues] addEntriesFromDictionary:properties];
+        enumerator(object, stop);
+    }];
 }
 
 #pragma mark Apply or Reset Changes
@@ -301,7 +309,8 @@
     __block BOOL success = YES;
     [classes enumerateObjectsUsingBlock:^(Class klass, BOOL *stop) {
         NSAssert([klass isORMClass], @"Class %@ is not managed by CocoaORM.", klass);
-        success = [klass setupORMSchemataInDatabase:self.db error:error];
+        ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:klass];
+        success = [mapping setupSchemataInDatabase:self.db error:error];
         *stop = !success;
     }];
     
