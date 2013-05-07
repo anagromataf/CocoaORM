@@ -252,5 +252,82 @@
     return YES;
 }
 
+#pragma mark Check if Entity exists
+
+- (BOOL)existsEntityWithPrimaryKey:(ORMPrimaryKey)pk
+                        inDatabase:(FMDatabase *)database
+                             error:(NSError **)error
+{
+    NSString *statement = [NSString stringWithFormat:@"SELECT _id FROM %@ WHERE _id = :_id", self.mappedClass.ORM.entityName];
+    NSLog(@"SQL: %@", statement);
+    
+    FMResultSet *result = [database executeQuery:statement withParameterDictionary:@{@"_id":@(pk)}];
+    if (result) {
+        if ([result next]) {
+            return YES;
+        } else {
+            return NO;
+        }
+    } else {
+        if (error) {
+            *error = database.lastError;
+        }
+        return NO;
+    }
+}
+
+#pragma mark Get Properties of Entity
+
+- (NSDictionary *)propertiesOfEntityWithPrimaryKey:(ORMPrimaryKey)pk
+                                        inDatabase:(FMDatabase *)database
+                                             error:(NSError **)error
+{
+    return [self propertiesOfEntityWithPrimaryKey:pk inDatabase:database error:error includeSuperProperties:NO];
+}
+
+- (NSDictionary *)propertiesOfEntityWithPrimaryKey:(ORMPrimaryKey)pk
+                                        inDatabase:(FMDatabase *)database
+                                             error:(NSError **)error
+                            includeSuperProperties:(BOOL)includeSuperProperties
+{
+    NSString *statement = nil;
+    if (includeSuperProperties) {
+        NSArray *classes = [[self.mappedClass.ORM.entityHierarchy reverseObjectEnumerator] allObjects];
+        statement = [NSString stringWithFormat:@"SELECT * FROM %@",
+                     [classes componentsJoinedByString:@" NATURAL JOIN "]];
+    } else {
+        statement = [NSString stringWithFormat:@"SELECT * FROM %@", self.mappedClass.ORM.entityName];
+    }
+    statement = [statement stringByAppendingString:@" WHERE _id = :_id"];
+    
+    NSLog(@"SQL: %@", statement);
+    
+    FMResultSet *result = [database executeQuery:statement withParameterDictionary:@{@"_id":@(pk)}];
+    if (result) {
+        if ([result next]) {
+            NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+            
+            NSDictionary *propertyDesctiptions = nil;
+            if (includeSuperProperties) {
+                propertyDesctiptions = self.mappedClass.ORM.allProperties;
+            } else {
+                propertyDesctiptions = self.mappedClass.ORM.properties;
+            }
+            
+            [propertyDesctiptions enumerateKeysAndObjectsUsingBlock:^(NSString *name, ORMAttributeDescription *attribute, BOOL *stop) {
+                id value = [result objectForColumnName:name];
+                [properties setObject:value forKey:name];
+            }];
+            return properties;
+        } else {
+            return nil;
+        }
+    } else {
+        if (error) {
+            *error = database.lastError;
+        }
+        return nil;
+    }
+}
 
 @end

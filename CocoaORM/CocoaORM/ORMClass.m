@@ -49,6 +49,15 @@ const char * NSObjectORMClassKey = "NSObjectORMClassKey";
     return NSStringFromClass(self.managedClass);
 }
 
+- (NSArray *)entityHierarchy
+{
+    if ([[self.managedClass superclass] isORMClass]) {
+        return [[[[self.managedClass superclass] ORM] entityHierarchy] arrayByAddingObject:self.entityName];
+    } else {
+        return @[self.entityName];
+    }
+}
+
 #pragma mark Properties
 
 - (ORMAttributeDescription *(^)(NSString *))attribute

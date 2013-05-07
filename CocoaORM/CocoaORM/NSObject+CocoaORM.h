@@ -56,18 +56,18 @@ extern NSString * const NSObjectORMValuesDidChangeNotification;
 
 + (BOOL)existsORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                            inDatabase:(FMDatabase *)database
-                                error:(NSError **)error;
+                                error:(NSError **)error __attribute__ ((deprecated));
 
 #pragma mark Get Properties
 
 + (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                                            inDatabase:(FMDatabase *)database
-                                                error:(NSError **)error;
+                                                error:(NSError **)error __attribute__ ((deprecated));
 
 + (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
                                            inDatabase:(FMDatabase *)database
                                                 error:(NSError **)error
-                               includeSuperProperties:(BOOL)includeSuperProperties;
+                               includeSuperProperties:(BOOL)includeSuperProperties __attribute__ ((deprecated));
 
 #pragma mark Enumerate ORM Objects
 

@@ -215,9 +215,9 @@
             
             // Person Properties
             
-            NSDictionary *personProperties = [Person propertiesOfORMObjectWithPrimaryKey:pk2
-                                                                              inDatabase:db
-                                                                                   error:&_error];
+            NSDictionary *personProperties = [self.personMapping propertiesOfEntityWithPrimaryKey:pk2
+                                                                                       inDatabase:db
+                                                                                            error:&_error];
             STAssertNotNil(personProperties, [_error localizedDescription]);
             
             NSDictionary *_pp = @{@"firstName":@"Jim", @"lastName":@"Example"};
@@ -225,9 +225,9 @@
             
             // Employee Properties
             
-            NSDictionary *employeeProperties = [Employee propertiesOfORMObjectWithPrimaryKey:pk2
-                                                                                  inDatabase:db
-                                                                                       error:&_error];
+            NSDictionary *employeeProperties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:pk2
+                                                                                           inDatabase:db
+                                                                                                error:&_error];
             STAssertNotNil(employeeProperties, [_error localizedDescription]);
             
             NSDictionary *_ep = @{@"position":@"CEO", @"fired":[NSNull null], @"employeeID":@(12)};
@@ -235,10 +235,10 @@
             
             // All Properties
             
-            NSDictionary *allProperties = [Employee propertiesOfORMObjectWithPrimaryKey:pk2
-                                                                             inDatabase:db
-                                                                                  error:&_error
-                                                                 includeSuperProperties:YES];
+            NSDictionary *allProperties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:pk2
+                                                                                      inDatabase:db
+                                                                                           error:&_error
+                                                                          includeSuperProperties:YES];
             STAssertNotNil(allProperties, [_error localizedDescription]);
             
             NSDictionary *_ap = @{@"firstName":@"Jim", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null], @"employeeID":@(12)};

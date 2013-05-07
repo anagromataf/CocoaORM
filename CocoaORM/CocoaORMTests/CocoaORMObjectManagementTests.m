@@ -8,7 +8,20 @@
 
 #import "CocoaORMObjectManagementTests.h"
 
+@interface CocoaORMObjectManagementTests ()
+@property (nonatomic, strong) ORMClassMapping *employeeMapping;
+@end
+
 @implementation CocoaORMObjectManagementTests
+
+- (void)setUp
+{
+    [super setUp];
+    
+    self.employeeMapping = [[ORMClassMapping alloc] initWithClass:[Employee class]];
+}
+
+#pragma mark Tests
 
 - (void)testInsertObject
 {
@@ -35,10 +48,10 @@
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [Employee propertiesOfORMObjectWithPrimaryKey:employee.ORMObjectID.primaryKey
-                                                                         inDatabase:db
-                                                                              error:&error
-                                                             includeSuperProperties:YES];
+        NSDictionary *allProperties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
+                                                                                  inDatabase:db
+                                                                                       error:&error
+                                                                      includeSuperProperties:YES];
         STAssertNotNil(allProperties, [error localizedDescription]);
         
         NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null], @"employeeID":[NSNull null]};
@@ -78,10 +91,10 @@
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [Employee propertiesOfORMObjectWithPrimaryKey:employee.ORMObjectID.primaryKey
-                                                                         inDatabase:db
-                                                                              error:&error
-                                                             includeSuperProperties:YES];
+        NSDictionary *allProperties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
+                                                                                  inDatabase:db
+                                                                                       error:&error
+                                                                      includeSuperProperties:YES];
         STAssertNotNil(allProperties, [error localizedDescription]);
         
         NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":@YES, @"employeeID":[NSNull null]};
@@ -122,10 +135,10 @@
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [Employee propertiesOfORMObjectWithPrimaryKey:employee.ORMObjectID.primaryKey
-                                                                         inDatabase:db
-                                                                              error:&error
-                                                             includeSuperProperties:YES];
+        NSDictionary *allProperties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
+                                                                                  inDatabase:db
+                                                                                       error:&error
+                                                                      includeSuperProperties:YES];
         STAssertNotNil(allProperties, [error localizedDescription]);
         
         NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null], @"employeeID":[NSNull null]};
@@ -166,8 +179,9 @@
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        NSDictionary *properties = [Employee propertiesOfORMObjectWithPrimaryKey:pk
-                                                                      inDatabase:db                                                                              error:&error];
+        NSDictionary *properties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:pk
+                                                                               inDatabase:db
+                                                                                    error:&error];
         STAssertNil(error, [error localizedDescription]);
         STAssertNil(properties, nil);
         
