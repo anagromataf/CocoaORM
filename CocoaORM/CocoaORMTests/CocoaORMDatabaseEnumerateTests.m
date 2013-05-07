@@ -68,12 +68,12 @@
         NSMutableSet *classes = [[NSMutableSet alloc] init];
         
         NSError *error = nil;
-        BOOL success = [Person enumerateORMObjectsInDatabase:db
-                                                       error:&error
-                                                  enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
-                                                      [primaryKeys addObject:@(pk)];
-                                                      [classes addObject:klass];
-                                                  }];
+        BOOL success = [self.personMapping enumerateEntitiesInDatabase:db
+                                                                 error:&error
+                                                            enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
+                                                                [primaryKeys addObject:@(pk)];
+                                                                [classes addObject:klass];
+                                                            }];
         STAssertTrue(success, [error localizedDescription]);
         
         NSSet *_p = [NSSet setWithObjects:@(self.employeePK), @(self.personPK), nil];
@@ -93,12 +93,12 @@
         NSMutableSet *primaryKeys = [[NSMutableSet alloc] init];
 
         NSError *error = nil;
-        BOOL success = [Person enumerateORMObjectsInDatabase:db
-                                                       error:&error
-                                                  enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
-                                                      [primaryKeys addObject:@(pk)];
-                                                      *stop = YES;
-                                                  }];
+        BOOL success = [self.personMapping enumerateEntitiesInDatabase:db
+                                                                 error:&error
+                                                            enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
+                                                                [primaryKeys addObject:@(pk)];
+                                                                *stop = YES;
+                                                            }];
         STAssertTrue(success, [error localizedDescription]);
         STAssertEquals([primaryKeys count], (NSUInteger)1, nil);
         return nil;
@@ -114,14 +114,14 @@
         NSMutableSet *classes = [[NSMutableSet alloc] init];
         
         NSError *error = nil;
-        BOOL success = [Person enumerateORMObjectsInDatabase:db
-                                          fetchingProperties:@[@"lastName"]
-                                                       error:&error
-                                                  enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
-                                                      [primaryKeys addObject:@(pk)];
-                                                      [classes addObject:klass];
-                                                      STAssertEqualObjects(properties, @{@"lastName":@"Example"}, nil);
-                                                  }];
+        BOOL success = [self.personMapping enumerateEntitiesInDatabase:db
+                                                    fetchingProperties:@[@"lastName"]
+                                                                 error:&error
+                                                            enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
+                                                                [primaryKeys addObject:@(pk)];
+                                                                [classes addObject:klass];
+                                                                STAssertEqualObjects(properties, @{@"lastName":@"Example"}, nil);
+                                                            }];
         STAssertTrue(success, [error localizedDescription]);
         
         NSSet *_p = [NSSet setWithObjects:@(self.employeePK), @(self.personPK), nil];
@@ -148,14 +148,14 @@
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [Person enumerateORMObjectsInDatabase:db
-                                           matchingCondition:@"lastName = :lastName"
-                                               withArguments:@{@"lastName":@"Example"}
-                                          fetchingProperties:@[@"lastName"]
-                                                       error:&error
-                                                  enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
-                                                      STAssertEqualObjects(properties, @{@"lastName":@"Example"}, nil);
-                                                  }];
+        BOOL success = [self.personMapping enumerateEntitiesInDatabase:db
+                                                     matchingCondition:@"lastName = :lastName"
+                                                         withArguments:@{@"lastName":@"Example"}
+                                                    fetchingProperties:@[@"lastName"]
+                                                                 error:&error
+                                                            enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
+                                                                STAssertEqualObjects(properties, @{@"lastName":@"Example"}, nil);
+                                                            }];
         STAssertTrue(success, [error localizedDescription]);
         
         return nil;

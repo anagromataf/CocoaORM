@@ -8,11 +8,17 @@
 
 #import "CocoaORMObjectConstraintTests.h"
 
+@interface CocoaORMObjectConstraintTests ()
+@property (nonatomic, strong) ORMClassMapping *personMapping;
+@end
+
 @implementation CocoaORMObjectConstraintTests
 
 - (void)setUp
 {
     [super setUp];
+    
+    self.personMapping = [[ORMClassMapping alloc] initWithClass:[Person class]];
     
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
@@ -59,12 +65,11 @@
         __block NSUInteger count = 0;
         
         NSError *error = nil;
-        BOOL success = [Person enumerateORMObjectsInDatabase:db
-                                                       error:&error
-                                                  enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
-                                                      count++;
-                                                  }];
-        
+        BOOL success = [self.personMapping enumerateEntitiesInDatabase:db
+                                                                 error:&error
+                                                            enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
+                                                                count++;
+                                                            }];
         
         STAssertTrue(success, [error localizedDescription]);
         

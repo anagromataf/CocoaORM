@@ -73,19 +73,19 @@ extern NSString * const NSObjectORMValuesDidChangeNotification;
 
 + (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
                                 error:(NSError **)error
-                           enumerator:(void(^)(ORMPrimaryKey pk, Class klass, BOOL *stop))enumerator;
+                           enumerator:(void(^)(ORMPrimaryKey pk, Class klass, BOOL *stop))enumerator __attribute__ ((deprecated));
 
 + (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
                    fetchingProperties:(NSArray *)propertyNames
                                 error:(NSError **)error
-                           enumerator:(void(^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
+                           enumerator:(void(^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator __attribute__ ((deprecated));
 
 + (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
                     matchingCondition:(NSString *)condition
                         withArguments:(NSDictionary *)arguments
                    fetchingProperties:(NSArray *)propertyNames
                                 error:(NSError **)error
-                           enumerator:(void (^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
+                           enumerator:(void (^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator __attribute__ ((deprecated));
 
 @end
 
