@@ -76,7 +76,7 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
     return ^(NSString *name) {
         ORMAttributeDescription *attributeDescription = [self.propertyDescriptions objectForKey:name];
         if (!attributeDescription) {
-            attributeDescription = [[ORMAttributeDescription alloc] initWithName:name ORMEntityDescription:self];
+            attributeDescription = [[ORMAttributeDescription alloc] initWithName:name entityDescription:self];
             [self.propertyDescriptions setObject:attributeDescription forKey:name];
         }
         return attributeDescription;

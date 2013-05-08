@@ -11,7 +11,7 @@
 
 @interface ORMAttributeDescription ()
 @property (nonatomic, readwrite) NSString *attributeName;
-@property (nonatomic, readwrite, weak) ORMEntityDescription *ORMEntityDescription;
+@property (nonatomic, readwrite, weak) ORMEntityDescription *entityDescription;
 
 @property (nonatomic, readwrite) NSString *typeName;
 @property (nonatomic, readwrite) BOOL required;
@@ -20,12 +20,12 @@
 
 @implementation ORMAttributeDescription
 
-- (id)initWithName:(NSString *)name ORMEntityDescription:(ORMEntityDescription *)ORMEntityDescription;
+- (id)initWithName:(NSString *)name entityDescription:(ORMEntityDescription *)entityDescription;
 {
     self = [super init];
     if (self) {
         _attributeName = name;
-        _ORMEntityDescription = ORMEntityDescription;
+        _entityDescription = entityDescription;
         _typeName = @"TEXT";
     }
     return self;
@@ -33,7 +33,7 @@
 
 - (Class)managedClass
 {
-    return self.ORMEntityDescription.managedClass;
+    return self.entityDescription.managedClass;
 }
 
 - (ORMAttributeDescription *(^)())integer

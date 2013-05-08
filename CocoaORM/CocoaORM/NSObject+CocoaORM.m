@@ -108,7 +108,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
         if (attributeDescription) {
             NSError *error = nil;
             
-            ORMEntitySQLConnector *mapping = [ORMEntitySQLConnector connectorWithEntityDescription:attributeDescription.ORMEntityDescription];
+            ORMEntitySQLConnector *mapping = [ORMEntitySQLConnector connectorWithEntityDescription:attributeDescription.entityDescription];
             
             NSDictionary *properties = [mapping propertiesOfEntityWithEntityID:self.ORMObjectID.entityID
                                                                       inDatabase:self.ORMStore.db

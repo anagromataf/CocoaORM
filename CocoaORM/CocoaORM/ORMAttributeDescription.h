@@ -12,10 +12,10 @@
 
 @interface ORMAttributeDescription : NSObject
 
-- (id)initWithName:(NSString *)name ORMEntityDescription:(ORMEntityDescription *)ORMEntityDescription;
+- (id)initWithName:(NSString *)name entityDescription:(ORMEntityDescription *)ORMEntityDescription;
 
 @property (nonatomic, readonly) NSString *attributeName;
-@property (nonatomic, readonly) ORMEntityDescription *ORMEntityDescription;
+@property (nonatomic, readonly) ORMEntityDescription *entityDescription;
 @property (nonatomic, readonly) Class managedClass;
 
 @property (nonatomic, readonly) ORMAttributeDescription *(^integer)();
