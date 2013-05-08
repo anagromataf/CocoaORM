@@ -190,8 +190,9 @@
 			isa = PBXGroup;
 			children = (
 				F6034C17172DA2C4002802F2 /* CocoaORM.h */,
-				F699F7E1173677AB000F4276 /* ORM */,
 				F618B909172E6D1800F12666 /* ORMConstants.h */,
+				F699F7E1173677AB000F4276 /* Model */,
+				F673F181173A833400461D9F /* SQL Connector */,
 				F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */,
 				F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */,
 				F618B905172E6CB900F12666 /* ORMObjectID.h */,
@@ -258,17 +259,24 @@
 			name = Private;
 			sourceTree = "<group>";
 		};
-		F699F7E1173677AB000F4276 /* ORM */ = {
+		F673F181173A833400461D9F /* SQL Connector */ = {
+			isa = PBXGroup;
+			children = (
+				F699F7E61736CF68000F4276 /* ORMEntitySQLConnector.h */,
+				F699F7E71736CF68000F4276 /* ORMEntitySQLConnector.m */,
+			);
+			name = "SQL Connector";
+			sourceTree = "<group>";
+		};
+		F699F7E1173677AB000F4276 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				F699F7DD173676C4000F4276 /* ORMEntityDescription.h */,
 				F699F7DE173676C4000F4276 /* ORMEntityDescription.m */,
 				F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */,
 				F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */,
-				F699F7E61736CF68000F4276 /* ORMEntitySQLConnector.h */,
-				F699F7E71736CF68000F4276 /* ORMEntitySQLConnector.m */,
 			);
-			name = ORM;
+			name = Model;
 			sourceTree = "<group>";
 		};
 		F6BBAC05172DBC9B000B389D /* Database Tests */ = {
