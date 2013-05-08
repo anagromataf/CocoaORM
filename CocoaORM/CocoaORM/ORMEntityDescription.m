@@ -51,8 +51,8 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
 
 - (NSArray *)entityHierarchy
 {
-    if ([[self.managedClass superclass] isORMClass]) {
-        return [[[[self.managedClass superclass] ORMEntityDescription] entityHierarchy] arrayByAddingObject:self.entityName];
+    if (self.superentity) {
+        return [[self.superentity entityHierarchy] arrayByAddingObject:self.entityName];
     } else {
         return @[self.entityName];
     }
@@ -62,8 +62,8 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
 
 - (NSArray *)classHierarchy
 {
-    if ([[self.managedClass superclass] isORMClass]) {
-        return [[[[self.managedClass superclass] ORMEntityDescription] classHierarchy] arrayByAddingObject:self.managedClass];
+    if (self.superentity) {
+        return [[self.superentity classHierarchy] arrayByAddingObject:self.managedClass];
     } else {
         return @[self.managedClass];
     }
@@ -90,8 +90,8 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
 
 - (NSDictionary *)allProperties
 {
-    if ([[self.managedClass superclass] isORMClass]) {
-        NSMutableDictionary *properties = [[[[self.managedClass superclass] ORMEntityDescription] allProperties] mutableCopy];
+    if (self.superentity) {
+        NSMutableDictionary *properties = [[self.superentity allProperties] mutableCopy];
         [properties addEntriesFromDictionary:self.properties];
         return properties;
     } else {
@@ -115,8 +115,8 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
 
 - (NSSet *)allUniqueConstraints
 {
-    if ([[self.managedClass superclass] isORMClass]) {
-        NSMutableSet *constraints = [[[[self.managedClass superclass] ORMEntityDescription] allUniqueConstraints] mutableCopy];
+    if (self.superentity) {
+        NSMutableSet *constraints = [[self.superentity allUniqueConstraints] mutableCopy];
         [constraints unionSet:self.uniqueConstraints];
         return constraints;
     } else {
