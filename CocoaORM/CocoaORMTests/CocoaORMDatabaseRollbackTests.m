@@ -9,7 +9,7 @@
 #import "CocoaORMDatabaseRollbackTests.h"
 
 @interface CocoaORMDatabaseRollbackTests ()
-@property (nonatomic, assign) ORMPrimaryKey employeePK;
+@property (nonatomic, assign) ORMEntityID employeePK;
 @end
 
 @implementation CocoaORMDatabaseRollbackTests
@@ -55,7 +55,7 @@
         BOOL success = YES;
         
         // Update Properties
-        success = [self.employeeConnector updateEntityWithPrimaryKey:self.employeePK
+        success = [self.employeeConnector updateEntityWithEntityID:self.employeePK
                                                     withProperties:@{@"firstName":@"John", @"position":@"CTO"}
                                                         inDatabase:db
                                                              error:&error];

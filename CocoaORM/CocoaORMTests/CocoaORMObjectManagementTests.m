@@ -48,7 +48,7 @@
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORMObjectID.entityID
                                                                                   inDatabase:db
                                                                                        error:&error
                                                                       includeSuperProperties:YES];
@@ -91,7 +91,7 @@
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORMObjectID.entityID
                                                                                   inDatabase:db
                                                                                        error:&error
                                                                       includeSuperProperties:YES];
@@ -135,7 +135,7 @@
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORMObjectID.entityID
                                                                                   inDatabase:db
                                                                                        error:&error
                                                                       includeSuperProperties:YES];
@@ -167,7 +167,7 @@
         };
     }];
     
-    ORMPrimaryKey pk = employee.ORMObjectID.primaryKey;
+    ORMEntityID eid = employee.ORMObjectID.entityID;
     
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
@@ -179,7 +179,7 @@
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        NSDictionary *properties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:pk
+        NSDictionary *properties = [self.employeeConnector propertiesOfEntityWithEntityID:eid
                                                                                inDatabase:db
                                                                                     error:&error];
         STAssertNil(error, [error localizedDescription]);

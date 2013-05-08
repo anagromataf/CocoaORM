@@ -6,4 +6,4 @@
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-typedef int64_t ORMPrimaryKey;
+

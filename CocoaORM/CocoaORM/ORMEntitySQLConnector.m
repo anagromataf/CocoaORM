@@ -116,7 +116,7 @@
 
 #pragma mark Insert, Update & Delete Entity
 
-- (ORMPrimaryKey)insertEntityWithProperties:(NSDictionary *)properties
+- (ORMEntityID)insertEntityWithProperties:(NSDictionary *)properties
                                intoDatabase:(FMDatabase *)database
                                       error:(NSError **)error
 {
@@ -126,12 +126,12 @@
         properties = _properties;
     }
     
-    sqlite_int64 pk = 0;
+    sqlite_int64 eid = 0;
     if (self.superConnector) {
-        pk = [self.superConnector insertEntityWithProperties:properties
+        eid = [self.superConnector insertEntityWithProperties:properties
                                                 intoDatabase:database
                                                        error:error];
-        if (pk == 0) {
+        if (eid == 0) {
             return 0;
         }
     }
@@ -139,7 +139,7 @@
     NSMutableArray *columnNames = [[NSMutableArray alloc] init];
     NSMutableArray *columnValues = [[NSMutableArray alloc] init];
     NSMutableDictionary *columnProperties = [[NSMutableDictionary alloc] init];
-    if (pk == 0) {
+    if (eid == 0) {
         [columnNames addObject:@"_class"];
         [columnValues addObject:@":_class"];
         [columnProperties setObject:[properties objectForKey:@"_class"]
@@ -147,7 +147,7 @@
     } else {
         [columnNames addObject:@"_id"];
         [columnValues addObject:@":_id"];
-        [columnProperties setObject:@(pk)
+        [columnProperties setObject:@(eid)
                              forKey:@"_id"];
     }
     
@@ -176,20 +176,20 @@
         return 0;
     }
     
-    if (pk == 0) {
-        pk = database.lastInsertRowId;
+    if (eid == 0) {
+        eid = database.lastInsertRowId;
     }
     
-    return pk;
+    return eid;
 }
 
-- (BOOL)updateEntityWithPrimaryKey:(ORMPrimaryKey)pk
+- (BOOL)updateEntityWithEntityID:(ORMEntityID)eid
                     withProperties:(NSDictionary *)properties
                         inDatabase:(FMDatabase *)database
                              error:(NSError **)error
 {
     if (self.superConnector) {
-        BOOL success = [self.superConnector updateEntityWithPrimaryKey:pk
+        BOOL success = [self.superConnector updateEntityWithEntityID:eid
                                                         withProperties:properties
                                                             inDatabase:database
                                                                  error:error];
@@ -212,7 +212,7 @@
     }];
     
     if ([columnProperties count] > 0) {
-        [columnProperties setObject:@(pk) forKey:@"_id"];
+        [columnProperties setObject:@(eid) forKey:@"_id"];
         
         NSString *statement = [NSString stringWithFormat:@"UPDATE %@ SET %@ WHERE _id == :_id",
                                self.entityDescription.entityName,
@@ -232,12 +232,12 @@
     
 }
 
-- (BOOL)deleteEntityWithPrimaryKey:(ORMPrimaryKey)pk
+- (BOOL)deleteEntityWithEntityID:(ORMEntityID)eid
                         inDatabase:(FMDatabase *)database
                              error:(NSError **)error
 {
     if (self.superConnector) {
-        return [self.superConnector deleteEntityWithPrimaryKey:pk inDatabase:database error:error];
+        return [self.superConnector deleteEntityWithEntityID:eid inDatabase:database error:error];
     }
     
     NSString *statement = [NSString stringWithFormat:@"DELETE FROM %@ WHERE _id = :_id",
@@ -245,7 +245,7 @@
     
     NSLog(@"SQL: %@", statement);
     
-    if (![database executeUpdate:statement withParameterDictionary:@{@"_id":@(pk)}]) {
+    if (![database executeUpdate:statement withParameterDictionary:@{@"_id":@(eid)}]) {
         if (error) {
             *error = database.lastError;
         }
@@ -257,14 +257,14 @@
 
 #pragma mark Check if Entity exists
 
-- (BOOL)existsEntityWithPrimaryKey:(ORMPrimaryKey)pk
+- (BOOL)existsEntityWithEntityID:(ORMEntityID)eid
                         inDatabase:(FMDatabase *)database
                              error:(NSError **)error
 {
     NSString *statement = [NSString stringWithFormat:@"SELECT _id FROM %@ WHERE _id = :_id", self.entityDescription.entityName];
     NSLog(@"SQL: %@", statement);
     
-    FMResultSet *result = [database executeQuery:statement withParameterDictionary:@{@"_id":@(pk)}];
+    FMResultSet *result = [database executeQuery:statement withParameterDictionary:@{@"_id":@(eid)}];
     if (result) {
         if ([result next]) {
             return YES;
@@ -281,14 +281,14 @@
 
 #pragma mark Get Properties of Entity
 
-- (NSDictionary *)propertiesOfEntityWithPrimaryKey:(ORMPrimaryKey)pk
+- (NSDictionary *)propertiesOfEntityWithEntityID:(ORMEntityID)eid
                                         inDatabase:(FMDatabase *)database
                                              error:(NSError **)error
 {
-    return [self propertiesOfEntityWithPrimaryKey:pk inDatabase:database error:error includeSuperProperties:NO];
+    return [self propertiesOfEntityWithEntityID:eid inDatabase:database error:error includeSuperProperties:NO];
 }
 
-- (NSDictionary *)propertiesOfEntityWithPrimaryKey:(ORMPrimaryKey)pk
+- (NSDictionary *)propertiesOfEntityWithEntityID:(ORMEntityID)eid
                                         inDatabase:(FMDatabase *)database
                                              error:(NSError **)error
                             includeSuperProperties:(BOOL)includeSuperProperties
@@ -305,7 +305,7 @@
     
     NSLog(@"SQL: %@", statement);
     
-    FMResultSet *result = [database executeQuery:statement withParameterDictionary:@{@"_id":@(pk)}];
+    FMResultSet *result = [database executeQuery:statement withParameterDictionary:@{@"_id":@(eid)}];
     if (result) {
         if ([result next]) {
             NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
@@ -337,22 +337,22 @@
 
 - (BOOL)enumerateEntitiesInDatabase:(FMDatabase *)database
                               error:(NSError **)error
-                         enumerator:(void(^)(ORMPrimaryKey pk, Class klass, BOOL *stop))enumerator
+                         enumerator:(void(^)(ORMEntityID eid, Class klass, BOOL *stop))enumerator
 {
     return [self enumerateEntitiesInDatabase:database
                            matchingCondition:nil
                                withArguments:nil
                           fetchingProperties:nil
                                        error:error
-                                  enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
-                                      enumerator(pk, klass, stop);
+                                  enumerator:^(ORMEntityID eid, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
+                                      enumerator(eid, klass, stop);
                                   }];
 }
 
 - (BOOL)enumerateEntitiesInDatabase:(FMDatabase *)database
                  fetchingProperties:(NSArray *)propertyNames
                               error:(NSError **)error
-                         enumerator:(void(^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator
+                         enumerator:(void(^)(ORMEntityID eid, Class klass, NSDictionary *properties, BOOL *stop))enumerator
 {
     return [self enumerateEntitiesInDatabase:database
                            matchingCondition:nil
@@ -367,7 +367,7 @@
                       withArguments:(NSDictionary *)arguments
                  fetchingProperties:(NSArray *)propertyNames
                               error:(NSError **)error
-                         enumerator:(void (^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator
+                         enumerator:(void (^)(ORMEntityID eid, Class klass, NSDictionary *properties, BOOL *stop))enumerator
 {
     if (propertyNames == nil) {
         propertyNames = @[];
@@ -390,7 +390,7 @@
         
         BOOL stop = NO;
         while (stop == NO && [result next]) {
-            ORMPrimaryKey pk = [[result objectForColumnName:@"_id"] integerValue];
+            ORMEntityID eid = [[result objectForColumnName:@"_id"] integerValue];
             Class klass = NSClassFromString([result objectForColumnName:@"_class"]);
             
             NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
@@ -398,7 +398,7 @@
                 id value = [result objectForColumnName:name];
                 [properties setObject:value forKey:name];
             }];
-            enumerator(pk, klass, properties, &stop);
+            enumerator(eid, klass, properties, &stop);
         }
         
         return YES;

@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ORMConstants.h"
+#import "ORMEntitySQLConnector.h"
 
 @interface ORMObjectID : NSObject <NSCopying>
 @property (nonatomic, readonly) Class ORMClass;
-@property (nonatomic, readonly) ORMPrimaryKey primaryKey;
+@property (nonatomic, readonly) ORMEntityID entityID;
 
-- (id)initWithClass:(Class)aClass primaryKey:(ORMPrimaryKey)primaryKey;
+- (id)initWithClass:(Class)aClass primaryKey:(ORMEntityID)primaryKey;
 
 @end

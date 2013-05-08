@@ -99,12 +99,12 @@
                 
                 ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[[obj class] ORMEntityDescription]];
                 
-                ORMPrimaryKey pk = [connector insertEntityWithProperties:[obj changedORMValues]
+                ORMEntityID eid = [connector insertEntityWithProperties:[obj changedORMValues]
                                                           intoDatabase:db
                                                                  error:&error];
                 
-                if (pk) {
-                    obj.ORMObjectID = [[ORMObjectID alloc] initWithClass:[obj class] primaryKey:pk];
+                if (eid) {
+                    obj.ORMObjectID = [[ORMObjectID alloc] initWithClass:[obj class] primaryKey:eid];
                     obj.ORMStore = self;
                 } else {
                     *stop = YES;
@@ -119,7 +119,7 @@
                 
                 ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[[obj class] ORMEntityDescription]];
                 
-                BOOL success = [connector updateEntityWithPrimaryKey:obj.ORMObjectID.primaryKey
+                BOOL success = [connector updateEntityWithEntityID:obj.ORMObjectID.entityID
                                                     withProperties:[obj changedORMValues]
                                                         inDatabase:db
                                                              error:&error];
@@ -135,7 +135,7 @@
                 
                 ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[[obj class] ORMEntityDescription]];
                 
-                BOOL success = [connector deleteEntityWithPrimaryKey:obj.ORMObjectID.primaryKey
+                BOOL success = [connector deleteEntityWithEntityID:obj.ORMObjectID.entityID
                                                         inDatabase:db
                                                              error:&error];
                 
@@ -192,7 +192,7 @@
         
         ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[objectID.ORMClass ORMEntityDescription]];
         
-        return [connector existsEntityWithPrimaryKey:objectID.primaryKey
+        return [connector existsEntityWithEntityID:objectID.entityID
                                         inDatabase:self.db
                                              error:&error];
     }
@@ -228,8 +228,8 @@
 {
     NSError *error = nil;
     ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[aClass ORMEntityDescription]];
-    [connector enumerateEntitiesInDatabase:self.db matchingCondition:condition withArguments:arguments fetchingProperties:propertyNames error:&error enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
-        ORMObjectID *objectID = [[ORMObjectID alloc] initWithClass:klass primaryKey:pk];
+    [connector enumerateEntitiesInDatabase:self.db matchingCondition:condition withArguments:arguments fetchingProperties:propertyNames error:&error enumerator:^(ORMEntityID eid, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
+        ORMObjectID *objectID = [[ORMObjectID alloc] initWithClass:klass primaryKey:eid];
         NSObject *object = [self objectWithID:objectID];
         [[self persistentORMValues] addEntriesFromDictionary:properties];
         enumerator(object, stop);

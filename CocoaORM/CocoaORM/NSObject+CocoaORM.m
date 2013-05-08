@@ -110,7 +110,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
             
             ORMEntitySQLConnector *mapping = [ORMEntitySQLConnector connectorWithEntityDescription:attributeDescription.ORMEntityDescription];
             
-            NSDictionary *properties = [mapping propertiesOfEntityWithPrimaryKey:self.ORMObjectID.primaryKey
+            NSDictionary *properties = [mapping propertiesOfEntityWithEntityID:self.ORMObjectID.entityID
                                                                       inDatabase:self.ORMStore.db
                                                                            error:&error];
             

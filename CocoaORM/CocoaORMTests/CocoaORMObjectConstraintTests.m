@@ -67,7 +67,7 @@
         NSError *error = nil;
         BOOL success = [self.personConnector enumerateEntitiesInDatabase:db
                                                                  error:&error
-                                                            enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
+                                                            enumerator:^(ORMEntityID eid, __unsafe_unretained Class klass, BOOL *stop) {
                                                                 count++;
                                                             }];
         

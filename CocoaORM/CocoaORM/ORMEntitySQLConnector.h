@@ -13,6 +13,9 @@
 @class FMDatabase;
 @class ORMEntityDescription;
 
+typedef int64_t ORMEntityID;
+
+
 @interface ORMEntitySQLConnector : NSObject
 
 + (instancetype)connectorWithEntityDescription:(ORMEntityDescription *)entityDescription;
@@ -28,49 +31,49 @@
                           error:(NSError **)error;
 
 #pragma mark Insert, Update & Delete Entity
-- (ORMPrimaryKey)insertEntityWithProperties:(NSDictionary *)properties
-                               intoDatabase:(FMDatabase *)database
-                                      error:(NSError **)error;
+- (ORMEntityID)insertEntityWithProperties:(NSDictionary *)properties
+                             intoDatabase:(FMDatabase *)database
+                                    error:(NSError **)error;
 
-- (BOOL)updateEntityWithPrimaryKey:(ORMPrimaryKey)pk
-                    withProperties:(NSDictionary *)properties
-                        inDatabase:(FMDatabase *)database
-                             error:(NSError **)error;
+- (BOOL)updateEntityWithEntityID:(ORMEntityID)eid
+                  withProperties:(NSDictionary *)properties
+                      inDatabase:(FMDatabase *)database
+                           error:(NSError **)error;
 
-- (BOOL)deleteEntityWithPrimaryKey:(ORMPrimaryKey)pk
-                        inDatabase:(FMDatabase *)database
-                             error:(NSError **)error;
+- (BOOL)deleteEntityWithEntityID:(ORMEntityID)eid
+                      inDatabase:(FMDatabase *)database
+                           error:(NSError **)error;
 
 #pragma mark Check if Entity exists
-- (BOOL)existsEntityWithPrimaryKey:(ORMPrimaryKey)pk
-                        inDatabase:(FMDatabase *)database
-                             error:(NSError **)error;
+- (BOOL)existsEntityWithEntityID:(ORMEntityID)eid
+                      inDatabase:(FMDatabase *)database
+                           error:(NSError **)error;
 
 #pragma mark Get Properties of Entity
-- (NSDictionary *)propertiesOfEntityWithPrimaryKey:(ORMPrimaryKey)pk
-                                        inDatabase:(FMDatabase *)database
-                                             error:(NSError **)error;
+- (NSDictionary *)propertiesOfEntityWithEntityID:(ORMEntityID)eid
+                                      inDatabase:(FMDatabase *)database
+                                           error:(NSError **)error;
 
-- (NSDictionary *)propertiesOfEntityWithPrimaryKey:(ORMPrimaryKey)pk
-                                        inDatabase:(FMDatabase *)database
-                                             error:(NSError **)error
-                            includeSuperProperties:(BOOL)includeSuperProperties;
+- (NSDictionary *)propertiesOfEntityWithEntityID:(ORMEntityID)eid
+                                      inDatabase:(FMDatabase *)database
+                                           error:(NSError **)error
+                          includeSuperProperties:(BOOL)includeSuperProperties;
 
 #pragma mark Enumerate Entities
 - (BOOL)enumerateEntitiesInDatabase:(FMDatabase *)database
                               error:(NSError **)error
-                         enumerator:(void(^)(ORMPrimaryKey pk, Class klass, BOOL *stop))enumerator;
+                         enumerator:(void(^)(ORMEntityID eid, Class klass, BOOL *stop))enumerator;
 
 - (BOOL)enumerateEntitiesInDatabase:(FMDatabase *)database
                  fetchingProperties:(NSArray *)propertyNames
                               error:(NSError **)error
-                         enumerator:(void(^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
+                         enumerator:(void(^)(ORMEntityID eid, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
 
 - (BOOL)enumerateEntitiesInDatabase:(FMDatabase *)database
                   matchingCondition:(NSString *)condition
                       withArguments:(NSDictionary *)arguments
                  fetchingProperties:(NSArray *)propertyNames
                               error:(NSError **)error
-                         enumerator:(void (^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
+                         enumerator:(void (^)(ORMEntityID eid, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
 
 @end

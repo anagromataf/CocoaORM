@@ -46,23 +46,23 @@
                                      @"position":@"CEO",
                                      @"employeeID":@(12)};
         
-        ORMPrimaryKey pk = [self.employeeConnector insertEntityWithProperties:properties
+        ORMEntityID eid = [self.employeeConnector insertEntityWithProperties:properties
                                                                intoDatabase:db
                                                                       error:&error];
-        STAssertTrue(pk != 0, [error localizedDescription]);
+        STAssertTrue(eid != 0, [error localizedDescription]);
         
         return ^(NSError *error) {
             STAssertNil(error, [error localizedDescription]);
             
             FMResultSet *result = nil;
             
-            result = [db executeQuery:@"SELECT * FROM Person WHERE _id = :_id" withParameterDictionary:@{@"_id":@(pk)}];
+            result = [db executeQuery:@"SELECT * FROM Person WHERE _id = :_id" withParameterDictionary:@{@"_id":@(eid)}];
             STAssertNotNil(result, [db.lastError localizedDescription]);
             
             STAssertEquals([result columnCount], 4, nil);
             
             STAssertTrue([result next], nil);
-            STAssertEqualObjects([result objectForColumnName:@"_id"], @(pk), nil);
+            STAssertEqualObjects([result objectForColumnName:@"_id"], @(eid), nil);
             STAssertEqualObjects([result objectForColumnName:@"_class"], NSStringFromClass([Employee class]), nil);
             STAssertEqualObjects([result objectForColumnName:@"firstName"], @"Jim", nil);
             STAssertEqualObjects([result objectForColumnName:@"lastName"], @"Example", nil);
@@ -70,13 +70,13 @@
             STAssertFalse([result next], nil);
             
             
-            result = [db executeQuery:@"SELECT * FROM Employee WHERE _id = :_id" withParameterDictionary:@{@"_id":@(pk)}];
+            result = [db executeQuery:@"SELECT * FROM Employee WHERE _id = :_id" withParameterDictionary:@{@"_id":@(eid)}];
             STAssertNotNil(result, [db.lastError localizedDescription]);
             
             STAssertEquals([result columnCount], 4, nil);
             
             STAssertTrue([result next], nil);
-            STAssertEqualObjects([result objectForColumnName:@"_id"], @(pk), nil);
+            STAssertEqualObjects([result objectForColumnName:@"_id"], @(eid), nil);
             STAssertEqualObjects([result objectForColumnName:@"position"], @"CEO", nil);
             STAssertEqualObjects([result objectForColumnName:@"fired"], [NSNull null], nil);
             STAssertEqualObjects([result objectForColumnName:@"employeeID"], @(12), nil);
@@ -101,13 +101,13 @@
                                      @"position":@"CEO"
                                      };
         
-        ORMPrimaryKey pk = [self.employeeConnector insertEntityWithProperties:properties
+        ORMEntityID eid = [self.employeeConnector insertEntityWithProperties:properties
                                                                intoDatabase:db
                                                                       error:&error];
-        STAssertTrue(pk != 0, [error localizedDescription]);
+        STAssertTrue(eid != 0, [error localizedDescription]);
         
         // Update Properties
-        success = [self.employeeConnector updateEntityWithPrimaryKey:pk
+        success = [self.employeeConnector updateEntityWithEntityID:eid
                                                     withProperties:@{@"firstName":@"John", @"position":@"CTO"}
                                                         inDatabase:db
                                                              error:&error];
@@ -118,7 +118,7 @@
             
             FMResultSet *result = nil;
             
-            result = [db executeQuery:@"SELECT * FROM Person NATURAL JOIN Employee WHERE _id = :_id" withParameterDictionary:@{@"_id":@(pk)}];
+            result = [db executeQuery:@"SELECT * FROM Person NATURAL JOIN Employee WHERE _id = :_id" withParameterDictionary:@{@"_id":@(eid)}];
             STAssertNotNil(result, [db.lastError localizedDescription]);
             
             STAssertTrue([result next], nil);
@@ -142,14 +142,14 @@
                                      @"position":@"CEO"
                                      };
         
-        ORMPrimaryKey pk = [self.employeeConnector insertEntityWithProperties:properties
+        ORMEntityID eid = [self.employeeConnector insertEntityWithProperties:properties
                                                                intoDatabase:db
                                                                       error:&error];
-        STAssertTrue(pk != 0, [error localizedDescription]);
+        STAssertTrue(eid != 0, [error localizedDescription]);
         
         // Delete Properties
         
-        success = [self.employeeConnector deleteEntityWithPrimaryKey:pk
+        success = [self.employeeConnector deleteEntityWithEntityID:eid
                                                         inDatabase:db
                                                              error:&error];
         STAssertTrue(success, [error localizedDescription]);
@@ -159,11 +159,11 @@
             
             FMResultSet *result = nil;
             
-            result = [db executeQuery:@"SELECT * FROM Person WHERE _id = :_id" withParameterDictionary:@{@"_id":@(pk)}];
+            result = [db executeQuery:@"SELECT * FROM Person WHERE _id = :_id" withParameterDictionary:@{@"_id":@(eid)}];
             STAssertNotNil(result, [db.lastError localizedDescription]);
             STAssertFalse([result next], nil);
             
-            result = [db executeQuery:@"SELECT * FROM Employee WHERE _id = :_id" withParameterDictionary:@{@"_id":@(pk)}];
+            result = [db executeQuery:@"SELECT * FROM Employee WHERE _id = :_id" withParameterDictionary:@{@"_id":@(eid)}];
             STAssertNotNil(result, [db.lastError localizedDescription]);
             STAssertFalse([result next], nil);
         };
@@ -183,29 +183,29 @@
                                       @"lastName":@"Example",
                                       @"position":@"CTO",
                                       @"employeeID":@(13)};
-        ORMPrimaryKey pk1 = [self.employeeConnector insertEntityWithProperties:properties1
+        ORMEntityID eid1 = [self.employeeConnector insertEntityWithProperties:properties1
                                                                 intoDatabase:db
                                                                        error:&error];
-        STAssertTrue(pk1 != 0, [error localizedDescription]);
+        STAssertTrue(eid1 != 0, [error localizedDescription]);
         
         NSDictionary *properties2 = @{@"firstName":@"Jim",
                                      @"lastName":@"Example",
                                      @"position":@"CEO",
                                      @"employeeID":@(12)};
-        ORMPrimaryKey pk2 = [self.employeeConnector insertEntityWithProperties:properties2
+        ORMEntityID eid2 = [self.employeeConnector insertEntityWithProperties:properties2
                                                                 intoDatabase:db
                                                                        error:&error];
-        STAssertTrue(pk2 != 0, [error localizedDescription]);
+        STAssertTrue(eid2 != 0, [error localizedDescription]);
 
         
         NSDictionary *properties3 = @{@"firstName":@"Eva",
                                       @"lastName":@"Example",
                                       @"position":@"ETO",
                                       @"employeeID":@(14)};
-        ORMPrimaryKey pk3 = [self.employeeConnector insertEntityWithProperties:properties3
+        ORMEntityID eid3 = [self.employeeConnector insertEntityWithProperties:properties3
                                                                 intoDatabase:db
                                                                        error:&error];
-        STAssertTrue(pk3 != 0, [error localizedDescription]);
+        STAssertTrue(eid3 != 0, [error localizedDescription]);
         
         
         return ^(NSError *error) {
@@ -215,7 +215,7 @@
             
             // Person Properties
             
-            NSDictionary *personProperties = [self.personConnector propertiesOfEntityWithPrimaryKey:pk2
+            NSDictionary *personProperties = [self.personConnector propertiesOfEntityWithEntityID:eid2
                                                                                        inDatabase:db
                                                                                             error:&_error];
             STAssertNotNil(personProperties, [_error localizedDescription]);
@@ -225,7 +225,7 @@
             
             // Employee Properties
             
-            NSDictionary *employeeProperties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:pk2
+            NSDictionary *employeeProperties = [self.employeeConnector propertiesOfEntityWithEntityID:eid2
                                                                                            inDatabase:db
                                                                                                 error:&_error];
             STAssertNotNil(employeeProperties, [_error localizedDescription]);
@@ -235,7 +235,7 @@
             
             // All Properties
             
-            NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:pk2
+            NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:eid2
                                                                                       inDatabase:db
                                                                                            error:&_error
                                                                           includeSuperProperties:YES];
@@ -262,11 +262,11 @@
                                      @"position":@"CEO",
                                      @"employeeID":@(12)};
         
-        ORMPrimaryKey pk = [self.employeeConnector insertEntityWithProperties:properties
+        ORMEntityID eid = [self.employeeConnector insertEntityWithProperties:properties
                                                                intoDatabase:db
                                                                       error:&error];
         
-        STAssertTrue(pk != 0, [error localizedDescription]);
+        STAssertTrue(eid != 0, [error localizedDescription]);
         
         return ^(NSError *error) {
             STAssertNil(error, [error localizedDescription]);
@@ -284,10 +284,10 @@
                                      @"position":@"CEO",
                                      @"employeeID":@(12)};
         
-        ORMPrimaryKey pk = [self.employeeConnector insertEntityWithProperties:properties
+        ORMEntityID eid = [self.employeeConnector insertEntityWithProperties:properties
                                                                intoDatabase:db
                                                                       error:&error];
-        STAssertTrue(pk == 0, nil);
+        STAssertTrue(eid == 0, nil);
         
         return ^(NSError *error) {
             STAssertNil(error, [error localizedDescription]);
@@ -306,10 +306,10 @@
         NSDictionary *properties = @{@"firstName":@"Jim",
                                      @"lastName":@"Example"};
         
-        ORMPrimaryKey pk = [self.personConnector insertEntityWithProperties:properties
+        ORMEntityID eid = [self.personConnector insertEntityWithProperties:properties
                                                              intoDatabase:db
                                                                     error:&error];
-        STAssertTrue(pk != 0, [error localizedDescription]);
+        STAssertTrue(eid != 0, [error localizedDescription]);
         
         return ^(NSError *error) {
             STAssertNil(error, [error localizedDescription]);
@@ -325,10 +325,10 @@
         NSDictionary *properties = @{@"firstName":@"Jim",
                                      @"lastName":@"Example"};
         
-        ORMPrimaryKey pk = [self.personConnector insertEntityWithProperties:properties
+        ORMEntityID eid = [self.personConnector insertEntityWithProperties:properties
                                                              intoDatabase:db
                                                                     error:&error];
-        STAssertTrue(pk == 0, nil);
+        STAssertTrue(eid == 0, nil);
         
         return ^(NSError *error) {
             STAssertNil(error, [error localizedDescription]);
