@@ -18,7 +18,7 @@
 {
     [super setUp];
     
-    self.employeeConnector = [[ORMEntitySQLConnector alloc] initWithClass:[Employee class]];
+    self.employeeConnector = [ORMEntitySQLConnector connectorWithEntityDescription:[Employee ORMEntityDescription]];
 }
 
 #pragma mark Tests

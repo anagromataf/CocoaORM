@@ -33,20 +33,20 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
     return self;
 }
 
-#pragma mark Managed Class
-
-- (NSArray *)classHierarchy
-{
-    if ([[self.managedClass superclass] isORMClass]) {
-        return [[[[self.managedClass superclass] ORMEntityDescription] classHierarchy] arrayByAddingObject:self.managedClass];
-    } else {
-        return @[self.managedClass];
-    }
-}
+#pragma mark Entity
 
 - (NSString *)entityName
 {
     return NSStringFromClass(self.managedClass);
+}
+
+- (ORMEntityDescription *)superentity
+{
+    if ([[self.managedClass superclass] isORMClass]) {
+        return [[self.managedClass superclass] ORMEntityDescription];
+    } else {
+        return nil;
+    }
 }
 
 - (NSArray *)entityHierarchy
@@ -55,6 +55,17 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
         return [[[[self.managedClass superclass] ORMEntityDescription] entityHierarchy] arrayByAddingObject:self.entityName];
     } else {
         return @[self.entityName];
+    }
+}
+
+#pragma mark Managed Class
+
+- (NSArray *)classHierarchy
+{
+    if ([[self.managedClass superclass] isORMClass]) {
+        return [[[[self.managedClass superclass] ORMEntityDescription] classHierarchy] arrayByAddingObject:self.managedClass];
+    } else {
+        return @[self.managedClass];
     }
 }
 

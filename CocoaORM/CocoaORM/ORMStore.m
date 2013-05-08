@@ -97,9 +97,9 @@
         if (!_rollback) {
             [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
                 
-                ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:[obj class]];
+                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[[obj class] ORMEntityDescription]];
                 
-                ORMPrimaryKey pk = [mapping insertEntityWithProperties:[obj changedORMValues]
+                ORMPrimaryKey pk = [connector insertEntityWithProperties:[obj changedORMValues]
                                                           intoDatabase:db
                                                                  error:&error];
                 
@@ -117,9 +117,9 @@
         if (!_rollback) {
             [self.changedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
                 
-                ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:[obj class]];
+                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[[obj class] ORMEntityDescription]];
                 
-                BOOL success = [mapping updateEntityWithPrimaryKey:obj.ORMObjectID.primaryKey
+                BOOL success = [connector updateEntityWithPrimaryKey:obj.ORMObjectID.primaryKey
                                                     withProperties:[obj changedORMValues]
                                                         inDatabase:db
                                                              error:&error];
@@ -133,9 +133,9 @@
         if (!_rollback) {
             [self.deletedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
                 
-                ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:[obj class]];
+                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[[obj class] ORMEntityDescription]];
                 
-                BOOL success = [mapping deleteEntityWithPrimaryKey:obj.ORMObjectID.primaryKey
+                BOOL success = [connector deleteEntityWithPrimaryKey:obj.ORMObjectID.primaryKey
                                                         inDatabase:db
                                                              error:&error];
                 
@@ -190,9 +190,9 @@
     } else {
         NSError *error = nil;
         
-        ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:objectID.ORMClass];
+        ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[objectID.ORMClass ORMEntityDescription]];
         
-        return [mapping existsEntityWithPrimaryKey:objectID.primaryKey
+        return [connector existsEntityWithPrimaryKey:objectID.primaryKey
                                         inDatabase:self.db
                                              error:&error];
     }
@@ -227,8 +227,8 @@
                      enumerator:(void(^)(id object, BOOL *stop))enumerator
 {
     NSError *error = nil;
-    ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:aClass];
-    [mapping enumerateEntitiesInDatabase:self.db matchingCondition:condition withArguments:arguments fetchingProperties:propertyNames error:&error enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
+    ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[aClass ORMEntityDescription]];
+    [connector enumerateEntitiesInDatabase:self.db matchingCondition:condition withArguments:arguments fetchingProperties:propertyNames error:&error enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
         ORMObjectID *objectID = [[ORMObjectID alloc] initWithClass:klass primaryKey:pk];
         NSObject *object = [self objectWithID:objectID];
         [[self persistentORMValues] addEntriesFromDictionary:properties];
@@ -309,8 +309,8 @@
     __block BOOL success = YES;
     [classes enumerateObjectsUsingBlock:^(Class klass, BOOL *stop) {
         NSAssert([klass isORMClass], @"Class %@ is not managed by CocoaORM.", klass);
-        ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:klass];
-        success = [mapping setupSchemataInDatabase:self.db error:error];
+        ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[klass ORMEntityDescription]];
+        success = [connector setupSchemataInDatabase:self.db error:error];
         *stop = !success;
     }];
     

@@ -11,16 +11,17 @@
 #import "ORMConstants.h"
 
 @class FMDatabase;
+@class ORMEntityDescription;
 
 @interface ORMEntitySQLConnector : NSObject
 
-+ (instancetype)mappingForClass:(Class)mappedClass;
++ (instancetype)connectorWithEntityDescription:(ORMEntityDescription *)entityDescription;
 
 #pragma mark Life-cycle
-- (id)initWithClass:(Class)mappedClass;
+- (id)initWithEntityDescription:(ORMEntityDescription *)entityDescription;
 
 #pragma mark Mapped Class
-@property (nonatomic, readonly) Class mappedClass;
+@property (nonatomic, readonly) ORMEntityDescription *entityDescription;
 
 #pragma mark Setup Schemata for Entity
 - (BOOL)setupSchemataInDatabase:(FMDatabase *)database

@@ -18,7 +18,7 @@
 {
     [super setUp];
     
-    self.personConnector = [[ORMEntitySQLConnector alloc] initWithClass:[Person class]];
+    self.personConnector = [ORMEntitySQLConnector connectorWithEntityDescription:[Person ORMEntityDescription]];
     
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         

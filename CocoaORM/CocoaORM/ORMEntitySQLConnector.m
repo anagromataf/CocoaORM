@@ -14,33 +14,37 @@
 
 #import "ORMEntitySQLConnector.h"
 
+@interface ORMEntitySQLConnector ()
+@property (nonatomic, readonly) ORMEntitySQLConnector *superConnector;
+@end
+
 @implementation ORMEntitySQLConnector
 
-+ (instancetype)mappingForClass:(Class)mappedClass
++ (instancetype)connectorWithEntityDescription:(ORMEntityDescription *)entityDescription
 {
-    static NSMutableDictionary *mappings;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        mappings = [[NSMutableDictionary alloc] init];
-    });
-    
-    ORMEntitySQLConnector *mapping = [mappings objectForKey:NSStringFromClass(mappedClass)];
-    if (!mapping) {
-        mapping = [[ORMEntitySQLConnector alloc] initWithClass:mappedClass];
-        [mappings setObject:mapping forKey:NSStringFromClass(mappedClass)];
-    }
-    return mapping;
+    return [[ORMEntitySQLConnector alloc] initWithEntityDescription:entityDescription];
 }
 
 #pragma mark Life-cycle
 
-- (id)initWithClass:(Class)mappedClass
+- (id)initWithEntityDescription:(ORMEntityDescription *)entityDescription;
 {
     self = [super init];
     if (self) {
-        _mappedClass = mappedClass;
+        _entityDescription = entityDescription;
     }
     return self;
+}
+
+#pragma mark Super Connector
+
+- (ORMEntitySQLConnector *)superConnector
+{
+    if (self.entityDescription.superentity) {
+        return [ORMEntitySQLConnector connectorWithEntityDescription:self.entityDescription.superentity];
+    } else {
+        return nil;
+    }
 }
 
 #pragma mark Setup Schemata for Entity
@@ -49,31 +53,30 @@
                           error:(NSError **)error
 {
     BOOL success = YES;
-    BOOL baseClass = ![[self.mappedClass superclass] isORMClass];
     
-    if (!baseClass) {
-        success = [[ORMEntitySQLConnector mappingForClass:[self.mappedClass superclass]] setupSchemataInDatabase:database error:error];
+    if (self.superConnector) {
+        success = [self.superConnector setupSchemataInDatabase:database error:error];
     }
     
     if (success) {
         
-        if ([database tableExists:self.mappedClass.ORMEntityDescription.entityName]) {
+        if ([database tableExists:self.entityDescription.entityName]) {
             return YES;
         } else {
             
             NSMutableArray *columns = [[NSMutableArray alloc] init];
             
-            if (baseClass) {
+            if (self.superConnector) {
+                [columns addObject:[NSString stringWithFormat:@"_id INTEGER NOT NULL PRIMARY KEY REFERENCES %@(_id) ON DELETE CASCADE",
+                                    self.superConnector.entityDescription.entityName]];
+            } else {
                 [columns addObject:@"_id INTEGER NOT NULL PRIMARY KEY"];
                 [columns addObject:@"_class TEXT NOT NULL"];
-            } else {
-                [columns addObject:[NSString stringWithFormat:@"_id INTEGER NOT NULL PRIMARY KEY REFERENCES %@(_id) ON DELETE CASCADE",
-                                    [[[self.mappedClass superclass] ORMEntityDescription] entityName]]];
             }
             
-            NSMutableSet *uniqueConstraints = [self.mappedClass.ORMEntityDescription.uniqueConstraints mutableCopy];
+            NSMutableSet *uniqueConstraints = [self.entityDescription.uniqueConstraints mutableCopy];
             
-            [self.mappedClass.ORMEntityDescription.properties enumerateKeysAndObjectsUsingBlock:^(NSString *name, ORMAttributeDescription *attribute, BOOL *stop) {
+            [self.entityDescription.properties enumerateKeysAndObjectsUsingBlock:^(NSString *name, ORMAttributeDescription *attribute, BOOL *stop) {
                 
                 NSMutableArray *column = [[NSMutableArray alloc] init];
                 
@@ -96,7 +99,7 @@
             }];
             
             NSString *statement = [NSString stringWithFormat:@"CREATE TABLE %@ (%@)",
-                                   self.mappedClass.ORMEntityDescription.entityName,
+                                   self.entityDescription.entityName,
                                    [columns componentsJoinedByString:@", "]];
             
             NSLog(@"SQL: %@", statement);
@@ -119,15 +122,15 @@
 {
     if ([properties objectForKey:@"_class"] == nil) {
         NSMutableDictionary *_properties = [properties mutableCopy];
-        [_properties setObject:NSStringFromClass(self.mappedClass) forKey:@"_class"];
+        [_properties setObject:NSStringFromClass(self.entityDescription.managedClass) forKey:@"_class"];
         properties = _properties;
     }
     
     sqlite_int64 pk = 0;
-    if ([[self.mappedClass superclass] isORMClass]) {
-        pk = [[ORMEntitySQLConnector mappingForClass:[self.mappedClass superclass]] insertEntityWithProperties:properties
-                                                                                            intoDatabase:database
-                                                                                                   error:error];
+    if (self.superConnector) {
+        pk = [self.superConnector insertEntityWithProperties:properties
+                                                intoDatabase:database
+                                                       error:error];
         if (pk == 0) {
             return 0;
         }
@@ -148,9 +151,9 @@
                              forKey:@"_id"];
     }
     
-    [self.mappedClass.ORMEntityDescription.properties enumerateKeysAndObjectsUsingBlock:^(NSString *name,
-                                                                         ORMAttributeDescription *attribute,
-                                                                         BOOL *stop) {
+    [self.entityDescription.properties enumerateKeysAndObjectsUsingBlock:^(NSString *name,
+                                                                           ORMAttributeDescription *attribute,
+                                                                           BOOL *stop) {
         id value = [properties objectForKey:name];
         if (value) {
             [columnNames addObject:name];
@@ -160,7 +163,7 @@
     }];
     
     NSString *statement = [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
-                           self.mappedClass.ORMEntityDescription.entityName,
+                           self.entityDescription.entityName,
                            [columnNames componentsJoinedByString:@", "],
                            [columnValues componentsJoinedByString:@", "]];
     
@@ -185,11 +188,11 @@
                         inDatabase:(FMDatabase *)database
                              error:(NSError **)error
 {
-    if ([[self.mappedClass superclass] isORMClass]) {
-        BOOL success = [[ORMEntitySQLConnector mappingForClass:[self.mappedClass superclass]] updateEntityWithPrimaryKey:pk
-                                                                                                    withProperties:properties
-                                                                                                        inDatabase:database
-                                                                                                             error:error];
+    if (self.superConnector) {
+        BOOL success = [self.superConnector updateEntityWithPrimaryKey:pk
+                                                        withProperties:properties
+                                                            inDatabase:database
+                                                                 error:error];
         if (!success) {
             return NO;
         }
@@ -198,9 +201,9 @@
     NSMutableArray *columns = [[NSMutableArray alloc] init];
     NSMutableDictionary *columnProperties = [[NSMutableDictionary alloc] init];
     
-    [self.mappedClass.ORMEntityDescription.properties enumerateKeysAndObjectsUsingBlock:^(NSString *name,
-                                                                         ORMAttributeDescription *attribute,
-                                                                         BOOL *stop) {
+    [self.entityDescription.properties enumerateKeysAndObjectsUsingBlock:^(NSString *name,
+                                                                           ORMAttributeDescription *attribute,
+                                                                           BOOL *stop) {
         id value = [properties objectForKey:name];
         if (value) {
             [columns addObject:[NSString stringWithFormat:@"%@ = :%@", name, name]];
@@ -212,7 +215,7 @@
         [columnProperties setObject:@(pk) forKey:@"_id"];
         
         NSString *statement = [NSString stringWithFormat:@"UPDATE %@ SET %@ WHERE _id == :_id",
-                               self.mappedClass.ORMEntityDescription.entityName,
+                               self.entityDescription.entityName,
                                [columns componentsJoinedByString:@", "]];
         
         NSLog(@"SQL: %@", statement);
@@ -226,19 +229,19 @@
     }
     
     return YES;
-
+    
 }
 
 - (BOOL)deleteEntityWithPrimaryKey:(ORMPrimaryKey)pk
                         inDatabase:(FMDatabase *)database
                              error:(NSError **)error
 {
-    if ([[self.mappedClass superclass] isORMClass]) {
-        return [[ORMEntitySQLConnector mappingForClass:[self.mappedClass superclass]] deleteEntityWithPrimaryKey:pk inDatabase:database error:error];
+    if (self.superConnector) {
+        return [self.superConnector deleteEntityWithPrimaryKey:pk inDatabase:database error:error];
     }
     
     NSString *statement = [NSString stringWithFormat:@"DELETE FROM %@ WHERE _id = :_id",
-                           self.mappedClass.ORMEntityDescription.entityName];
+                           self.entityDescription.entityName];
     
     NSLog(@"SQL: %@", statement);
     
@@ -258,7 +261,7 @@
                         inDatabase:(FMDatabase *)database
                              error:(NSError **)error
 {
-    NSString *statement = [NSString stringWithFormat:@"SELECT _id FROM %@ WHERE _id = :_id", self.mappedClass.ORMEntityDescription.entityName];
+    NSString *statement = [NSString stringWithFormat:@"SELECT _id FROM %@ WHERE _id = :_id", self.entityDescription.entityName];
     NSLog(@"SQL: %@", statement);
     
     FMResultSet *result = [database executeQuery:statement withParameterDictionary:@{@"_id":@(pk)}];
@@ -292,11 +295,11 @@
 {
     NSString *statement = nil;
     if (includeSuperProperties) {
-        NSArray *classes = [[self.mappedClass.ORMEntityDescription.entityHierarchy reverseObjectEnumerator] allObjects];
+        NSArray *classes = [[self.entityDescription.entityHierarchy reverseObjectEnumerator] allObjects];
         statement = [NSString stringWithFormat:@"SELECT * FROM %@",
                      [classes componentsJoinedByString:@" NATURAL JOIN "]];
     } else {
-        statement = [NSString stringWithFormat:@"SELECT * FROM %@", self.mappedClass.ORMEntityDescription.entityName];
+        statement = [NSString stringWithFormat:@"SELECT * FROM %@", self.entityDescription.entityName];
     }
     statement = [statement stringByAppendingString:@" WHERE _id = :_id"];
     
@@ -309,9 +312,9 @@
             
             NSDictionary *propertyDesctiptions = nil;
             if (includeSuperProperties) {
-                propertyDesctiptions = self.mappedClass.ORMEntityDescription.allProperties;
+                propertyDesctiptions = self.entityDescription.allProperties;
             } else {
-                propertyDesctiptions = self.mappedClass.ORMEntityDescription.properties;
+                propertyDesctiptions = self.entityDescription.properties;
             }
             
             [propertyDesctiptions enumerateKeysAndObjectsUsingBlock:^(NSString *name, ORMAttributeDescription *attribute, BOOL *stop) {
@@ -342,8 +345,8 @@
                           fetchingProperties:nil
                                        error:error
                                   enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
-        enumerator(pk, klass, stop);
-    }];
+                                      enumerator(pk, klass, stop);
+                                  }];
 }
 
 - (BOOL)enumerateEntitiesInDatabase:(FMDatabase *)database
@@ -370,7 +373,7 @@
         propertyNames = @[];
     }
     
-    NSArray *classes = [[[[self.mappedClass ORMEntityDescription] entityHierarchy] reverseObjectEnumerator] allObjects];
+    NSArray *classes = [[self.entityDescription.entityHierarchy reverseObjectEnumerator] allObjects];
     
     NSString *statement = [NSString stringWithFormat:@"SELECT %@ FROM %@",
                            [[propertyNames arrayByAddingObjectsFromArray:@[@"_id", @"_class"]] componentsJoinedByString:@", "],

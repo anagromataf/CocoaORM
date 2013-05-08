@@ -14,10 +14,9 @@
 {
     [super setUp];
     
-    self.personConnector = [ORMEntitySQLConnector mappingForClass:[Person class]];
-    self.employeeConnector = [ORMEntitySQLConnector mappingForClass:[Employee class]];
-    self.chefConnector = [ORMEntitySQLConnector mappingForClass:[Chef class]];
-    
+    self.personConnector = [ORMEntitySQLConnector connectorWithEntityDescription:[Person ORMEntityDescription]];
+    self.employeeConnector = [ORMEntitySQLConnector connectorWithEntityDescription:[Employee ORMEntityDescription]];
+    self.chefConnector = [ORMEntitySQLConnector connectorWithEntityDescription:[Chef ORMEntityDescription]];    
 }
 
 @end
