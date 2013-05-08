@@ -35,7 +35,7 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
 
 #pragma mark Entity
 
-- (NSString *)entityName
+- (NSString *)name
 {
     return NSStringFromClass(self.managedClass);
 }
@@ -52,9 +52,9 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
 - (NSArray *)entityHierarchy
 {
     if (self.superentity) {
-        return [[self.superentity entityHierarchy] arrayByAddingObject:self.entityName];
+        return [[self.superentity entityHierarchy] arrayByAddingObject:self.name];
     } else {
-        return @[self.entityName];
+        return @[self.name];
     }
 }
 

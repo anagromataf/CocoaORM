@@ -60,7 +60,7 @@
     
     if (success) {
         
-        if ([database tableExists:self.entityDescription.entityName]) {
+        if ([database tableExists:self.entityDescription.name]) {
             return YES;
         } else {
             
@@ -68,7 +68,7 @@
             
             if (self.superConnector) {
                 [columns addObject:[NSString stringWithFormat:@"_id INTEGER NOT NULL PRIMARY KEY REFERENCES %@(_id) ON DELETE CASCADE",
-                                    self.superConnector.entityDescription.entityName]];
+                                    self.superConnector.entityDescription.name]];
             } else {
                 [columns addObject:@"_id INTEGER NOT NULL PRIMARY KEY"];
                 [columns addObject:@"_class TEXT NOT NULL"];
@@ -99,7 +99,7 @@
             }];
             
             NSString *statement = [NSString stringWithFormat:@"CREATE TABLE %@ (%@)",
-                                   self.entityDescription.entityName,
+                                   self.entityDescription.name,
                                    [columns componentsJoinedByString:@", "]];
             
             NSLog(@"SQL: %@", statement);
@@ -163,7 +163,7 @@
     }];
     
     NSString *statement = [NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES (%@)",
-                           self.entityDescription.entityName,
+                           self.entityDescription.name,
                            [columnNames componentsJoinedByString:@", "],
                            [columnValues componentsJoinedByString:@", "]];
     
@@ -215,7 +215,7 @@
         [columnProperties setObject:@(eid) forKey:@"_id"];
         
         NSString *statement = [NSString stringWithFormat:@"UPDATE %@ SET %@ WHERE _id == :_id",
-                               self.entityDescription.entityName,
+                               self.entityDescription.name,
                                [columns componentsJoinedByString:@", "]];
         
         NSLog(@"SQL: %@", statement);
@@ -241,7 +241,7 @@
     }
     
     NSString *statement = [NSString stringWithFormat:@"DELETE FROM %@ WHERE _id = :_id",
-                           self.entityDescription.entityName];
+                           self.entityDescription.name];
     
     NSLog(@"SQL: %@", statement);
     
@@ -261,7 +261,7 @@
                         inDatabase:(FMDatabase *)database
                              error:(NSError **)error
 {
-    NSString *statement = [NSString stringWithFormat:@"SELECT _id FROM %@ WHERE _id = :_id", self.entityDescription.entityName];
+    NSString *statement = [NSString stringWithFormat:@"SELECT _id FROM %@ WHERE _id = :_id", self.entityDescription.name];
     NSLog(@"SQL: %@", statement);
     
     FMResultSet *result = [database executeQuery:statement withParameterDictionary:@{@"_id":@(eid)}];
@@ -299,7 +299,7 @@
         statement = [NSString stringWithFormat:@"SELECT * FROM %@",
                      [classes componentsJoinedByString:@" NATURAL JOIN "]];
     } else {
-        statement = [NSString stringWithFormat:@"SELECT * FROM %@", self.entityDescription.entityName];
+        statement = [NSString stringWithFormat:@"SELECT * FROM %@", self.entityDescription.name];
     }
     statement = [statement stringByAppendingString:@" WHERE _id = :_id"];
     

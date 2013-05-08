@@ -22,7 +22,7 @@
 - (id)initWithClass:(Class)managedClass;
 
 #pragma mark Entity
-@property (nonatomic, readonly) NSString *entityName;
+@property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) ORMEntityDescription *superentity;
 @property (nonatomic, readonly) NSArray *entityHierarchy;
 
