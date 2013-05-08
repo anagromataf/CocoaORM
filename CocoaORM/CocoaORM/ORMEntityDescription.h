@@ -13,7 +13,7 @@
 
 @interface NSObject (ORMEntityDescription)
 + (BOOL)isORMClass;
-+ (ORMEntityDescription *)ORM;
++ (ORMEntityDescription *)ORMEntityDescription;
 @end
 
 @interface ORMEntityDescription : NSObject

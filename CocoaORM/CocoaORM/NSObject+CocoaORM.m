@@ -103,7 +103,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
     }
     
     if (value == nil && [self ORMObjectID] && [self ORMStore]) {
-        ORMAttributeDescription *attributeDescription = [[[[self class] ORM] allProperties] objectForKey:key];
+        ORMAttributeDescription *attributeDescription = [[[[self class] ORMEntityDescription] allProperties] objectForKey:key];
         
         if (attributeDescription) {
             NSError *error = nil;
@@ -166,7 +166,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
 ORMAttributeDescription *
 ORMAttribute(Class _class, NSString *name)
 {
-    ORMEntityDescription *ORM = [_class ORM];
+    ORMEntityDescription *ORM = [_class ORMEntityDescription];
     ORMAttributeDescription *attribute = ORM.attribute(name);
     
     // Add Getter
@@ -193,6 +193,6 @@ ORMAttribute(Class _class, NSString *name)
 void
 ORMUniqueTogether(Class _class, NSArray *propertyNames)
 {
-    ORMEntityDescription *ORM = [_class ORM];
+    ORMEntityDescription *ORM = [_class ORMEntityDescription];
     ORM.unique(propertyNames);
 }

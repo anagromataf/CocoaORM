@@ -11,7 +11,7 @@
 #import "ORMAttributeDescription.h"
 #import "ORMEntityDescription.h"
 
-const char * NSObjectORMClassKey = "NSObjectORMClassKey";
+const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey";
 
 @interface ORMEntityDescription ()
 @property (nonatomic, readonly) NSMutableDictionary *propertyDescriptions;
@@ -38,7 +38,7 @@ const char * NSObjectORMClassKey = "NSObjectORMClassKey";
 - (NSArray *)classHierarchy
 {
     if ([[self.managedClass superclass] isORMClass]) {
-        return [[[[self.managedClass superclass] ORM] classHierarchy] arrayByAddingObject:self.managedClass];
+        return [[[[self.managedClass superclass] ORMEntityDescription] classHierarchy] arrayByAddingObject:self.managedClass];
     } else {
         return @[self.managedClass];
     }
@@ -52,7 +52,7 @@ const char * NSObjectORMClassKey = "NSObjectORMClassKey";
 - (NSArray *)entityHierarchy
 {
     if ([[self.managedClass superclass] isORMClass]) {
-        return [[[[self.managedClass superclass] ORM] entityHierarchy] arrayByAddingObject:self.entityName];
+        return [[[[self.managedClass superclass] ORMEntityDescription] entityHierarchy] arrayByAddingObject:self.entityName];
     } else {
         return @[self.entityName];
     }
@@ -80,7 +80,7 @@ const char * NSObjectORMClassKey = "NSObjectORMClassKey";
 - (NSDictionary *)allProperties
 {
     if ([[self.managedClass superclass] isORMClass]) {
-        NSMutableDictionary *properties = [[[[self.managedClass superclass] ORM] allProperties] mutableCopy];
+        NSMutableDictionary *properties = [[[[self.managedClass superclass] ORMEntityDescription] allProperties] mutableCopy];
         [properties addEntriesFromDictionary:self.properties];
         return properties;
     } else {
@@ -105,7 +105,7 @@ const char * NSObjectORMClassKey = "NSObjectORMClassKey";
 - (NSSet *)allUniqueConstraints
 {
     if ([[self.managedClass superclass] isORMClass]) {
-        NSMutableSet *constraints = [[[[self.managedClass superclass] ORM] allUniqueConstraints] mutableCopy];
+        NSMutableSet *constraints = [[[[self.managedClass superclass] ORMEntityDescription] allUniqueConstraints] mutableCopy];
         [constraints unionSet:self.uniqueConstraints];
         return constraints;
     } else {
@@ -123,21 +123,21 @@ const char * NSObjectORMClassKey = "NSObjectORMClassKey";
 {
     if (self == [NSObject class]) {
         return NO;
-    } else if (objc_getAssociatedObject(self, NSObjectORMClassKey) != nil) {
+    } else if (objc_getAssociatedObject(self, NSObjectORMEntityDescriptionKey) != nil) {
         return YES;
     } else {
         return [[self superclass] isORMClass];
     }
 }
 
-+ (ORMEntityDescription *)ORM
++ (ORMEntityDescription *)ORMEntityDescription
 {
-    ORMEntityDescription *ORM = objc_getAssociatedObject(self, NSObjectORMClassKey);
-    if (!ORM) {
-        ORM = [[ORMEntityDescription alloc] initWithClass:[self class]];
-        objc_setAssociatedObject(self, NSObjectORMClassKey, ORM, OBJC_ASSOCIATION_RETAIN);
+    ORMEntityDescription *entityDescription = objc_getAssociatedObject(self, NSObjectORMEntityDescriptionKey);
+    if (!entityDescription) {
+        entityDescription = [[ORMEntityDescription alloc] initWithClass:[self class]];
+        objc_setAssociatedObject(self, NSObjectORMEntityDescriptionKey, entityDescription, OBJC_ASSOCIATION_RETAIN);
     }
-    return ORM;
+    return entityDescription;
 }
 
 @end
