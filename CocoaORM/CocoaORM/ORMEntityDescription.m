@@ -58,17 +58,6 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
     }
 }
 
-#pragma mark Managed Class
-
-- (NSArray *)classHierarchy
-{
-    if (self.superentity) {
-        return [[self.superentity classHierarchy] arrayByAddingObject:self.managedClass];
-    } else {
-        return @[self.managedClass];
-    }
-}
-
 #pragma mark Properties
 
 - (ORMAttributeDescription *(^)(NSString *))attribute

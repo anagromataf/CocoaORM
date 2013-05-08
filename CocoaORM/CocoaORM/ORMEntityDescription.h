@@ -28,7 +28,6 @@
 
 #pragma mark Managed Class
 @property (nonatomic, readonly) Class managedClass;
-@property (nonatomic, readonly) NSArray *classHierarchy;
 
 #pragma mark Properties
 @property (nonatomic, readonly) ORMAttributeDescription *(^attribute)(NSString *name);
