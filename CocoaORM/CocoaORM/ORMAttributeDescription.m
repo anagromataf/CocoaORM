@@ -6,12 +6,12 @@
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import "ORMClass.h"
+#import "ORMEntityDescription.h"
 #import "ORMAttributeDescription.h"
 
 @interface ORMAttributeDescription ()
 @property (nonatomic, readwrite) NSString *attributeName;
-@property (nonatomic, readwrite, weak) ORMClass *ORMClass;
+@property (nonatomic, readwrite, weak) ORMEntityDescription *ORMEntityDescription;
 
 @property (nonatomic, readwrite) NSString *typeName;
 @property (nonatomic, readwrite) BOOL required;
@@ -20,12 +20,12 @@
 
 @implementation ORMAttributeDescription
 
-- (id)initWithName:(NSString *)name ORMClass:(ORMClass *)ORMClass;
+- (id)initWithName:(NSString *)name ORMEntityDescription:(ORMEntityDescription *)ORMEntityDescription;
 {
     self = [super init];
     if (self) {
         _attributeName = name;
-        _ORMClass = ORMClass;
+        _ORMEntityDescription = ORMEntityDescription;
         _typeName = @"TEXT";
     }
     return self;
@@ -33,7 +33,7 @@
 
 - (Class)managedClass
 {
-    return self.ORMClass.managedClass;
+    return self.ORMEntityDescription.managedClass;
 }
 
 - (ORMAttributeDescription *(^)())integer

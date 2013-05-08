@@ -10,7 +10,7 @@
 #import <FMDB/FMDatabaseAdditions.h>
 
 #import "ORMAttributeDescription.h"
-#import "ORMClass.h"
+#import "ORMEntityDescription.h"
 
 #import "ORMEntitySQLConnector.h"
 

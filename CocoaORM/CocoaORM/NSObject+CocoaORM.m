@@ -14,7 +14,7 @@
 #import <FMDB/FMDatabaseAdditions.h>
 
 // CocoaORM
-#import "ORMClass.h"
+#import "ORMEntityDescription.h"
 #import "ORMEntitySQLConnector.h"
 #import "ORMStore+Private.h"
 
@@ -166,7 +166,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
 ORMAttributeDescription *
 ORMAttribute(Class _class, NSString *name)
 {
-    ORMClass *ORM = [_class ORM];
+    ORMEntityDescription *ORM = [_class ORM];
     ORMAttributeDescription *attribute = ORM.attribute(name);
     
     // Add Getter
@@ -193,6 +193,6 @@ ORMAttribute(Class _class, NSString *name)
 void
 ORMUniqueTogether(Class _class, NSArray *propertyNames)
 {
-    ORMClass *ORM = [_class ORM];
+    ORMEntityDescription *ORM = [_class ORM];
     ORM.unique(propertyNames);
 }

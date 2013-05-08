@@ -8,7 +8,7 @@
 
 #import "ORMConstants.h"
 
-#import "ORMClass.h"
+#import "ORMEntityDescription.h"
 #import "ORMEntitySQLConnector.h"
 
 

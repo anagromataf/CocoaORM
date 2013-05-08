@@ -1,5 +1,5 @@
 //
-//  ORMClass.h
+//  ORMEntityDescription.h
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 05.05.13.
@@ -9,14 +9,14 @@
 #import <Foundation/Foundation.h>
 
 @class ORMAttributeDescription;
-@class ORMClass;
+@class ORMEntityDescription;
 
-@interface NSObject (ORMClass)
+@interface NSObject (ORMEntityDescription)
 + (BOOL)isORMClass;
-+ (ORMClass *)ORM;
++ (ORMEntityDescription *)ORM;
 @end
 
-@interface ORMClass : NSObject
+@interface ORMEntityDescription : NSObject
 
 #pragma mark Life-cycle
 - (id)initWithClass:(Class)managedClass;

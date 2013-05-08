@@ -34,8 +34,8 @@
 		F6509EAC172DB072002A3067 /* CocoaORMTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EAB172DB072002A3067 /* CocoaORMTestCase.m */; };
 		F6509EAF172DB118002A3067 /* CocoaORMDatabasePropertyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EAE172DB118002A3067 /* CocoaORMDatabasePropertyTests.m */; };
 		F6509EB2172DB757002A3067 /* CocoaORMDatabaseEnumerateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6509EB1172DB757002A3067 /* CocoaORMDatabaseEnumerateTests.m */; };
-		F699F7DF173676C4000F4276 /* ORMClass.h in Headers */ = {isa = PBXBuildFile; fileRef = F699F7DD173676C4000F4276 /* ORMClass.h */; };
-		F699F7E0173676C4000F4276 /* ORMClass.m in Sources */ = {isa = PBXBuildFile; fileRef = F699F7DE173676C4000F4276 /* ORMClass.m */; };
+		F699F7DF173676C4000F4276 /* ORMEntityDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = F699F7DD173676C4000F4276 /* ORMEntityDescription.h */; };
+		F699F7E0173676C4000F4276 /* ORMEntityDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = F699F7DE173676C4000F4276 /* ORMEntityDescription.m */; };
 		F699F7E81736CF68000F4276 /* ORMEntitySQLConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = F699F7E61736CF68000F4276 /* ORMEntitySQLConnector.h */; };
 		F699F7E91736CF68000F4276 /* ORMEntitySQLConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = F699F7E71736CF68000F4276 /* ORMEntitySQLConnector.m */; };
 		F699F7EE1736ECFD000F4276 /* CocoaORMDatabaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = F699F7ED1736ECFD000F4276 /* CocoaORMDatabaseTestCase.m */; };
@@ -76,8 +76,8 @@
 		F6034C2A172DA2C4002802F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "NSObject+CocoaORM.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "NSObject+CocoaORM.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORMAttributeDescription.h; sourceTree = "<group>"; };
-		F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORMAttributeDescription.m; sourceTree = "<group>"; };
+		F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ORMAttributeDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ORMAttributeDescription.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F6034C40172DA9BD002802F2 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		F6034C41172DA9BD002802F2 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		F6034C43172DAA2E002802F2 /* Employee.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Employee.h; sourceTree = "<group>"; };
@@ -87,8 +87,8 @@
 		F618B8FE172DCE2C00F12666 /* ORMStore+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ORMStore+Private.h"; sourceTree = "<group>"; };
 		F618B902172DCF6600F12666 /* CocoaORMObjectManagementTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMObjectManagementTests.h; sourceTree = "<group>"; };
 		F618B903172DCF6600F12666 /* CocoaORMObjectManagementTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CocoaORMObjectManagementTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		F618B905172E6CB900F12666 /* ORMObjectID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORMObjectID.h; sourceTree = "<group>"; };
-		F618B906172E6CB900F12666 /* ORMObjectID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORMObjectID.m; sourceTree = "<group>"; };
+		F618B905172E6CB900F12666 /* ORMObjectID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ORMObjectID.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		F618B906172E6CB900F12666 /* ORMObjectID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ORMObjectID.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F618B909172E6D1800F12666 /* ORMConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ORMConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		F618B90D172E9E5300F12666 /* CocoaORMObjectConstraintTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMObjectConstraintTests.h; sourceTree = "<group>"; };
 		F618B90E172E9E5300F12666 /* CocoaORMObjectConstraintTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CocoaORMObjectConstraintTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -102,8 +102,8 @@
 		F6509EAE172DB118002A3067 /* CocoaORMDatabasePropertyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CocoaORMDatabasePropertyTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F6509EB0172DB757002A3067 /* CocoaORMDatabaseEnumerateTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMDatabaseEnumerateTests.h; sourceTree = "<group>"; };
 		F6509EB1172DB757002A3067 /* CocoaORMDatabaseEnumerateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CocoaORMDatabaseEnumerateTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		F699F7DD173676C4000F4276 /* ORMClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORMClass.h; sourceTree = "<group>"; };
-		F699F7DE173676C4000F4276 /* ORMClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORMClass.m; sourceTree = "<group>"; };
+		F699F7DD173676C4000F4276 /* ORMEntityDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ORMEntityDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		F699F7DE173676C4000F4276 /* ORMEntityDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ORMEntityDescription.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F699F7E61736CF68000F4276 /* ORMEntitySQLConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ORMEntitySQLConnector.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		F699F7E71736CF68000F4276 /* ORMEntitySQLConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ORMEntitySQLConnector.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F699F7EC1736ECFD000F4276 /* CocoaORMDatabaseTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CocoaORMDatabaseTestCase.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -261,8 +261,8 @@
 		F699F7E1173677AB000F4276 /* ORM */ = {
 			isa = PBXGroup;
 			children = (
-				F699F7DD173676C4000F4276 /* ORMClass.h */,
-				F699F7DE173676C4000F4276 /* ORMClass.m */,
+				F699F7DD173676C4000F4276 /* ORMEntityDescription.h */,
+				F699F7DE173676C4000F4276 /* ORMEntityDescription.m */,
 				F6034C3B172DA602002802F2 /* ORMAttributeDescription.h */,
 				F6034C3C172DA602002802F2 /* ORMAttributeDescription.m */,
 				F699F7E61736CF68000F4276 /* ORMEntitySQLConnector.h */,
@@ -319,7 +319,7 @@
 				F618B900172DCE2C00F12666 /* ORMStore+Private.h in Headers */,
 				F618B907172E6CB900F12666 /* ORMObjectID.h in Headers */,
 				F618B90B172E6D1900F12666 /* ORMConstants.h in Headers */,
-				F699F7DF173676C4000F4276 /* ORMClass.h in Headers */,
+				F699F7DF173676C4000F4276 /* ORMEntityDescription.h in Headers */,
 				F699F7E81736CF68000F4276 /* ORMEntitySQLConnector.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -495,7 +495,7 @@
 				F6034C3E172DA602002802F2 /* ORMAttributeDescription.m in Sources */,
 				F6509EA9172DAD85002A3067 /* ORMStore.m in Sources */,
 				F618B908172E6CB900F12666 /* ORMObjectID.m in Sources */,
-				F699F7E0173676C4000F4276 /* ORMClass.m in Sources */,
+				F699F7E0173676C4000F4276 /* ORMEntityDescription.m in Sources */,
 				F699F7E91736CF68000F4276 /* ORMEntitySQLConnector.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

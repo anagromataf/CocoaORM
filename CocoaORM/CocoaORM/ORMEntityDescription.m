@@ -1,5 +1,5 @@
 //
-//  ORMClass.m
+//  ORMEntityDescription.m
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 05.05.13.
@@ -9,16 +9,16 @@
 #import <objc/runtime.h>
 
 #import "ORMAttributeDescription.h"
-#import "ORMClass.h"
+#import "ORMEntityDescription.h"
 
 const char * NSObjectORMClassKey = "NSObjectORMClassKey";
 
-@interface ORMClass ()
+@interface ORMEntityDescription ()
 @property (nonatomic, readonly) NSMutableDictionary *propertyDescriptions;
 @property (nonatomic, readonly) NSMutableSet *uniqueTogetherConstraints;
 @end
 
-@implementation ORMClass
+@implementation ORMEntityDescription
 
 #pragma mark Life-cycle
 
@@ -65,7 +65,7 @@ const char * NSObjectORMClassKey = "NSObjectORMClassKey";
     return ^(NSString *name) {
         ORMAttributeDescription *attributeDescription = [self.propertyDescriptions objectForKey:name];
         if (!attributeDescription) {
-            attributeDescription = [[ORMAttributeDescription alloc] initWithName:name ORMClass:self];
+            attributeDescription = [[ORMAttributeDescription alloc] initWithName:name ORMEntityDescription:self];
             [self.propertyDescriptions setObject:attributeDescription forKey:name];
         }
         return attributeDescription;
@@ -117,7 +117,7 @@ const char * NSObjectORMClassKey = "NSObjectORMClassKey";
 
 #pragma mark -
 
-@implementation NSObject (ORMClass)
+@implementation NSObject (ORMEntityDescription)
 
 + (BOOL)isORMClass
 {
@@ -130,11 +130,11 @@ const char * NSObjectORMClassKey = "NSObjectORMClassKey";
     }
 }
 
-+ (ORMClass *)ORM
++ (ORMEntityDescription *)ORM
 {
-    ORMClass *ORM = objc_getAssociatedObject(self, NSObjectORMClassKey);
+    ORMEntityDescription *ORM = objc_getAssociatedObject(self, NSObjectORMClassKey);
     if (!ORM) {
-        ORM = [[ORMClass alloc] initWithClass:[self class]];
+        ORM = [[ORMEntityDescription alloc] initWithClass:[self class]];
         objc_setAssociatedObject(self, NSObjectORMClassKey, ORM, OBJC_ASSOCIATION_RETAIN);
     }
     return ORM;

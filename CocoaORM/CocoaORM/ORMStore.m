@@ -9,7 +9,7 @@
 #import "NSObject+CocoaORM.h"
 #import "NSObject+CocoaORMPrivate.h"
 
-#import "ORMClass.h"
+#import "ORMEntityDescription.h"
 #import "ORMEntitySQLConnector.h"
 
 #import "ORMStore.h"

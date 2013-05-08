@@ -8,14 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@class ORMClass;
+@class ORMEntityDescription;
 
 @interface ORMAttributeDescription : NSObject
 
-- (id)initWithName:(NSString *)name ORMClass:(ORMClass *)ORMClass;
+- (id)initWithName:(NSString *)name ORMEntityDescription:(ORMEntityDescription *)ORMEntityDescription;
 
 @property (nonatomic, readonly) NSString *attributeName;
-@property (nonatomic, readonly) ORMClass *ORMClass;
+@property (nonatomic, readonly) ORMEntityDescription *ORMEntityDescription;
 @property (nonatomic, readonly) Class managedClass;
 
 @property (nonatomic, readonly) ORMAttributeDescription *(^integer)();
