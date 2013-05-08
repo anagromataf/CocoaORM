@@ -1,5 +1,5 @@
 //
-//  ORMClassMapping.m
+//  ORMEntitySQLConnector.m
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 05.05.13.
@@ -12,9 +12,9 @@
 #import "ORMAttributeDescription.h"
 #import "ORMClass.h"
 
-#import "ORMClassMapping.h"
+#import "ORMEntitySQLConnector.h"
 
-@implementation ORMClassMapping
+@implementation ORMEntitySQLConnector
 
 + (instancetype)mappingForClass:(Class)mappedClass
 {
@@ -24,9 +24,9 @@
         mappings = [[NSMutableDictionary alloc] init];
     });
     
-    ORMClassMapping *mapping = [mappings objectForKey:NSStringFromClass(mappedClass)];
+    ORMEntitySQLConnector *mapping = [mappings objectForKey:NSStringFromClass(mappedClass)];
     if (!mapping) {
-        mapping = [[ORMClassMapping alloc] initWithClass:mappedClass];
+        mapping = [[ORMEntitySQLConnector alloc] initWithClass:mappedClass];
         [mappings setObject:mapping forKey:NSStringFromClass(mappedClass)];
     }
     return mapping;
@@ -52,7 +52,7 @@
     BOOL baseClass = ![[self.mappedClass superclass] isORMClass];
     
     if (!baseClass) {
-        success = [[ORMClassMapping mappingForClass:[self.mappedClass superclass]] setupSchemataInDatabase:database error:error];
+        success = [[ORMEntitySQLConnector mappingForClass:[self.mappedClass superclass]] setupSchemataInDatabase:database error:error];
     }
     
     if (success) {
@@ -125,7 +125,7 @@
     
     sqlite_int64 pk = 0;
     if ([[self.mappedClass superclass] isORMClass]) {
-        pk = [[ORMClassMapping mappingForClass:[self.mappedClass superclass]] insertEntityWithProperties:properties
+        pk = [[ORMEntitySQLConnector mappingForClass:[self.mappedClass superclass]] insertEntityWithProperties:properties
                                                                                             intoDatabase:database
                                                                                                    error:error];
         if (pk == 0) {
@@ -186,7 +186,7 @@
                              error:(NSError **)error
 {
     if ([[self.mappedClass superclass] isORMClass]) {
-        BOOL success = [[ORMClassMapping mappingForClass:[self.mappedClass superclass]] updateEntityWithPrimaryKey:pk
+        BOOL success = [[ORMEntitySQLConnector mappingForClass:[self.mappedClass superclass]] updateEntityWithPrimaryKey:pk
                                                                                                     withProperties:properties
                                                                                                         inDatabase:database
                                                                                                              error:error];
@@ -234,7 +234,7 @@
                              error:(NSError **)error
 {
     if ([[self.mappedClass superclass] isORMClass]) {
-        return [[ORMClassMapping mappingForClass:[self.mappedClass superclass]] deleteEntityWithPrimaryKey:pk inDatabase:database error:error];
+        return [[ORMEntitySQLConnector mappingForClass:[self.mappedClass superclass]] deleteEntityWithPrimaryKey:pk inDatabase:database error:error];
     }
     
     NSString *statement = [NSString stringWithFormat:@"DELETE FROM %@ WHERE _id = :_id",

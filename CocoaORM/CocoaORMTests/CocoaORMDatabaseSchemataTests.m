@@ -10,7 +10,7 @@
 #import <FMDB/FMDatabase.h>
 #import <FMDB/FMDatabaseAdditions.h>
 
-#import "ORMClassMapping.h"
+#import "ORMEntitySQLConnector.h"
 
 #import "CocoaORMDatabaseSchemataTests.h"
 
@@ -21,7 +21,7 @@
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [self.personMapping setupSchemataInDatabase:db error:&error];
+        BOOL success = [self.personConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error){
@@ -38,7 +38,7 @@
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [self.employeeMapping setupSchemataInDatabase:db error:&error];
+        BOOL success = [self.employeeConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error){
@@ -56,7 +56,7 @@
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [self.chefMapping setupSchemataInDatabase:db error:&error];
+        BOOL success = [self.chefConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error){

@@ -1,5 +1,5 @@
 //
-//  ORMClassMapping.h
+//  ORMEntitySQLConnector.h
 //  CocoaORM
 //
 //  Created by Tobias Kräntzer on 05.05.13.
@@ -12,7 +12,7 @@
 
 @class FMDatabase;
 
-@interface ORMClassMapping : NSObject
+@interface ORMEntitySQLConnector : NSObject
 
 + (instancetype)mappingForClass:(Class)mappedClass;
 

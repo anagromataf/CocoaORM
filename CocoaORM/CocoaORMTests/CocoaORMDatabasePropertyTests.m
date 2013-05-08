@@ -18,13 +18,13 @@
         BOOL success;
         NSError *error = nil;
 
-        success = [self.personMapping setupSchemataInDatabase:db error:&error];
+        success = [self.personConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
-        success = [self.employeeMapping setupSchemataInDatabase:db error:&error];
+        success = [self.employeeConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
-        success = [self.chefMapping setupSchemataInDatabase:db error:&error];
+        success = [self.chefConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return nil;
@@ -46,7 +46,7 @@
                                      @"position":@"CEO",
                                      @"employeeID":@(12)};
         
-        ORMPrimaryKey pk = [self.employeeMapping insertEntityWithProperties:properties
+        ORMPrimaryKey pk = [self.employeeConnector insertEntityWithProperties:properties
                                                                intoDatabase:db
                                                                       error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
@@ -101,13 +101,13 @@
                                      @"position":@"CEO"
                                      };
         
-        ORMPrimaryKey pk = [self.employeeMapping insertEntityWithProperties:properties
+        ORMPrimaryKey pk = [self.employeeConnector insertEntityWithProperties:properties
                                                                intoDatabase:db
                                                                       error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
         
         // Update Properties
-        success = [self.employeeMapping updateEntityWithPrimaryKey:pk
+        success = [self.employeeConnector updateEntityWithPrimaryKey:pk
                                                     withProperties:@{@"firstName":@"John", @"position":@"CTO"}
                                                         inDatabase:db
                                                              error:&error];
@@ -142,14 +142,14 @@
                                      @"position":@"CEO"
                                      };
         
-        ORMPrimaryKey pk = [self.employeeMapping insertEntityWithProperties:properties
+        ORMPrimaryKey pk = [self.employeeConnector insertEntityWithProperties:properties
                                                                intoDatabase:db
                                                                       error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
         
         // Delete Properties
         
-        success = [self.employeeMapping deleteEntityWithPrimaryKey:pk
+        success = [self.employeeConnector deleteEntityWithPrimaryKey:pk
                                                         inDatabase:db
                                                              error:&error];
         STAssertTrue(success, [error localizedDescription]);
@@ -183,7 +183,7 @@
                                       @"lastName":@"Example",
                                       @"position":@"CTO",
                                       @"employeeID":@(13)};
-        ORMPrimaryKey pk1 = [self.employeeMapping insertEntityWithProperties:properties1
+        ORMPrimaryKey pk1 = [self.employeeConnector insertEntityWithProperties:properties1
                                                                 intoDatabase:db
                                                                        error:&error];
         STAssertTrue(pk1 != 0, [error localizedDescription]);
@@ -192,7 +192,7 @@
                                      @"lastName":@"Example",
                                      @"position":@"CEO",
                                      @"employeeID":@(12)};
-        ORMPrimaryKey pk2 = [self.employeeMapping insertEntityWithProperties:properties2
+        ORMPrimaryKey pk2 = [self.employeeConnector insertEntityWithProperties:properties2
                                                                 intoDatabase:db
                                                                        error:&error];
         STAssertTrue(pk2 != 0, [error localizedDescription]);
@@ -202,7 +202,7 @@
                                       @"lastName":@"Example",
                                       @"position":@"ETO",
                                       @"employeeID":@(14)};
-        ORMPrimaryKey pk3 = [self.employeeMapping insertEntityWithProperties:properties3
+        ORMPrimaryKey pk3 = [self.employeeConnector insertEntityWithProperties:properties3
                                                                 intoDatabase:db
                                                                        error:&error];
         STAssertTrue(pk3 != 0, [error localizedDescription]);
@@ -215,7 +215,7 @@
             
             // Person Properties
             
-            NSDictionary *personProperties = [self.personMapping propertiesOfEntityWithPrimaryKey:pk2
+            NSDictionary *personProperties = [self.personConnector propertiesOfEntityWithPrimaryKey:pk2
                                                                                        inDatabase:db
                                                                                             error:&_error];
             STAssertNotNil(personProperties, [_error localizedDescription]);
@@ -225,7 +225,7 @@
             
             // Employee Properties
             
-            NSDictionary *employeeProperties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:pk2
+            NSDictionary *employeeProperties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:pk2
                                                                                            inDatabase:db
                                                                                                 error:&_error];
             STAssertNotNil(employeeProperties, [_error localizedDescription]);
@@ -235,7 +235,7 @@
             
             // All Properties
             
-            NSDictionary *allProperties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:pk2
+            NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:pk2
                                                                                       inDatabase:db
                                                                                            error:&_error
                                                                           includeSuperProperties:YES];
@@ -262,7 +262,7 @@
                                      @"position":@"CEO",
                                      @"employeeID":@(12)};
         
-        ORMPrimaryKey pk = [self.employeeMapping insertEntityWithProperties:properties
+        ORMPrimaryKey pk = [self.employeeConnector insertEntityWithProperties:properties
                                                                intoDatabase:db
                                                                       error:&error];
         
@@ -284,7 +284,7 @@
                                      @"position":@"CEO",
                                      @"employeeID":@(12)};
         
-        ORMPrimaryKey pk = [self.employeeMapping insertEntityWithProperties:properties
+        ORMPrimaryKey pk = [self.employeeConnector insertEntityWithProperties:properties
                                                                intoDatabase:db
                                                                       error:&error];
         STAssertTrue(pk == 0, nil);
@@ -306,7 +306,7 @@
         NSDictionary *properties = @{@"firstName":@"Jim",
                                      @"lastName":@"Example"};
         
-        ORMPrimaryKey pk = [self.personMapping insertEntityWithProperties:properties
+        ORMPrimaryKey pk = [self.personConnector insertEntityWithProperties:properties
                                                              intoDatabase:db
                                                                     error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
@@ -325,7 +325,7 @@
         NSDictionary *properties = @{@"firstName":@"Jim",
                                      @"lastName":@"Example"};
         
-        ORMPrimaryKey pk = [self.personMapping insertEntityWithProperties:properties
+        ORMPrimaryKey pk = [self.personConnector insertEntityWithProperties:properties
                                                              intoDatabase:db
                                                                     error:&error];
         STAssertTrue(pk == 0, nil);

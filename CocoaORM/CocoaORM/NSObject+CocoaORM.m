@@ -15,7 +15,7 @@
 
 // CocoaORM
 #import "ORMClass.h"
-#import "ORMClassMapping.h"
+#import "ORMEntitySQLConnector.h"
 #import "ORMStore+Private.h"
 
 #import "NSObject+CocoaORM.h"
@@ -108,7 +108,7 @@ const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
         if (attributeDescription) {
             NSError *error = nil;
             
-            ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:attributeDescription.managedClass];
+            ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:attributeDescription.managedClass];
             
             NSDictionary *properties = [mapping propertiesOfEntityWithPrimaryKey:self.ORMObjectID.primaryKey
                                                                       inDatabase:self.ORMStore.db

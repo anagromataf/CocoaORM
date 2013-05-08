@@ -9,7 +9,7 @@
 #import "CocoaORMObjectManagementTests.h"
 
 @interface CocoaORMObjectManagementTests ()
-@property (nonatomic, strong) ORMClassMapping *employeeMapping;
+@property (nonatomic, strong) ORMEntitySQLConnector *employeeConnector;
 @end
 
 @implementation CocoaORMObjectManagementTests
@@ -18,7 +18,7 @@
 {
     [super setUp];
     
-    self.employeeMapping = [[ORMClassMapping alloc] initWithClass:[Employee class]];
+    self.employeeConnector = [[ORMEntitySQLConnector alloc] initWithClass:[Employee class]];
 }
 
 #pragma mark Tests
@@ -48,7 +48,7 @@
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
                                                                                   inDatabase:db
                                                                                        error:&error
                                                                       includeSuperProperties:YES];
@@ -91,7 +91,7 @@
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
                                                                                   inDatabase:db
                                                                                        error:&error
                                                                       includeSuperProperties:YES];
@@ -135,7 +135,7 @@
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:employee.ORMObjectID.primaryKey
                                                                                   inDatabase:db
                                                                                        error:&error
                                                                       includeSuperProperties:YES];
@@ -179,7 +179,7 @@
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        NSDictionary *properties = [self.employeeMapping propertiesOfEntityWithPrimaryKey:pk
+        NSDictionary *properties = [self.employeeConnector propertiesOfEntityWithPrimaryKey:pk
                                                                                inDatabase:db
                                                                                     error:&error];
         STAssertNil(error, [error localizedDescription]);

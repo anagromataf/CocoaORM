@@ -14,9 +14,9 @@
 {
     [super setUp];
     
-    self.personMapping = [ORMClassMapping mappingForClass:[Person class]];
-    self.employeeMapping = [ORMClassMapping mappingForClass:[Employee class]];
-    self.chefMapping = [ORMClassMapping mappingForClass:[Chef class]];
+    self.personConnector = [ORMEntitySQLConnector mappingForClass:[Person class]];
+    self.employeeConnector = [ORMEntitySQLConnector mappingForClass:[Employee class]];
+    self.chefConnector = [ORMEntitySQLConnector mappingForClass:[Chef class]];
     
 }
 

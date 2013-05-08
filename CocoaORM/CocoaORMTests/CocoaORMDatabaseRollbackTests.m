@@ -25,7 +25,7 @@
         
         // Setup Schemata
         
-        success = [self.employeeMapping setupSchemataInDatabase:db error:&error];
+        success = [self.employeeConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         // Insert Properties
@@ -34,7 +34,7 @@
                                       @"lastName":@"Example",
                                       @"position":@"CEO"};
         
-        self.employeePK = [self.employeeMapping insertEntityWithProperties:properties1
+        self.employeePK = [self.employeeConnector insertEntityWithProperties:properties1
                                                               intoDatabase:db
                                                                      error:&error];
         STAssertTrue(self.employeePK != 0, [error localizedDescription]);
@@ -55,7 +55,7 @@
         BOOL success = YES;
         
         // Update Properties
-        success = [self.employeeMapping updateEntityWithPrimaryKey:self.employeePK
+        success = [self.employeeConnector updateEntityWithPrimaryKey:self.employeePK
                                                     withProperties:@{@"firstName":@"John", @"position":@"CTO"}
                                                         inDatabase:db
                                                              error:&error];

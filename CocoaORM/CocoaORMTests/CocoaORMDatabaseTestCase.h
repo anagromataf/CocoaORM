@@ -10,8 +10,8 @@
 
 @interface CocoaORMDatabaseTestCase : CocoaORMTestCase
 
-@property (nonatomic, strong) ORMClassMapping *personMapping;
-@property (nonatomic, strong) ORMClassMapping *employeeMapping;
-@property (nonatomic, strong) ORMClassMapping *chefMapping;
+@property (nonatomic, strong) ORMEntitySQLConnector *personConnector;
+@property (nonatomic, strong) ORMEntitySQLConnector *employeeConnector;
+@property (nonatomic, strong) ORMEntitySQLConnector *chefConnector;
 
 @end

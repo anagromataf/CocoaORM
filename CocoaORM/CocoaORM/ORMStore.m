@@ -10,7 +10,7 @@
 #import "NSObject+CocoaORMPrivate.h"
 
 #import "ORMClass.h"
-#import "ORMClassMapping.h"
+#import "ORMEntitySQLConnector.h"
 
 #import "ORMStore.h"
 #import "ORMStore+Private.h"
@@ -97,7 +97,7 @@
         if (!_rollback) {
             [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
                 
-                ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:[obj class]];
+                ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:[obj class]];
                 
                 ORMPrimaryKey pk = [mapping insertEntityWithProperties:[obj changedORMValues]
                                                           intoDatabase:db
@@ -117,7 +117,7 @@
         if (!_rollback) {
             [self.changedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
                 
-                ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:[obj class]];
+                ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:[obj class]];
                 
                 BOOL success = [mapping updateEntityWithPrimaryKey:obj.ORMObjectID.primaryKey
                                                     withProperties:[obj changedORMValues]
@@ -133,7 +133,7 @@
         if (!_rollback) {
             [self.deletedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
                 
-                ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:[obj class]];
+                ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:[obj class]];
                 
                 BOOL success = [mapping deleteEntityWithPrimaryKey:obj.ORMObjectID.primaryKey
                                                         inDatabase:db
@@ -190,7 +190,7 @@
     } else {
         NSError *error = nil;
         
-        ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:objectID.ORMClass];
+        ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:objectID.ORMClass];
         
         return [mapping existsEntityWithPrimaryKey:objectID.primaryKey
                                         inDatabase:self.db
@@ -227,7 +227,7 @@
                      enumerator:(void(^)(id object, BOOL *stop))enumerator
 {
     NSError *error = nil;
-    ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:aClass];
+    ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:aClass];
     [mapping enumerateEntitiesInDatabase:self.db matchingCondition:condition withArguments:arguments fetchingProperties:propertyNames error:&error enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
         ORMObjectID *objectID = [[ORMObjectID alloc] initWithClass:klass primaryKey:pk];
         NSObject *object = [self objectWithID:objectID];
@@ -309,7 +309,7 @@
     __block BOOL success = YES;
     [classes enumerateObjectsUsingBlock:^(Class klass, BOOL *stop) {
         NSAssert([klass isORMClass], @"Class %@ is not managed by CocoaORM.", klass);
-        ORMClassMapping *mapping = [[ORMClassMapping alloc] initWithClass:klass];
+        ORMEntitySQLConnector *mapping = [[ORMEntitySQLConnector alloc] initWithClass:klass];
         success = [mapping setupSchemataInDatabase:self.db error:error];
         *stop = !success;
     }];

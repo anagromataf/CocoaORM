@@ -24,13 +24,13 @@
         NSError *error = nil;
         BOOL success = YES;
         
-        success = [self.personMapping setupSchemataInDatabase:db error:&error];
+        success = [self.personConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
-        success = [self.employeeMapping setupSchemataInDatabase:db error:&error];
+        success = [self.employeeConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
-        success = [self.chefMapping setupSchemataInDatabase:db error:&error];
+        success = [self.chefConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         // Insert Properties
@@ -39,7 +39,7 @@
                                       @"lastName":@"Example",
                                       @"position":@"CEO"};
         
-        self.employeePK = [self.employeeMapping insertEntityWithProperties:properties1
+        self.employeePK = [self.employeeConnector insertEntityWithProperties:properties1
                                                               intoDatabase:db
                                                                      error:&error];
         STAssertTrue(self.employeePK != 0, [error localizedDescription]);
@@ -47,7 +47,7 @@
         
         NSDictionary *properties2 = @{@"firstName":@"John",
                                       @"lastName":@"Example"};
-        self.personPK = [self.personMapping insertEntityWithProperties:properties2
+        self.personPK = [self.personConnector insertEntityWithProperties:properties2
                                                           intoDatabase:db
                                                                  error:&error];
         STAssertTrue(self.personPK, [error localizedDescription]);
@@ -68,7 +68,7 @@
         NSMutableSet *classes = [[NSMutableSet alloc] init];
         
         NSError *error = nil;
-        BOOL success = [self.personMapping enumerateEntitiesInDatabase:db
+        BOOL success = [self.personConnector enumerateEntitiesInDatabase:db
                                                                  error:&error
                                                             enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
                                                                 [primaryKeys addObject:@(pk)];
@@ -93,7 +93,7 @@
         NSMutableSet *primaryKeys = [[NSMutableSet alloc] init];
 
         NSError *error = nil;
-        BOOL success = [self.personMapping enumerateEntitiesInDatabase:db
+        BOOL success = [self.personConnector enumerateEntitiesInDatabase:db
                                                                  error:&error
                                                             enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, BOOL *stop) {
                                                                 [primaryKeys addObject:@(pk)];
@@ -114,7 +114,7 @@
         NSMutableSet *classes = [[NSMutableSet alloc] init];
         
         NSError *error = nil;
-        BOOL success = [self.personMapping enumerateEntitiesInDatabase:db
+        BOOL success = [self.personConnector enumerateEntitiesInDatabase:db
                                                     fetchingProperties:@[@"lastName"]
                                                                  error:&error
                                                             enumerator:^(ORMPrimaryKey pk, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
@@ -138,7 +138,7 @@
 {
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         NSError *error = nil;
-        ORMPrimaryKey pk = [self.personMapping insertEntityWithProperties:@{@"firstName":@"John",  @"lastName":@"Tester"}
+        ORMPrimaryKey pk = [self.personConnector insertEntityWithProperties:@{@"firstName":@"John",  @"lastName":@"Tester"}
                                                              intoDatabase:db
                                                                     error:&error];
         STAssertTrue(pk != 0, [error localizedDescription]);
@@ -148,7 +148,7 @@
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [self.personMapping enumerateEntitiesInDatabase:db
+        BOOL success = [self.personConnector enumerateEntitiesInDatabase:db
                                                      matchingCondition:@"lastName = :lastName"
                                                          withArguments:@{@"lastName":@"Example"}
                                                     fetchingProperties:@[@"lastName"]
