@@ -45,10 +45,10 @@ NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValu
                                                                                BOOL *stop) {
             
             [attributeDescriptionsForGetters setObject:attributeDescription
-                                                forKey:NSStringFromSelector(attributeDescription.getterSelector)];
+                                                forKey:NSStringFromSelector(attributeDescription.propertyGetterSelector)];
             
             [attributeDescriptionsForSetters setObject:attributeDescription
-                                                forKey:NSStringFromSelector(attributeDescription.setterSelector)];
+                                                forKey:NSStringFromSelector(attributeDescription.propertySetterSelector)];
         }];
         
         _attributeDescriptionsForGetters = [attributeDescriptionsForGetters copy];
@@ -109,9 +109,9 @@ NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValu
         NSAssert([attributeDescription.propertyType hasPrefix:@"@"],
                  @"Properties with type %@ are not supported.", attributeDescription.propertyType);
         
-        id value = [[self temporaryValues] objectForKey:attributeDescription.attributeName];
+        id value = [[self temporaryValues] objectForKey:attributeDescription.propertyName];
         if (!value) {
-            value = [[self persistentValues] objectForKey:attributeDescription.attributeName];
+            value = [[self persistentValues] objectForKey:attributeDescription.propertyName];
         }
         
         if (!value) {
@@ -136,15 +136,15 @@ NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValu
         [anInvocation getArgument:&value atIndex:2];
         
         if (value == nil) {
-            if ([self.persistentValues objectForKey:attributeDescription.attributeName]) {
+            if ([self.persistentValues objectForKey:attributeDescription.propertyName]) {
                 [self.temporaryValues setObject:[NSNull null]
-                                         forKey:attributeDescription.attributeName];
+                                         forKey:attributeDescription.propertyName];
             } else {
-                [self.temporaryValues removeObjectForKey:attributeDescription.attributeName];
+                [self.temporaryValues removeObjectForKey:attributeDescription.propertyName];
             }
         } else {
             [self.temporaryValues setObject:value
-                                     forKey:attributeDescription.attributeName];
+                                     forKey:attributeDescription.propertyName];
         }
         
         NSNotification *notification = [NSNotification notificationWithName:ORMObjectDidChangeValuesNotification
@@ -161,7 +161,7 @@ NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValu
 - (id)fetchValueForAttribute:(ORMAttributeDescription *)attributeDescription
 {
     [self.store loadValueWithAttributeDescription:attributeDescription ofObject:self.managedObject];
-    return [self.persistentValues objectForKey:attributeDescription.attributeName];
+    return [self.persistentValues objectForKey:attributeDescription.propertyName];
 }
 
 @end

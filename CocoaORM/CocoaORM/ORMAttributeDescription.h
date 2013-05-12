@@ -12,17 +12,20 @@
 
 @interface ORMAttributeDescription : NSObject
 
-- (id)initWithName:(NSString *)name entityDescription:(ORMEntityDescription *)ORMEntityDescription;
+#pragma mark Life-cycle
+- (id)initWithPropertyName:(NSString *)propertyName
+         entityDescription:(ORMEntityDescription *)ORMEntityDescription;
 
-@property (nonatomic, readonly) NSString *attributeName;
-@property (nonatomic, readonly) SEL getterSelector;
-@property (nonatomic, readonly) SEL setterSelector;
+#pragma mark Objective-C Property
+@property (nonatomic, readonly) NSString *propertyName;
 @property (nonatomic, readonly) NSString *propertyType;
+@property (nonatomic, readonly) SEL propertyGetterSelector;
+@property (nonatomic, readonly) SEL propertySetterSelector;
 
-@property (nonatomic, readonly) NSString *propertyAttributes;
+#pragma mark Entity Description
 @property (nonatomic, readonly) ORMEntityDescription *entityDescription;
-@property (nonatomic, readonly) Class managedClass;
 
+#pragma mark Attribute Configuration
 @property (nonatomic, readonly) ORMAttributeDescription *(^integer)();
 @property (nonatomic, readonly) ORMAttributeDescription *(^real)();
 @property (nonatomic, readonly) ORMAttributeDescription *(^text)();
@@ -31,8 +34,9 @@
 @property (nonatomic, readonly) ORMAttributeDescription *(^notNull)();
 @property (nonatomic, readonly) ORMAttributeDescription *(^unique)();
 
-@property (nonatomic, readonly) NSString *typeName;
-@property (nonatomic, readonly) BOOL required;
-@property (nonatomic, readonly) BOOL uniqueProperty;
+#pragma mark Column Specification
+@property (nonatomic, readonly) NSString *columnType;
+@property (nonatomic, readonly) BOOL columnRequired;
+@property (nonatomic, readonly) BOOL columnUnique;
 
 @end

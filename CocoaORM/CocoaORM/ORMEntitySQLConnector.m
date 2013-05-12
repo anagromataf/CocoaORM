@@ -80,14 +80,14 @@
                 
                 NSMutableArray *column = [[NSMutableArray alloc] init];
                 
-                [column addObject:attribute.attributeName];
-                [column addObject:attribute.typeName];
+                [column addObject:attribute.propertyName];
+                [column addObject:attribute.columnType];
                 
-                if (attribute.required) {
+                if (attribute.columnRequired) {
                     [column addObject:@"NOT NULL"];
                 }
                 
-                if (attribute.uniqueProperty) {
+                if (attribute.columnUnique) {
                     [uniqueConstraints addObject:[NSSet setWithObject:name]];
                 }
                 
