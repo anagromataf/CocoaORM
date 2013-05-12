@@ -13,8 +13,12 @@
 
 #import "ORMEntitySQLConnector.h"
 
-#import "ORMObject.h"
 #import "ORMStore.h"
+#import "ORMObjectID.h"
+
+#import "ORMObject.h"
+#import "ORMObject+Private.h"
+
 
 @interface NSObject ()
 - (id)initWithORMObject:(ORMObject *)anORMObject;
@@ -317,7 +321,12 @@
 
 - (ORMEntitySQLConnector *)connectorWithEntityDescription:(ORMEntityDescription *)entityDescription
 {
-    return [self.entityConnectors objectForKey:entityDescription.name];
+    ORMEntitySQLConnector *connector = [self.entityConnectors objectForKey:entityDescription.name];
+    if (!connector) {
+        connector = [[ORMEntitySQLConnector alloc] initWithEntityDescription:entityDescription];
+        [self.entityConnectors setObject:connector forKey:entityDescription.name];
+    }
+    return connector;
 }
 
 #pragma mark Database Transaction

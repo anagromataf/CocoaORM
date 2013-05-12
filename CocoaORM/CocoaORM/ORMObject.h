@@ -8,36 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-// CocoaORM
-#import "ORMObjectID.h"
-#import "ORMStore.h"
-
-extern NSString * const ORMObjectDidChangeValuesNotification;
+@class ORMEntityDescription;
 
 @interface ORMObject : NSObject
-
-#pragma mark Life-cycle
-- (id)initWithEntityDescription:(ORMEntityDescription *)entityDescription;
-
-#pragma mark Managed Object
-@property (nonatomic, readonly) id managedObject;
 
 #pragma mark Entity Description
 @property (nonatomic, readonly) ORMEntityDescription *entityDescription;
 
-#pragma mark Object ID & Store
-@property (nonatomic, readwrite) ORMObjectID *objectID;
-@property (nonatomic, readwrite) ORMStore *store;
-
 #pragma mark Values
-@property (nonatomic, strong) NSMutableDictionary *persistentValues;
+- (void)setManagedValue:(id)value forKey:(NSString *)key;
+- (id)managedValueForKey:(NSString *)key;
 @property (nonatomic, readonly) NSDictionary *changedValues;
-
-- (void)resetChanges;
-- (void)applyChanges;
-
-#pragma mark Handle Invocation
-- (NSMethodSignature *)methodSignatureForORMSelector:(SEL)aSelector;
-- (BOOL)handleInvocation:(NSInvocation *)anInvocation;
 
 @end

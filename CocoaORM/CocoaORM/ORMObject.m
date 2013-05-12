@@ -14,12 +14,15 @@
 #import "ORMStore.h"
 
 #import "ORMObject.h"
+#import "ORMObject+Private.h"
 
 NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValuesNotification";
 
 @interface ORMObject ()
-@property (nonatomic, readwrite, weak) id managedObject;
-
+@property (nonatomic, weak) id managedObject;
+@property (nonatomic, readwrite) ORMObjectID *objectID;
+@property (nonatomic, readwrite) ORMStore *store;
+@property (nonatomic, strong) NSMutableDictionary *persistentValues;
 @property (nonatomic, strong) NSMutableDictionary *temporaryValues;
 
 @property (nonatomic, readonly) NSDictionary *attributeDescriptionsForGetters;
@@ -27,6 +30,67 @@ NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValu
 @end
 
 @implementation ORMObject
+
+#pragma mark Values
+
+- (void)setManagedValue:(id)value forKey:(NSString *)propertyName
+{
+    if (value == nil) {
+        if ([self.persistentValues objectForKey:propertyName]) {
+            [self.temporaryValues setObject:[NSNull null]
+                                     forKey:propertyName];
+        } else {
+            [self.temporaryValues removeObjectForKey:propertyName];
+        }
+    } else {
+        [self.temporaryValues setObject:value
+                                 forKey:propertyName];
+    }
+    
+    NSNotification *notification = [NSNotification notificationWithName:ORMObjectDidChangeValuesNotification
+                                                                 object:self];
+    [[NSNotificationQueue defaultQueue] enqueueNotification:notification
+                                               postingStyle:NSPostNow];
+}
+
+- (id)managedValueForKey:(NSString *)propertyName
+{
+    id value = [[self temporaryValues] objectForKey:propertyName];
+    if (!value) {
+        value = [[self persistentValues] objectForKey:propertyName];
+    }
+    
+    if (!value) {
+        ORMAttributeDescription *attributeDescription = [[self.entityDescription allProperties] objectForKey:propertyName];
+        value = [self fetchValueForAttribute:attributeDescription];
+    }
+    
+    if ([value isEqual:[NSNull null]]) {
+        value = nil;
+    }
+    
+    return value;
+}
+
+- (NSDictionary *)changedValues
+{
+    return [self.temporaryValues copy];
+}
+
+- (id)fetchValueForAttribute:(ORMAttributeDescription *)attributeDescription
+{
+    [self.store loadValueWithAttributeDescription:attributeDescription ofObject:self.managedObject];
+    return [self.persistentValues objectForKey:attributeDescription.propertyName];
+}
+
+@end
+
+@implementation ORMObject (Private)
+
+@dynamic managedObject;
+@dynamic objectID;
+@dynamic store;
+@dynamic persistentValues;
 
 - (id)initWithEntityDescription:(ORMEntityDescription *)entityDescription
 {
@@ -57,12 +121,7 @@ NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValu
     return self;
 }
 
-#pragma mark Values
-
-- (NSDictionary *)changedValues
-{
-    return [self.temporaryValues copy];
-}
+#pragma mark Change Management
 
 - (void)resetChanges
 {
@@ -109,18 +168,7 @@ NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValu
         NSAssert([attributeDescription.propertyType hasPrefix:@"@"],
                  @"Properties with type %@ are not supported.", attributeDescription.propertyType);
         
-        id value = [[self temporaryValues] objectForKey:attributeDescription.propertyName];
-        if (!value) {
-            value = [[self persistentValues] objectForKey:attributeDescription.propertyName];
-        }
-        
-        if (!value) {
-            value = [self fetchValueForAttribute:attributeDescription];
-        }
-        
-        if ([value isEqual:[NSNull null]]) {
-            value = nil;
-        }
+        id value = [self managedValueForKey:attributeDescription.propertyName];
         
         [anInvocation setReturnValue:&value];
         [anInvocation retainArguments];
@@ -135,33 +183,12 @@ NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValu
         __unsafe_unretained id value = nil;
         [anInvocation getArgument:&value atIndex:2];
         
-        if (value == nil) {
-            if ([self.persistentValues objectForKey:attributeDescription.propertyName]) {
-                [self.temporaryValues setObject:[NSNull null]
-                                         forKey:attributeDescription.propertyName];
-            } else {
-                [self.temporaryValues removeObjectForKey:attributeDescription.propertyName];
-            }
-        } else {
-            [self.temporaryValues setObject:value
-                                     forKey:attributeDescription.propertyName];
-        }
-        
-        NSNotification *notification = [NSNotification notificationWithName:ORMObjectDidChangeValuesNotification
-                                                                     object:self];
-        [[NSNotificationQueue defaultQueue] enqueueNotification:notification
-                                                   postingStyle:NSPostNow];
+        [self setManagedValue:value forKey:attributeDescription.propertyName];
         
         return YES;
     }
     
     return NO;
-}
-
-- (id)fetchValueForAttribute:(ORMAttributeDescription *)attributeDescription
-{
-    [self.store loadValueWithAttributeDescription:attributeDescription ofObject:self.managedObject];
-    return [self.persistentValues objectForKey:attributeDescription.propertyName];
 }
 
 @end

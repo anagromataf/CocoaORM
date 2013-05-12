@@ -20,7 +20,7 @@
 #import "ORMEntityDescription.h"
 #import "ORMEntitySQLConnector.h"
 #import "ORMObject.h"
-#import "ORMStore.h"
+#import "ORMObject+Private.h"
 
 #pragma mark - ORMObject
 
