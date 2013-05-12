@@ -208,7 +208,12 @@
         ORM.objectID = objectID;
         [self.managedObjects setObject:ORM forKey:objectID];
     }
-    return [[ORM.entityDescription.managedClass alloc] initWithORMObject:ORM];
+    
+    if (ORM.managedObject) {
+        return ORM.managedObject;
+    } else {
+        return [[ORM.entityDescription.managedClass alloc] initWithORMObject:ORM];
+    }
 }
 
 - (void)enumerateObjectsOfClass:(Class)aClass

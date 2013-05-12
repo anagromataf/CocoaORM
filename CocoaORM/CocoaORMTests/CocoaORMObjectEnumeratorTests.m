@@ -70,7 +70,7 @@
         }];
         
         STAssertEquals([result count], (NSUInteger)7, nil);
-//        STAssertEqualObjects(result, self.objects, nil);
+        STAssertEqualObjects(result, self.objects, nil);
         return nil;
     }];
 }
@@ -79,7 +79,7 @@
 {
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
-//        NSArray *lastNames = @[@"a", @"b", @"f"];
+        NSArray *lastNames = @[@"a", @"b", @"f"];
         
         NSMutableSet *result = [[NSMutableSet alloc] init];
         
@@ -92,10 +92,10 @@
         }];
         
         STAssertEquals([result count], (NSUInteger)3, nil);
-//        STAssertEqualObjects(result, [self.objects filteredSetUsingPredicate:
-//                                      [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-//            return [lastNames containsObject:[evaluatedObject lastName]];
-//        }]], nil);
+        STAssertEqualObjects(result, [self.objects filteredSetUsingPredicate:
+                                      [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            return [lastNames containsObject:[evaluatedObject lastName]];
+        }]], nil);
         return nil;
     }];
 }
