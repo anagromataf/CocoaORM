@@ -13,7 +13,6 @@
 // 3rdParty
 #import <FMDB/FMDatabase.h>
 #import <FMDB/FMDatabaseAdditions.h>
-#import <JRSwizzle/JRSwizzle.h>
 
 // CocoaORM
 #import "NSObject+CocoaORM.h"
