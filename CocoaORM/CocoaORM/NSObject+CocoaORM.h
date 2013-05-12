@@ -9,14 +9,9 @@
 // Cocoa
 #import <Foundation/Foundation.h>
 
-// 3rdParty
-#import <FMDB/FMDatabase.h>
-
-// CocoaORM
-#import "ORMAttributeDescription.h"
-#import "ORMEntityDescription.h"
-#import "ORMObject.h"
-#import "ORMStore.h"
+@class ORMEntityDescription;
+@class ORMAttributeDescription;
+@class ORMObject;
 
 @interface NSObject (CocoaORM)
 
@@ -26,9 +21,6 @@
 
 #pragma mark ORMObject
 @property (nonatomic, readonly) ORMObject *ORM;
-
-#pragma mark - Internal
-- (id)initWithORMObject:(ORMObject *)anORMObject;
 
 @end
 

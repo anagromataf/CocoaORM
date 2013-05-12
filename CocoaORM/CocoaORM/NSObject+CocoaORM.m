@@ -19,6 +19,7 @@
 #import "NSObject+CocoaORM.h"
 #import "ORMEntityDescription.h"
 #import "ORMEntitySQLConnector.h"
+#import "ORMObject.h"
 #import "ORMStore.h"
 
 #pragma mark - ORMObject
@@ -43,6 +44,8 @@ const char * NSObjectORMObjectKey = "NSObjectORMObjectKey";
 
 + (ORMEntityDescription *)ORMEntityDescription
 {
+    NSAssert([self class] != [ORMEntityDescription class], @"ORMEntityDescription can't be managed by CocoaORM.");
+    
     ORMEntityDescription *entityDescription = objc_getAssociatedObject(self, NSObjectORMEntityDescriptionKey);
     if (!entityDescription) {
         entityDescription = [[ORMEntityDescription alloc] initWithClass:[self class]];
@@ -80,6 +83,8 @@ const char * NSObjectORMObjectKey = "NSObjectORMObjectKey";
 
 - (ORMObject *)ORM
 {
+    NSAssert(![self isKindOfClass:[ORMObject class]], @"ORMObject can't be managed by CocoaORM.");
+    
     ORMObject *ORM = objc_getAssociatedObject(self, NSObjectORMObjectKey);
     if (!ORM) {
         ORM = [[ORMObject alloc] initWithEntityDescription:[[self class] ORMEntityDescription]];

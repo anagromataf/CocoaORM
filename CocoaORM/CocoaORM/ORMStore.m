@@ -9,9 +9,16 @@
 #import "NSObject+CocoaORM.h"
 
 #import "ORMEntityDescription.h"
+#import "ORMAttributeDescription.h"
+
 #import "ORMEntitySQLConnector.h"
 
+#import "ORMObject.h"
 #import "ORMStore.h"
+
+@interface NSObject ()
+- (id)initWithORMObject:(ORMObject *)anORMObject;
+@end
 
 @interface ORMStore ()
 @property (nonatomic, readonly) FMDatabase *db;
