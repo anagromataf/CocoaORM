@@ -6,9 +6,13 @@
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
+#import "ORMEntityDescription.h"
+
 #import "ORMObjectID.h"
 
 @implementation ORMObjectID
+
+#pragma mark Life-cycle
 
 - (id)initWithEntityDescription:(ORMEntityDescription *)entityDescription
                        entityID:(ORMEntityID)entityID
@@ -21,15 +25,11 @@
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone
-{
-    return [[ORMObjectID allocWithZone:zone] initWithEntityDescription:self.entityDescription
-                                                              entityID:self.entityID];
-}
+#pragma mark NSObject
 
-- (NSUInteger)hash
+- (NSString *)description
 {
-    return self.entityID;
+    return [NSString stringWithFormat:@"<ORMObjectID: %p %@ %lld>", self, self.entityDescription.name, self.entityID];
 }
 
 - (BOOL)isEqual:(id)object
@@ -41,7 +41,7 @@
             return NO;
         }
         
-        if (self.entityDescription != other.entityDescription) {
+        if (![self.entityDescription isEqual:other.entityDescription]) {
             return NO;
         }
         
@@ -50,9 +50,18 @@
     return NO;
 }
 
-- (NSString *)description
+- (NSUInteger)hash
 {
-    return [NSString stringWithFormat:@"<ORMObjectID: %p %@ %lld>", self, self.entityDescription.name, self.entityID];
+    return self.entityID;
 }
+
+#pragma mark NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    return [[ORMObjectID allocWithZone:zone] initWithEntityDescription:self.entityDescription
+                                                              entityID:self.entityID];
+}
+
 
 @end

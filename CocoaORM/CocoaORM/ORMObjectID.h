@@ -9,13 +9,17 @@
 #import <Foundation/Foundation.h>
 
 #import "ORMEntitySQLConnector.h"
-#import "ORMEntityDescription.h"
+
+@class ORMEntityDescription;
 
 @interface ORMObjectID : NSObject <NSCopying>
-@property (nonatomic, readonly) ORMEntityDescription *entityDescription;
-@property (nonatomic, readonly) ORMEntityID entityID;
 
+#pragma mark Life-cycle
 - (id)initWithEntityDescription:(ORMEntityDescription *)entityDescription
                        entityID:(ORMEntityID)entityID;
+
+#pragma mark Properties
+@property (nonatomic, readonly) ORMEntityDescription *entityDescription;
+@property (nonatomic, readonly) ORMEntityID entityID;
 
 @end

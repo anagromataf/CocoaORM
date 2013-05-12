@@ -192,9 +192,7 @@
 				F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */,
 				F699F7E1173677AB000F4276 /* Model */,
 				F673F181173A833400461D9F /* SQL Connector */,
-				F6DFEE4B173A8757003E38A8 /* Object */,
-				F6509EA6172DAD85002A3067 /* ORMStore.h */,
-				F6509EA7172DAD85002A3067 /* ORMStore.m */,
+				F6DFEE4B173A8757003E38A8 /* Object & Store */,
 				F6034C11172DA2C4002802F2 /* Supporting Files */,
 			);
 			path = CocoaORM;
@@ -299,15 +297,17 @@
 			name = "Object Tests";
 			sourceTree = "<group>";
 		};
-		F6DFEE4B173A8757003E38A8 /* Object */ = {
+		F6DFEE4B173A8757003E38A8 /* Object & Store */ = {
 			isa = PBXGroup;
 			children = (
 				F618B905172E6CB900F12666 /* ORMObjectID.h */,
 				F618B906172E6CB900F12666 /* ORMObjectID.m */,
 				F6DFEE4C173A8772003E38A8 /* ORMObject.h */,
 				F6DFEE4D173A8772003E38A8 /* ORMObject.m */,
+				F6509EA6172DAD85002A3067 /* ORMStore.h */,
+				F6509EA7172DAD85002A3067 /* ORMStore.m */,
 			);
-			name = Object;
+			name = "Object & Store";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
