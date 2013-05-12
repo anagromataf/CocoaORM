@@ -160,17 +160,8 @@ NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValu
 
 - (id)fetchValueForAttribute:(ORMAttributeDescription *)attributeDescription
 {
-    NSError *error = nil;
-    
-    ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:attributeDescription.entityDescription];
-    
-    NSDictionary *properties = [connector propertiesOfEntityWithEntityID:self.objectID.entityID
-                                                              inDatabase:self.store.db
-                                                                   error:&error];
-    
-    [self.persistentValues addEntriesFromDictionary:properties];
-    
-    return [properties objectForKey:attributeDescription.attributeName];
+    [self.store loadValueOfObject:self.managedObject withAttributeDescription:attributeDescription];
+    return [self.persistentValues objectForKey:attributeDescription.attributeName];
 }
 
 @end

@@ -45,9 +45,9 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
              fetchingProperties:(NSArray *)propertyNames
                      enumerator:(void(^)(id object, BOOL *stop))enumerator;
 
-#pragma mark - Private
+- (void)loadValueOfObject:(id)object withAttributeDescription:(ORMAttributeDescription *)attributeDescription;
 
-@property (nonatomic, readonly) FMDatabase *db;
+#pragma mark - Private
 
 #pragma mark Database Transaction
 - (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;

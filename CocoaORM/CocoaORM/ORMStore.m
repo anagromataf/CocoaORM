@@ -14,6 +14,7 @@
 #import "ORMStore.h"
 
 @interface ORMStore ()
+@property (nonatomic, readonly) FMDatabase *db;
 @property (nonatomic, readonly) dispatch_queue_t queue;
 
 @property (nonatomic, readonly) NSMutableSet *insertedObjects;
@@ -99,8 +100,8 @@
                 ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:ORM.entityDescription];
                 
                 ORMEntityID eid = [connector insertEntityWithProperties:ORM.changedValues
-                                                          intoDatabase:db
-                                                                 error:&error];
+                                                           intoDatabase:db
+                                                                  error:&error];
                 
                 if (eid) {
                     ORM.objectID = [[ORMObjectID alloc] initWithEntityDescription:ORM.entityDescription entityID:eid];
@@ -240,6 +241,16 @@
         [[self.ORM persistentValues] addEntriesFromDictionary:properties];
         enumerator(object, stop);
     }];
+}
+
+- (void)loadValueOfObject:(id)object withAttributeDescription:(ORMAttributeDescription *)attributeDescription
+{
+    NSError *error = nil;
+    ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:attributeDescription.entityDescription];
+    NSDictionary *properties = [connector propertiesOfEntityWithEntityID:[object ORM].objectID.entityID
+                                                              inDatabase:self.db
+                                                                   error:&error];
+    [[object ORM].persistentValues addEntriesFromDictionary:properties];
 }
 
 #pragma mark Apply or Reset Changes
