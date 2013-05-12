@@ -44,12 +44,9 @@ To manage Objects in the Store, just create them and add them to the store.
 
     [store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
-        Person *person = [[Person alloc] init];
-        
+        Person *person = [store createObjectWithEntityDescription:[Person ORMEntityDescription]];
         person.firstName = @"John";
         person.lastName = @"Example";
-                
-        [self.store insertObject:person];
         
         return ^(NSError *error){
             
@@ -61,6 +58,6 @@ If you want to update an object, just set the property.
     [store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
         person.firstName = @"Jim";
-       
+        
         return nil;
     }];
