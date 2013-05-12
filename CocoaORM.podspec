@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.author       = { "Tobias Kräntzer" => "info@tobias-kraentzer.de" }
   s.source       = { :git => "https://github.com/anagromataf/CocoaORM.git", :tag => "0.0.3" }
   
-  s.platform     = :osx
+  s.platform     = :osx, '10.8'
   s.source_files = 'CocoaORM/CocoaORM/*.{h,m}'
   
   s.requires_arc = true
