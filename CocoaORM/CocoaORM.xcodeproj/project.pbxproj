@@ -41,7 +41,8 @@
 		F699F7EE1736ECFD000F4276 /* CocoaORMDatabaseTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = F699F7ED1736ECFD000F4276 /* CocoaORMDatabaseTestCase.m */; };
 		F6BBAC08172DBD10000B389D /* CocoaORMDatabaseRollbackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6BBAC07172DBD10000B389D /* CocoaORMDatabaseRollbackTests.m */; };
 		F6BBAC0C172DC49C000B389D /* CocoaORMObjectChangeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6BBAC0B172DC49C000B389D /* CocoaORMObjectChangeTests.m */; };
-		F6BBAC0F172DCAE8000B389D /* NSObject+CocoaORMPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = F6BBAC0D172DCAE8000B389D /* NSObject+CocoaORMPrivate.h */; };
+		F6DFEE4E173A8772003E38A8 /* ORMObject.h in Headers */ = {isa = PBXBuildFile; fileRef = F6DFEE4C173A8772003E38A8 /* ORMObject.h */; };
+		F6DFEE4F173A8772003E38A8 /* ORMObject.m in Sources */ = {isa = PBXBuildFile; fileRef = F6DFEE4D173A8772003E38A8 /* ORMObject.m */; };
 		F6FEB6EA172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FEB6E9172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.m */; };
 		F6FEB6ED172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FEB6EC172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.m */; };
 /* End PBXBuildFile section */
@@ -112,7 +113,8 @@
 		F6BBAC07172DBD10000B389D /* CocoaORMDatabaseRollbackTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CocoaORMDatabaseRollbackTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F6BBAC0A172DC49C000B389D /* CocoaORMObjectChangeTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMObjectChangeTests.h; sourceTree = "<group>"; };
 		F6BBAC0B172DC49C000B389D /* CocoaORMObjectChangeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMObjectChangeTests.m; sourceTree = "<group>"; };
-		F6BBAC0D172DCAE8000B389D /* NSObject+CocoaORMPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CocoaORMPrivate.h"; sourceTree = "<group>"; };
+		F6DFEE4C173A8772003E38A8 /* ORMObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORMObject.h; sourceTree = "<group>"; };
+		F6DFEE4D173A8772003E38A8 /* ORMObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORMObject.m; sourceTree = "<group>"; };
 		F6FEB6E8172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMObjectPropertyLoadingTests.h; sourceTree = "<group>"; };
 		F6FEB6E9172FB9D000448614 /* CocoaORMObjectPropertyLoadingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaORMObjectPropertyLoadingTests.m; sourceTree = "<group>"; };
 		F6FEB6EB172FBEEB00448614 /* CocoaORMObjectEnumeratorTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaORMObjectEnumeratorTests.h; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				F618B909172E6D1800F12666 /* ORMConstants.h */,
 				F699F7E1173677AB000F4276 /* Model */,
 				F673F181173A833400461D9F /* SQL Connector */,
+				F6DFEE4B173A8757003E38A8 /* Object */,
 				F6034C37172DA425002802F2 /* NSObject+CocoaORM.h */,
 				F6034C38172DA425002802F2 /* NSObject+CocoaORM.m */,
 				F618B905172E6CB900F12666 /* ORMObjectID.h */,
@@ -253,7 +256,6 @@
 		F618B910172EAAF800F12666 /* Private */ = {
 			isa = PBXGroup;
 			children = (
-				F6BBAC0D172DCAE8000B389D /* NSObject+CocoaORMPrivate.h */,
 				F618B8FE172DCE2C00F12666 /* ORMStore+Private.h */,
 			);
 			name = Private;
@@ -313,6 +315,15 @@
 			name = "Object Tests";
 			sourceTree = "<group>";
 		};
+		F6DFEE4B173A8757003E38A8 /* Object */ = {
+			isa = PBXGroup;
+			children = (
+				F6DFEE4C173A8772003E38A8 /* ORMObject.h */,
+				F6DFEE4D173A8772003E38A8 /* ORMObject.m */,
+			);
+			name = Object;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -323,12 +334,12 @@
 				F6034C39172DA425002802F2 /* NSObject+CocoaORM.h in Headers */,
 				F6034C3D172DA602002802F2 /* ORMAttributeDescription.h in Headers */,
 				F6509EA8172DAD85002A3067 /* ORMStore.h in Headers */,
-				F6BBAC0F172DCAE8000B389D /* NSObject+CocoaORMPrivate.h in Headers */,
 				F618B900172DCE2C00F12666 /* ORMStore+Private.h in Headers */,
 				F618B907172E6CB900F12666 /* ORMObjectID.h in Headers */,
 				F618B90B172E6D1900F12666 /* ORMConstants.h in Headers */,
 				F699F7DF173676C4000F4276 /* ORMEntityDescription.h in Headers */,
 				F699F7E81736CF68000F4276 /* ORMEntitySQLConnector.h in Headers */,
+				F6DFEE4E173A8772003E38A8 /* ORMObject.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +516,7 @@
 				F618B908172E6CB900F12666 /* ORMObjectID.m in Sources */,
 				F699F7E0173676C4000F4276 /* ORMEntityDescription.m in Sources */,
 				F699F7E91736CF68000F4276 /* ORMEntitySQLConnector.m in Sources */,
+				F6DFEE4F173A8772003E38A8 /* ORMObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

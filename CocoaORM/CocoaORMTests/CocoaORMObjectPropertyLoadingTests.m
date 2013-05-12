@@ -31,7 +31,7 @@
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
-            self.objectID = employee.ORMObjectID;
+            self.objectID = employee.ORM.objectID;
         };
     }];
 }
@@ -44,20 +44,20 @@
         
         Employee *employee = [self.store objectWithID:self.objectID];
         STAssertNotNil(employee, nil);
-        STAssertEqualObjects(employee.ORMObjectID, self.objectID, nil);
+        STAssertEqualObjects(employee.ORM.objectID, self.objectID, nil);
         
-        STAssertEqualObjects([employee performSelector:@selector(persistentORMValues)], @{}, nil);
+        STAssertEqualObjects(employee.ORM.persistentValues, @{}, nil);
         
         STAssertEqualObjects(employee.position, @"CEO", nil);
         
         NSDictionary *_ep = @{@"position":@"CEO", @"fired":[NSNull null], @"employeeID":@(12)};
-        STAssertEqualObjects([employee performSelector:@selector(persistentORMValues)], _ep, nil);
+        STAssertEqualObjects(employee.ORM.persistentValues, _ep, nil);
         
         STAssertEqualObjects(employee.firstName, @"John", nil);
         STAssertEqualObjects(employee.lastName, @"Example", nil);
         
         NSDictionary *_ap = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null], @"employeeID":@(12)};
-        STAssertEqualObjects([employee performSelector:@selector(persistentORMValues)], _ap, nil);
+        STAssertEqualObjects(employee.ORM.persistentValues, _ap, nil);
         
         return nil;
     }];

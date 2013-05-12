@@ -15,6 +15,11 @@
 - (id)initWithName:(NSString *)name entityDescription:(ORMEntityDescription *)ORMEntityDescription;
 
 @property (nonatomic, readonly) NSString *attributeName;
+@property (nonatomic, readonly) SEL getterSelector;
+@property (nonatomic, readonly) SEL setterSelector;
+@property (nonatomic, readonly) NSString *propertyType;
+
+@property (nonatomic, readonly) NSString *propertyAttributes;
 @property (nonatomic, readonly) ORMEntityDescription *entityDescription;
 @property (nonatomic, readonly) Class managedClass;
 

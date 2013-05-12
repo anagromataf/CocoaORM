@@ -44,11 +44,11 @@
     
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
-        STAssertEqualObjects(employee.changedORMValues, @{}, nil);
+        STAssertEqualObjects(employee.ORM.changedValues, @{}, nil);
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORMObjectID.entityID
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORM.objectID.entityID
                                                                                   inDatabase:db
                                                                                        error:&error
                                                                       includeSuperProperties:YES];
@@ -87,11 +87,11 @@
     
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
-        STAssertEqualObjects(employee.changedORMValues, @{}, nil);
+        STAssertEqualObjects(employee.ORM.changedValues, @{}, nil);
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORMObjectID.entityID
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORM.objectID.entityID
                                                                                   inDatabase:db
                                                                                        error:&error
                                                                       includeSuperProperties:YES];
@@ -131,11 +131,11 @@
     
     [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
         
-        STAssertEqualObjects(employee.changedORMValues, @{}, nil);
+        STAssertEqualObjects(employee.ORM.changedValues, @{}, nil);
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORMObjectID.entityID
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORM.objectID.entityID
                                                                                   inDatabase:db
                                                                                        error:&error
                                                                       includeSuperProperties:YES];
@@ -167,7 +167,7 @@
         };
     }];
     
-    ORMEntityID eid = employee.ORMObjectID.entityID;
+    ORMEntityID eid = employee.ORM.objectID.entityID;
     
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
@@ -185,8 +185,8 @@
         STAssertNil(error, [error localizedDescription]);
         STAssertNil(properties, nil);
         
-        STAssertNil(employee.ORMObjectID, nil);
-        STAssertNil(employee.ORMStore, nil);
+        STAssertNil(employee.ORM.objectID, nil);
+        STAssertNil(employee.ORM.store, nil);
         
         STAssertEqualObjects(employee.firstName, @"John", nil);
         STAssertEqualObjects(employee.lastName, @"Example", nil);
@@ -212,7 +212,7 @@
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
-            employeeID = employee.ORMObjectID;
+            employeeID = employee.ORM.objectID;
         };
     }];
     
@@ -241,7 +241,7 @@
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
-            employeeID = employee.ORMObjectID;
+            employeeID = employee.ORM.objectID;
         };
     }];
     
@@ -251,7 +251,7 @@
         
         Employee *employee = [self.store objectWithID:employeeID];
         STAssertNotNil(employee, nil);
-        STAssertEqualObjects(employee.ORMObjectID, employeeID, nil);
+        STAssertEqualObjects(employee.ORM.objectID, employeeID, nil);
         
         return nil;
     }];

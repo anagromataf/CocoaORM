@@ -8,10 +8,10 @@
 
 #import <objc/runtime.h>
 
+#import "NSObject+CocoaORM.h"
+
 #import "ORMAttributeDescription.h"
 #import "ORMEntityDescription.h"
-
-const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey";
 
 @interface ORMEntityDescription ()
 @property (nonatomic, readonly) NSMutableDictionary *propertyDescriptions;
@@ -111,33 +111,6 @@ const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey"
     } else {
         return self.uniqueConstraints;
     }
-}
-
-@end
-
-#pragma mark -
-
-@implementation NSObject (ORMEntityDescription)
-
-+ (BOOL)isORMClass
-{
-    if (self == [NSObject class]) {
-        return NO;
-    } else if (objc_getAssociatedObject(self, NSObjectORMEntityDescriptionKey) != nil) {
-        return YES;
-    } else {
-        return [[self superclass] isORMClass];
-    }
-}
-
-+ (ORMEntityDescription *)ORMEntityDescription
-{
-    ORMEntityDescription *entityDescription = objc_getAssociatedObject(self, NSObjectORMEntityDescriptionKey);
-    if (!entityDescription) {
-        entityDescription = [[ORMEntityDescription alloc] initWithClass:[self class]];
-        objc_setAssociatedObject(self, NSObjectORMEntityDescriptionKey, entityDescription, OBJC_ASSOCIATION_RETAIN);
-    }
-    return entityDescription;
 }
 
 @end

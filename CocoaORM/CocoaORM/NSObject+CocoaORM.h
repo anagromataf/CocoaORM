@@ -14,22 +14,22 @@
 
 // CocoaORM
 #import "ORMConstants.h"
-#import "ORMObjectID.h"
-#import "ORMStore.h"
 #import "ORMAttributeDescription.h"
-
-extern NSString * const NSObjectORMValuesDidChangeNotification;
+#import "ORMEntityDescription.h"
+#import "ORMObject.h"
+#import "ORMStore.h"
 
 @interface NSObject (CocoaORM)
 
-#pragma mark ORM Object ID & Store
-@property (nonatomic, readonly) ORMObjectID *ORMObjectID;
-@property (nonatomic, readonly) ORMStore *ORMStore;
+#pragma mark ORMEntityDescription
++ (BOOL)isORMClass;
++ (ORMEntityDescription *)ORMEntityDescription;
 
-#pragma mark ORM Values
-@property (nonatomic, readonly) NSDictionary *changedORMValues;
-- (id)ORMValueForKey:(NSString *)key;
-- (void)setORMValue:(id)value forKey:(NSString *)key;
+#pragma mark ORMObject
+@property (nonatomic, readonly) ORMObject *ORM;
+
+#pragma mark - Internal
+- (id)initWithORMObject:(ORMObject *)anORMObject;
 
 @end
 

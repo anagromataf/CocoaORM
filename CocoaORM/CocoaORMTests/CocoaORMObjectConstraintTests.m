@@ -55,8 +55,8 @@
         return ^(NSError *error) {
             STAssertNotNil(error, nil);
             
-            STAssertNil(employee.ORMObjectID, nil);
-            STAssertNil(employee.ORMStore, nil);
+            STAssertNil(employee.ORM.objectID, nil);
+            STAssertNil(employee.ORM.store, nil);
         };
     }];
     

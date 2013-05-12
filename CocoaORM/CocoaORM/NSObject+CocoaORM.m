@@ -8,10 +8,12 @@
 
 // Cocoa
 #import <objc/runtime.h>
+#import <objc/message.h>
 
 // 3rdParty
 #import <FMDB/FMDatabase.h>
 #import <FMDB/FMDatabaseAdditions.h>
+#import <JRSwizzle/JRSwizzle.h>
 
 // CocoaORM
 #import "ORMEntityDescription.h"
@@ -19,174 +21,93 @@
 #import "ORMStore+Private.h"
 
 #import "NSObject+CocoaORM.h"
-#import "NSObject+CocoaORMPrivate.h"
 
-NSString * const NSObjectORMValuesDidChangeNotification = @"NSObjectORMValuesDidChangeNotification";
 
-const char * NSObjectORMPropertyDescriptionsKey         = "NSObjectORMPropertyDescriptionsKey";
-const char * NSObjectORMUniqueTogetherPropertyNamesKey  = "NSObjectORMUniqueTogetherPropertyNamesKey";
-const char * NSObjectORMObjectIDKey                     = "NSObjectORMObjectIDKey";
-const char * NSObjectORMStoreKey                        = "NSObjectORMStoreKey";
+#pragma mark - ORMObject
+
+const char * NSObjectORMEntityDescriptionKey = "NSObjectORMEntityDescriptionKey";
+const char * NSObjectORMObjectKey = "NSObjectORMObjectKey";
 
 @implementation NSObject (CocoaORM)
 
-#pragma mark ORM Object ID & Store
+#pragma mark ORMEntityDescription
 
-- (ORMObjectID *)ORMObjectID
++ (BOOL)isORMClass
 {
-    return objc_getAssociatedObject(self, NSObjectORMObjectIDKey);
-}
-
-- (void)setORMObjectID:(ORMObjectID *)ORMObjectID
-{
-    objc_setAssociatedObject(self, NSObjectORMObjectIDKey, ORMObjectID, OBJC_ASSOCIATION_RETAIN);
-}
-
-- (ORMStore *)ORMStore
-{
-    return objc_getAssociatedObject(self, NSObjectORMStoreKey);
-}
-
-- (void)setORMStore:(ORMStore *)ORMStore
-{
-    objc_setAssociatedObject(self, NSObjectORMStoreKey, ORMStore, OBJC_ASSOCIATION_ASSIGN);
-}
-
-#pragma mark Persistent & Temporary ORM Values
-
-- (NSMutableDictionary *)persistentORMValues
-{
-    NSMutableDictionary *cache = objc_getAssociatedObject(self, _cmd);
-    if (cache == nil) {
-        cache = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self, _cmd, cache, OBJC_ASSOCIATION_RETAIN);
-    }
-    return cache;
-}
-
-- (NSMutableDictionary *)temporaryORMValues
-{
-    NSMutableDictionary *cache = objc_getAssociatedObject(self, _cmd);
-    if (cache == nil) {
-        cache = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self, _cmd, cache, OBJC_ASSOCIATION_RETAIN);
-    }
-    return cache;
-}
-
-#pragma mark ORM Values
-
-- (NSDictionary *)changedORMValues
-{
-    return [[self temporaryORMValues] copy];
-}
-
-- (void)setORMValue:(id)value forKey:(NSString *)key
-{
-    if (value == nil) {
-        if ([[self persistentORMValues] objectForKey:key]) {
-            [[self temporaryORMValues] setObject:[NSNull null] forKey:key];
-        } else {
-            [[self temporaryORMValues] removeObjectForKey:key];
-        }
-    }
-    [[self temporaryORMValues] setObject:value forKey:key];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:NSObjectORMValuesDidChangeNotification object:self];
-}
-
-- (id)ORMValueForKey:(NSString *)key
-{
-    id value = [[self temporaryORMValues] objectForKey:key];
-    if (!value) {
-        value = [[self persistentORMValues] objectForKey:key];
-    }
-    
-    if (value == nil && [self ORMObjectID] && [self ORMStore]) {
-        ORMAttributeDescription *attributeDescription = [[[[self class] ORMEntityDescription] allProperties] objectForKey:key];
-        
-        if (attributeDescription) {
-            NSError *error = nil;
-            
-            ORMEntitySQLConnector *mapping = [ORMEntitySQLConnector connectorWithEntityDescription:attributeDescription.entityDescription];
-            
-            NSDictionary *properties = [mapping propertiesOfEntityWithEntityID:self.ORMObjectID.entityID
-                                                                      inDatabase:self.ORMStore.db
-                                                                           error:&error];
-            
-            [[self persistentORMValues] addEntriesFromDictionary:properties];
-            
-            value = [properties objectForKey:key];
-        }
-    }
-    
-    if ([value isEqual:[NSNull null]]) {
-        return nil;
+    if (self == [NSObject class]) {
+        return NO;
+    } else if (objc_getAssociatedObject(self, NSObjectORMEntityDescriptionKey) != nil) {
+        return YES;
     } else {
-        return value;
+        return [[self superclass] isORMClass];
     }
 }
 
-@end
++ (ORMEntityDescription *)ORMEntityDescription
+{
+    ORMEntityDescription *entityDescription = objc_getAssociatedObject(self, NSObjectORMEntityDescriptionKey);
+    if (!entityDescription) {
+        entityDescription = [[ORMEntityDescription alloc] initWithClass:[self class]];
+        objc_setAssociatedObject(self, NSObjectORMEntityDescriptionKey, entityDescription, OBJC_ASSOCIATION_RETAIN);
+        
+        Method origMethodSignatureForSelector = class_getInstanceMethod(self, @selector(methodSignatureForSelector:));
+        class_addMethod(self,
+                        @selector(methodSignatureForSelector:),
+                        imp_implementationWithBlock(^(id _self, SEL selector){
+                            NSMethodSignature *signature = [[_self ORM] methodSignatureForORMSelector:selector];
+                            if (!signature) {
+                                signature = (NSMethodSignature *)method_invoke(_self, origMethodSignatureForSelector, selector);
+                            }
+                            return signature;
+                        }),
+                        method_getTypeEncoding(class_getInstanceMethod(self, @selector(methodSignatureForSelector:))));
+        
+        Method origForwardInvocation = class_getInstanceMethod(self, @selector(forwardInvocation:));
+        class_addMethod(self,
+                        @selector(forwardInvocation:),
+                        imp_implementationWithBlock(^(id _self, NSInvocation *invocation){
+                            BOOL success = [[_self ORM] handleInvocation:invocation];
+                            if (!success) {
+                                success = (BOOL)method_invoke(_self, origForwardInvocation, invocation);
+                            }
+                            return success;
+                        }),
+                        method_getTypeEncoding(class_getInstanceMethod(self, @selector(forwardInvocation:))));
+    }
+    
+    return entityDescription;
+}
 
-@implementation NSObject (CocoaORMPrivate)
+#pragma mark ORMObject
 
-@dynamic ORMObjectID;
-@dynamic ORMStore;
-@dynamic persistentORMValues;
+- (ORMObject *)ORM
+{
+    ORMObject *ORM = objc_getAssociatedObject(self, NSObjectORMObjectKey);
+    if (!ORM) {
+        ORM = [[ORMObject alloc] initWithEntityDescription:[[self class] ORMEntityDescription]];
+        objc_setAssociatedObject(self, NSObjectORMObjectKey, ORM, OBJC_ASSOCIATION_RETAIN);
+    }
+    return ORM;
+}
 
-- (instancetype)initWithORMObjectID:(ORMObjectID *)objectID inStore:(ORMStore *)store properties:(NSDictionary *)properties
+#pragma mark - Internal
+
+- (id)initWithORMObject:(ORMObject *)anORMObject
 {
     self = [self init];
     if (self) {
-        self.ORMObjectID = objectID;
-        self.ORMStore = store;
-        [[self persistentORMValues] addEntriesFromDictionary:properties];
+        objc_setAssociatedObject(self, NSObjectORMObjectKey, anORMObject, OBJC_ASSOCIATION_RETAIN);
     }
     return self;
 }
 
-- (void)resetChangedORMValues
-{
-    [[self temporaryORMValues] removeAllObjects];
-}
-
-- (void)applyChangedORMValues
-{
-    [[self temporaryORMValues] enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [[self persistentORMValues] setValue:obj forKey:key];
-    }];
-    [[self temporaryORMValues] removeAllObjects];
-}
-
 @end
-
-#pragma mark -
 
 ORMAttributeDescription *
 ORMAttribute(Class _class, NSString *name)
 {
     ORMEntityDescription *ORM = [_class ORMEntityDescription];
     ORMAttributeDescription *attribute = ORM.attribute(name);
-    
-    // Add Getter
-    class_addMethod(_class,
-                    NSSelectorFromString(name),
-                    imp_implementationWithBlock((id)^(id obj){
-        return [obj ORMValueForKey:name];
-    }), "@@:");
-    
-    // Add Setter
-    
-    NSString *setterSelectorName = [NSString stringWithFormat:@"set%@:",
-                                    [name stringByReplacingCharactersInRange:NSMakeRange(0,1)
-                                                                  withString:[[name substringToIndex:1] capitalizedString]]];
-    class_addMethod(_class,
-                    NSSelectorFromString(setterSelectorName),
-                    imp_implementationWithBlock(^(id obj, id value){
-        [obj setORMValue:value forKey:name];
-    }), "v@:@");
-    
     return attribute;
 }
 

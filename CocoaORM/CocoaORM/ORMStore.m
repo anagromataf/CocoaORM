@@ -7,7 +7,6 @@
 //
 
 #import "NSObject+CocoaORM.h"
-#import "NSObject+CocoaORMPrivate.h"
 
 #import "ORMEntityDescription.h"
 #import "ORMEntitySQLConnector.h"
@@ -41,11 +40,13 @@
     self = [super init];
     if (self) {
         
+        _managedClasses = [[NSMutableSet alloc] init];
+        
+        _managedObjects = [NSMapTable strongToWeakObjectsMapTable];
+        
         _insertedObjects = [[NSMutableSet alloc] init];
         _changedObjects = [[NSMutableSet alloc] init];
         _deletedObjects = [[NSMutableSet alloc] init];
-        _managedObjects = [NSMapTable strongToWeakObjectsMapTable];
-        _managedClasses = [[NSMutableSet alloc] init];
         
         _queue = queue ? queue : dispatch_queue_create("de.tobias-kraentzer.CocoaORM (ORMStore)", DISPATCH_QUEUE_SERIAL);
         
@@ -95,17 +96,17 @@
         
         // Insert Objects into Database
         if (!_rollback) {
-            [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+            [self.insertedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
                 
-                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[[obj class] ORMEntityDescription]];
+                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:ORM.entityDescription];
                 
-                ORMEntityID eid = [connector insertEntityWithProperties:[obj changedORMValues]
+                ORMEntityID eid = [connector insertEntityWithProperties:ORM.changedValues
                                                           intoDatabase:db
                                                                  error:&error];
                 
                 if (eid) {
-                    obj.ORMObjectID = [[ORMObjectID alloc] initWithClass:[obj class] primaryKey:eid];
-                    obj.ORMStore = self;
+                    ORM.objectID = [[ORMObjectID alloc] initWithClass:ORM.entityDescription.managedClass primaryKey:eid];
+                    ORM.store = self;
                 } else {
                     *stop = YES;
                     _rollback = YES;
@@ -115,12 +116,12 @@
         
         // Update Objects in Database
         if (!_rollback) {
-            [self.changedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+            [self.changedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
                 
-                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[[obj class] ORMEntityDescription]];
+                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:ORM.entityDescription];
                 
-                BOOL success = [connector updateEntityWithEntityID:obj.ORMObjectID.entityID
-                                                    withProperties:[obj changedORMValues]
+                BOOL success = [connector updateEntityWithEntityID:ORM.objectID.entityID
+                                                    withProperties:ORM.changedValues
                                                         inDatabase:db
                                                              error:&error];
                 
@@ -131,11 +132,11 @@
         
         // Delete Objects in Database
         if (!_rollback) {
-            [self.deletedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
+            [self.deletedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
                 
-                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[[obj class] ORMEntityDescription]];
+                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:ORM.entityDescription];
                 
-                BOOL success = [connector deleteEntityWithEntityID:obj.ORMObjectID.entityID
+                BOOL success = [connector deleteEntityWithEntityID:ORM.objectID.entityID
                                                         inDatabase:db
                                                              error:&error];
                 
@@ -173,14 +174,14 @@
 
 - (void)insertObject:(NSObject *)object
 {
-    NSAssert([object ORMObjectID] == nil, @"Object '%@' already managed by a store.", object);
-    [self.insertedObjects addObject:object];
+    NSAssert(object.ORM.objectID == nil, @"Object '%@' already managed by a store.", object);
+    [self.insertedObjects addObject:object.ORM];
 }
 
 - (void)deleteObject:(NSObject *)object
 {
-    NSAssert([self.managedObjects objectForKey:object.ORMObjectID] != nil, @"Object '%@' not managed by this store.", object);
-    [self.deletedObjects addObject:object];
+    NSAssert([self.managedObjects objectForKey:object.ORM.objectID] != nil, @"Object '%@' not managed by this store.", object);
+    [self.deletedObjects addObject:object.ORM];
 }
 
 - (BOOL)existsObjectWithID:(ORMObjectID *)objectID
@@ -200,14 +201,14 @@
 
 - (id)objectWithID:(ORMObjectID *)objectID
 {
-    NSObject *object = [self.managedObjects objectForKey:objectID];
-    if (object == nil) {
-        object = [[objectID.ORMClass alloc] initWithORMObjectID:objectID
-                                                        inStore:self
-                                                     properties:@{}];
-        [self.managedObjects setObject:object forKey:objectID];
+    ORMObject *ORM = [self.managedObjects objectForKey:objectID];
+    if (ORM == nil) {
+        ORM = [[ORMObject alloc] initWithEntityDescription:[objectID.ORMClass ORMEntityDescription]];
+        ORM.store = self;
+        ORM.objectID = objectID;
+        [self.managedObjects setObject:ORM forKey:objectID];
     }
-    return object;
+    return [[ORM.entityDescription.managedClass alloc] initWithORMObject:ORM];
 }
 
 - (void)enumerateObjectsOfClass:(Class)aClass
@@ -231,7 +232,7 @@
     [connector enumerateEntitiesInDatabase:self.db matchingCondition:condition withArguments:arguments fetchingProperties:propertyNames error:&error enumerator:^(ORMEntityID eid, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
         ORMObjectID *objectID = [[ORMObjectID alloc] initWithClass:klass primaryKey:eid];
         NSObject *object = [self objectWithID:objectID];
-        [[self persistentORMValues] addEntriesFromDictionary:properties];
+        [[self.ORM persistentValues] addEntriesFromDictionary:properties];
         enumerator(object, stop);
     }];
 }
@@ -241,29 +242,29 @@
 - (void)applyChanges
 {
     // Insert
-    [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
-        [obj applyChangedORMValues];
-        [self.managedObjects setObject:obj forKey:obj.ORMObjectID];
+    [self.insertedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
+        [ORM applyChanges];
+        [self.managedObjects setObject:ORM forKey:ORM.objectID];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(objectORMValuesDidChange:)
-                                                     name:NSObjectORMValuesDidChangeNotification
-                                                   object:obj];
+                                                     name:ORMObjectDidChangeValuesNotification
+                                                   object:ORM];
     }];
     [self.insertedObjects removeAllObjects];
     
     // Update
-    [self.changedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
-        [obj applyChangedORMValues];
+    [self.changedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
+        [ORM applyChanges];
     }];
     [self.changedObjects removeAllObjects];
     
     // Delete
-    [self.deletedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
-        obj.ORMObjectID = nil;
-        obj.ORMStore = nil;
+    [self.deletedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
+        ORM.objectID = nil;
+        ORM.store = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:NSObjectORMValuesDidChangeNotification
-                                                      object:obj];
+                                                        name:ORMObjectDidChangeValuesNotification
+                                                      object:ORM];
     }];
     [self.deletedObjects removeAllObjects];
 }
@@ -271,16 +272,16 @@
 - (void)resetChanges
 {
     // Insert
-    [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
-        [obj resetChangedORMValues];
-        obj.ORMObjectID = nil;
-        obj.ORMStore = nil;
+    [self.insertedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
+        [ORM resetChanges];
+        ORM.objectID = nil;
+        ORM.store = nil;
     }];
     [self.insertedObjects removeAllObjects];
     
     // Update
-    [self.changedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
-        [obj resetChangedORMValues];
+    [self.changedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
+        [ORM resetChanges];
     }];
     [self.changedObjects removeAllObjects];
     
@@ -300,9 +301,9 @@
 - (BOOL)setupSchemataInDatabase:(FMDatabase *)database error:(NSError **)error
 {
     NSMutableSet *classes = [[NSMutableSet alloc] init];
-    [self.insertedObjects enumerateObjectsUsingBlock:^(NSObject *obj, BOOL *stop) {
-        if (![self.managedClasses containsObject:[obj class]]) {
-            [classes addObject:[obj class]];
+    [self.insertedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
+        if (![self.managedClasses containsObject:ORM.entityDescription.managedClass]) {
+            [classes addObject:ORM.entityDescription.managedClass];
         }
     }];
     

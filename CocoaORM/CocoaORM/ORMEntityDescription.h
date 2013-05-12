@@ -11,11 +11,6 @@
 @class ORMAttributeDescription;
 @class ORMEntityDescription;
 
-@interface NSObject (ORMEntityDescription)
-+ (BOOL)isORMClass;
-+ (ORMEntityDescription *)ORMEntityDescription;
-@end
-
 @interface ORMEntityDescription : NSObject
 
 #pragma mark Life-cycle
