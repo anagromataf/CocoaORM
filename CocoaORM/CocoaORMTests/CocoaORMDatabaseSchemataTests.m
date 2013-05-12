@@ -10,16 +10,18 @@
 #import <FMDB/FMDatabase.h>
 #import <FMDB/FMDatabaseAdditions.h>
 
+#import "ORMEntitySQLConnector.h"
+
 #import "CocoaORMDatabaseSchemataTests.h"
 
 @implementation CocoaORMDatabaseSchemataTests
 
 - (void)testSetupSchemata
 {
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [Person setupORMSchemataInDatabase:db error:&error];
+        BOOL success = [self.personConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error){
@@ -33,10 +35,10 @@
         };
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [Employee setupORMSchemataInDatabase:db error:&error];
+        BOOL success = [self.employeeConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error){
@@ -51,10 +53,10 @@
         };
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        BOOL success = [Chef setupORMSchemataInDatabase:db error:&error];
+        BOOL success = [self.chefConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         return ^(NSError *error){

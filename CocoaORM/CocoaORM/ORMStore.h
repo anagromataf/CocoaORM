@@ -9,31 +9,29 @@
 // Cocoa
 #import <Foundation/Foundation.h>
 
-// CocoaORM
-#import "ORMObjectID.h"
+@class ORMObject;
+@class ORMObjectID;
+@class ORMEntityDescription;
 
-typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
+typedef void(^ORMStoreTransactionCompletionHandler)(NSError *error);
 
 @interface ORMStore : NSObject
 
+#pragma mark Life-cycle
 - (id)initWithSerialQueue:(dispatch_queue_t)queue;
 
 #pragma mark Transactions
-- (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block;
-- (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block;
-- (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block andWait:(BOOL)wait;
+- (void)commitTransaction:(ORMStoreTransactionCompletionHandler(^)(BOOL *rollback))block;
+- (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHandler(^)(BOOL *rollback))block;
 
-#pragma mark Object Management
-- (void)insertObject:(NSObject *)object;
+#pragma mark Object Life-cycle
+- (id)createObjectWithEntityDescription:(ORMEntityDescription *)entityDescription;
 - (void)deleteObject:(NSObject *)object;
 
-- (BOOL)existsObjectWithID:(ORMObjectID *)objectID;
+#pragma mark Object Property Loading
+- (void)loadValueWithAttributeDescription:(ORMAttributeDescription *)attributeDescription ofObject:(id)object;
 
-- (id)objectWithID:(ORMObjectID *)objectID;
-
-- (void)enumerateObjectsOfClass:(Class)aClass
-                     enumerator:(void(^)(id object, BOOL *stop))enumerator;
-
+#pragma mark Object Enumeration
 - (void)enumerateObjectsOfClass:(Class)aClass
               matchingCondition:(NSString *)condition
                   withArguments:(NSDictionary *)arguments

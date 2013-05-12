@@ -6,28 +6,30 @@
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
+#import "ORMEntityDescription.h"
+
 #import "ORMObjectID.h"
 
 @implementation ORMObjectID
 
-- (id)initWithClass:(Class)aClass primaryKey:(ORMPrimaryKey)primaryKey
+#pragma mark Life-cycle
+
+- (id)initWithEntityDescription:(ORMEntityDescription *)entityDescription
+                       entityID:(ORMEntityID)entityID
 {
     self = [super init];
     if (self) {
-        _ORMClass = aClass;
-        _primaryKey = primaryKey;
+        _entityDescription = entityDescription;
+        _entityID = entityID;
     }
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone
-{
-    return [[ORMObjectID allocWithZone:zone] initWithClass:self.ORMClass primaryKey:self.primaryKey];
-}
+#pragma mark NSObject
 
-- (NSUInteger)hash
+- (NSString *)description
 {
-    return self.primaryKey;
+    return [NSString stringWithFormat:@"<ORMObjectID: %p %@ %lld>", self, self.entityDescription.name, self.entityID];
 }
 
 - (BOOL)isEqual:(id)object
@@ -35,11 +37,11 @@
     if ([object isKindOfClass:[ORMObjectID class]]) {
         ORMObjectID *other = object;
         
-        if (self.primaryKey != other.primaryKey) {
+        if (self.entityID != other.entityID) {
             return NO;
         }
         
-        if (self.ORMClass != other.ORMClass) {
+        if (![self.entityDescription isEqual:other.entityDescription]) {
             return NO;
         }
         
@@ -48,9 +50,18 @@
     return NO;
 }
 
-- (NSString *)description
+- (NSUInteger)hash
 {
-    return [NSString stringWithFormat:@"<ORMObjectID: %p %@ %lld>", self, self.ORMClass, self.primaryKey];
+    return self.entityID;
 }
+
+#pragma mark NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    return [[ORMObjectID allocWithZone:zone] initWithEntityDescription:self.entityDescription
+                                                              entityID:self.entityID];
+}
+
 
 @end

@@ -8,37 +8,48 @@
 
 #import "CocoaORMObjectManagementTests.h"
 
+@interface CocoaORMObjectManagementTests ()
+@property (nonatomic, strong) ORMEntitySQLConnector *employeeConnector;
+@end
+
 @implementation CocoaORMObjectManagementTests
+
+- (void)setUp
+{
+    [super setUp];
+    
+    self.employeeConnector = [ORMEntitySQLConnector connectorWithEntityDescription:[Employee ORMEntityDescription]];
+}
+
+#pragma mark Tests
 
 - (void)testInsertObject
 {
     __block Employee *employee = nil;
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
-        employee = [[Employee alloc] init];
+        employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
-        
+                
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
         };
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
-        STAssertEqualObjects(employee.changedORMValues, @{}, nil);
+        STAssertEqualObjects(employee.ORM.changedValues, @{}, nil);
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [Employee propertiesOfORMObjectWithPrimaryKey:employee.ORMObjectID.primaryKey
-                                                                         inDatabase:db
-                                                                              error:&error
-                                                             includeSuperProperties:YES];
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORM.objectID.entityID
+                                                                                  inDatabase:db
+                                                                                       error:&error
+                                                                      includeSuperProperties:YES];
         STAssertNotNil(allProperties, [error localizedDescription]);
         
         NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null], @"employeeID":[NSNull null]};
@@ -52,36 +63,34 @@
 {
     __block Employee *employee = nil;
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
-        employee = [[Employee alloc] init];
+        employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
         };
     }];
     
-    [self.store commitTransaction:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransaction:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         employee.fired = @YES;
         return nil;
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
-        STAssertEqualObjects(employee.changedORMValues, @{}, nil);
+        STAssertEqualObjects(employee.ORM.changedValues, @{}, nil);
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [Employee propertiesOfORMObjectWithPrimaryKey:employee.ORMObjectID.primaryKey
-                                                                         inDatabase:db
-                                                                              error:&error
-                                                             includeSuperProperties:YES];
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORM.objectID.entityID
+                                                                                  inDatabase:db
+                                                                                       error:&error
+                                                                      includeSuperProperties:YES];
         STAssertNotNil(allProperties, [error localizedDescription]);
         
         NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":@YES, @"employeeID":[NSNull null]};
@@ -95,37 +104,35 @@
 {
     __block Employee *employee = nil;
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
-        employee = [[Employee alloc] init];
+        employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
         };
     }];
     
-    [self.store commitTransaction:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransaction:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         employee.fired = @YES;
         *rollback = YES;
         return nil;
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
-        STAssertEqualObjects(employee.changedORMValues, @{}, nil);
+        STAssertEqualObjects(employee.ORM.changedValues, @{}, nil);
         
         NSError *error = nil;
         
-        NSDictionary *allProperties = [Employee propertiesOfORMObjectWithPrimaryKey:employee.ORMObjectID.primaryKey
-                                                                         inDatabase:db
-                                                                              error:&error
-                                                             includeSuperProperties:YES];
+        NSDictionary *allProperties = [self.employeeConnector propertiesOfEntityWithEntityID:employee.ORM.objectID.entityID
+                                                                                  inDatabase:db
+                                                                                       error:&error
+                                                                      includeSuperProperties:YES];
         STAssertNotNil(allProperties, [error localizedDescription]);
         
         NSDictionary *p = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null], @"employeeID":[NSNull null]};
@@ -139,105 +146,43 @@
 {
     __block Employee *employee = nil;
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
-        employee = [[Employee alloc] init];
+        employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
         };
     }];
     
-    ORMPrimaryKey pk = employee.ORMObjectID.primaryKey;
+    ORMEntityID eid = employee.ORM.objectID.entityID;
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         [self.store deleteObject:employee];
         
         return nil;
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
-        NSDictionary *properties = [Employee propertiesOfORMObjectWithPrimaryKey:pk
-                                                                      inDatabase:db                                                                              error:&error];
+        NSDictionary *properties = [self.employeeConnector propertiesOfEntityWithEntityID:eid
+                                                                               inDatabase:db
+                                                                                    error:&error];
         STAssertNil(error, [error localizedDescription]);
         STAssertNil(properties, nil);
         
-        STAssertNil(employee.ORMObjectID, nil);
-        STAssertNil(employee.ORMStore, nil);
+        STAssertNil(employee.ORM.objectID, nil);
+        STAssertNil(employee.ORM.store, nil);
         
         STAssertEqualObjects(employee.firstName, @"John", nil);
         STAssertEqualObjects(employee.lastName, @"Example", nil);
         STAssertEqualObjects(employee.position, @"CEO", nil);
-        
-        return nil;
-    }];
-}
-
-- (void)testObjectExistence
-{
-    __block ORMObjectID *employeeID = nil;
-    
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
-        
-        Employee *employee = [[Employee alloc] init];
-        
-        employee.firstName = @"John";
-        employee.lastName = @"Example";
-        employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
-        
-        return ^(NSError *error){
-            STAssertNil(error, [error localizedDescription]);
-            employeeID = employee.ORMObjectID;
-        };
-    }];
-    
-    STAssertNotNil(employeeID, nil);
-    
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
-        BOOL exsit = [self.store existsObjectWithID:employeeID];
-        STAssertTrue(exsit, nil);
-        return nil;
-    }];
-}
-
-- (void)testGetObjectWithObjectID
-{
-    __block ORMObjectID *employeeID = nil;
-    
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
-        
-        Employee *employee = [[Employee alloc] init];
-        
-        employee.firstName = @"John";
-        employee.lastName = @"Example";
-        employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
-        
-        return ^(NSError *error){
-            STAssertNil(error, [error localizedDescription]);
-            employeeID = employee.ORMObjectID;
-        };
-    }];
-    
-    STAssertNotNil(employeeID, nil);
-    
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
-        
-        Employee *employee = [self.store objectWithID:employeeID];
-        STAssertNotNil(employee, nil);
-        STAssertEqualObjects(employee.ORMObjectID, employeeID, nil);
         
         return nil;
     }];

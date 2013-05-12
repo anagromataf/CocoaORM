@@ -9,7 +9,7 @@
 #import "CocoaORMObjectPropertyLoadingTests.h"
 
 @interface CocoaORMObjectPropertyLoadingTests ()
-@property (nonatomic, strong) ORMObjectID *objectID;
+
 @end
 
 @implementation CocoaORMObjectPropertyLoadingTests
@@ -18,20 +18,17 @@
 {
     [super setUp];
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
-        Employee *employee = [[Employee alloc] init];
+        Employee *employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
         employee.employeeID = @(12);
-        
-        [self.store insertObject:employee];
-        
+                
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
-            self.objectID = employee.ORMObjectID;
         };
     }];
 }
@@ -40,24 +37,18 @@
 
 - (void)testPropertyLoading
 {
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
-        Employee *employee = [self.store objectWithID:self.objectID];
-        STAssertNotNil(employee, nil);
-        STAssertEqualObjects(employee.ORMObjectID, self.objectID, nil);
-        
-        STAssertEqualObjects([employee performSelector:@selector(persistentORMValues)], @{}, nil);
-        
-        STAssertEqualObjects(employee.position, @"CEO", nil);
-        
-        NSDictionary *_ep = @{@"position":@"CEO", @"fired":[NSNull null], @"employeeID":@(12)};
-        STAssertEqualObjects([employee performSelector:@selector(persistentORMValues)], _ep, nil);
-        
-        STAssertEqualObjects(employee.firstName, @"John", nil);
-        STAssertEqualObjects(employee.lastName, @"Example", nil);
-        
-        NSDictionary *_ap = @{@"firstName":@"John", @"lastName":@"Example", @"position":@"CEO", @"fired":[NSNull null], @"employeeID":@(12)};
-        STAssertEqualObjects([employee performSelector:@selector(persistentORMValues)], _ap, nil);
+        [self.store enumerateObjectsOfClass:[Employee class]
+                          matchingCondition:nil
+                              withArguments:nil
+                         fetchingProperties:nil
+                                 enumerator:^(Employee *employee, BOOL *stop) {
+            STAssertNotNil(employee, nil);
+            STAssertEqualObjects(employee.position, @"CEO", nil);
+            STAssertEqualObjects(employee.firstName, @"John", nil);
+            STAssertEqualObjects(employee.lastName, @"Example", nil);
+        }];
         
         return nil;
     }];

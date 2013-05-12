@@ -9,91 +9,18 @@
 // Cocoa
 #import <Foundation/Foundation.h>
 
-// 3rdParty
-#import <FMDB/FMDatabase.h>
-
-// CocoaORM
-#import "ORMConstants.h"
-#import "ORMObjectID.h"
-#import "ORMStore.h"
-#import "ORMAttributeDescription.h"
-
-extern NSString * const NSObjectORMValuesDidChangeNotification;
+@class ORMEntityDescription;
+@class ORMAttributeDescription;
+@class ORMObject;
 
 @interface NSObject (CocoaORM)
 
-#pragma mark ORM Descriptions
+#pragma mark ORMEntityDescription
 + (BOOL)isORMClass;
-+ (NSArray *)ORMClassHierarchy;
-+ (NSDictionary *)ORMProperties;
-+ (NSDictionary *)allORMProperties;
-+ (NSSet *)ORMUniqueConstraints;
-+ (NSSet *)allORMUniqueConstraints;
++ (ORMEntityDescription *)ORMEntityDescription;
 
-#pragma mark ORM Object ID & Store
-@property (nonatomic, readonly) ORMObjectID *ORMObjectID;
-@property (nonatomic, readonly) ORMStore *ORMStore;
-
-#pragma mark ORM Values
-@property (nonatomic, readonly) NSDictionary *changedORMValues;
-- (id)ORMValueForKey:(NSString *)key;
-- (void)setORMValue:(id)value forKey:(NSString *)key;
-
-#pragma mark -
-#pragma mark SQL Schemata
-
-+ (BOOL)setupORMSchemataInDatabase:(FMDatabase *)database
-                             error:(NSError **)error;
-
-#pragma mark Insert, Update & Delete Properties
-
-+ (ORMPrimaryKey)insertORMObjectProperties:(NSDictionary *)properties
-                              intoDatabase:(FMDatabase *)database
-                                     error:(NSError **)error;
-
-+ (BOOL)updateORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
-                       withProperties:(NSDictionary *)properties
-                           inDatabase:(FMDatabase *)database
-                                error:(NSError **)error;
-
-+ (BOOL)deleteORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
-                           inDatabase:(FMDatabase *)database
-                                error:(NSError **)error;
-
-#pragma mark Check Exsitance
-
-+ (BOOL)existsORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
-                           inDatabase:(FMDatabase *)database
-                                error:(NSError **)error;
-
-#pragma mark Get Properties
-
-+ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
-                                           inDatabase:(FMDatabase *)database
-                                                error:(NSError **)error;
-
-+ (NSDictionary *)propertiesOfORMObjectWithPrimaryKey:(ORMPrimaryKey)pk
-                                           inDatabase:(FMDatabase *)database
-                                                error:(NSError **)error
-                               includeSuperProperties:(BOOL)includeSuperProperties;
-
-#pragma mark Enumerate ORM Objects
-
-+ (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
-                                error:(NSError **)error
-                           enumerator:(void(^)(ORMPrimaryKey pk, Class klass, BOOL *stop))enumerator;
-
-+ (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
-                   fetchingProperties:(NSArray *)propertyNames
-                                error:(NSError **)error
-                           enumerator:(void(^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
-
-+ (BOOL)enumerateORMObjectsInDatabase:(FMDatabase *)database
-                    matchingCondition:(NSString *)condition
-                        withArguments:(NSDictionary *)arguments
-                   fetchingProperties:(NSArray *)propertyNames
-                                error:(NSError **)error
-                           enumerator:(void (^)(ORMPrimaryKey pk, Class klass, NSDictionary *properties, BOOL *stop))enumerator;
+#pragma mark ORMObject
+@property (nonatomic, readonly) ORMObject *ORM;
 
 @end
 

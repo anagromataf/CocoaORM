@@ -9,7 +9,7 @@
 #import "CocoaORMDatabaseRollbackTests.h"
 
 @interface CocoaORMDatabaseRollbackTests ()
-@property (nonatomic, assign) ORMPrimaryKey employeePK;
+@property (nonatomic, assign) ORMEntityID employeePK;
 @end
 
 @implementation CocoaORMDatabaseRollbackTests
@@ -18,14 +18,14 @@
 {
     [super setUp];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
         BOOL success = YES;
         
         // Setup Schemata
         
-        success = [Employee setupORMSchemataInDatabase:db error:&error];
+        success = [self.employeeConnector setupSchemataInDatabase:db error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         // Insert Properties
@@ -33,9 +33,10 @@
         NSDictionary *properties1 = @{@"firstName":@"Jim",
                                       @"lastName":@"Example",
                                       @"position":@"CEO"};
-        self.employeePK = [Employee insertORMObjectProperties:properties1
-                                                 intoDatabase:db
-                                                        error:&error];
+        
+        self.employeePK = [self.employeeConnector insertEntityWithProperties:properties1
+                                                              intoDatabase:db
+                                                                     error:&error];
         STAssertTrue(self.employeePK != 0, [error localizedDescription]);
         
         return ^(NSError *error) {
@@ -48,16 +49,16 @@
 
 - (void)testRollbackUpdate
 {
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
         BOOL success = YES;
         
         // Update Properties
-        success = [Employee updateORMObjectWithPrimaryKey:self.employeePK
-                                           withProperties:@{@"firstName":@"John", @"position":@"CTO"}
-                                               inDatabase:db
-                                                    error:&error];
+        success = [self.employeeConnector updateEntityWithEntityID:self.employeePK
+                                                    withProperties:@{@"firstName":@"John", @"position":@"CTO"}
+                                                        inDatabase:db
+                                                             error:&error];
         STAssertTrue(success, [error localizedDescription]);
         
         FMResultSet *result = nil;

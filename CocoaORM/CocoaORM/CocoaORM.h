@@ -6,10 +6,13 @@
 //  Copyright (c) 2013 Tobias Kräntzer. All rights reserved.
 //
 
-#import "ORMConstants.h"
-
 #import "NSObject+CocoaORM.h"
 
+#import "ORMEntityDescription.h"
 #import "ORMAttributeDescription.h"
+
+#import "ORMEntitySQLConnector.h"
+
+#import "ORMObject.h"
 #import "ORMObjectID.h"
 #import "ORMStore.h"
