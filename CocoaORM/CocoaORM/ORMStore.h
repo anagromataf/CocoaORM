@@ -9,9 +9,6 @@
 // Cocoa
 #import <Foundation/Foundation.h>
 
-// 3rdParty
-#import <FMDB/FMDatabase.h>
-
 @class ORMObject;
 @class ORMObjectID;
 @class ORMEntityDescription;
@@ -20,12 +17,12 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 
 @interface ORMStore : NSObject
 
+#pragma mark Life-cycle
 - (id)initWithSerialQueue:(dispatch_queue_t)queue;
 
 #pragma mark Transactions
 - (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block;
 - (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block;
-- (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block andWait:(BOOL)wait;
 
 #pragma mark Object Life-cycle
 - (id)createObjectWithEntityDescription:(ORMEntityDescription *)entityDescription;
@@ -40,12 +37,5 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
                   withArguments:(NSDictionary *)arguments
              fetchingProperties:(NSArray *)propertyNames
                      enumerator:(void(^)(id object, BOOL *stop))enumerator;
-
-#pragma mark - Private
-
-#pragma mark Database Transaction
-- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;
-- (void)commitTransactionInDatabaseAndWait:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;
-- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block andWait:(BOOL)wait;
 
 @end

@@ -13,12 +13,13 @@
 
 #import "ORMEntitySQLConnector.h"
 
-#import "ORMStore.h"
 #import "ORMObjectID.h"
 
 #import "ORMObject.h"
 #import "ORMObject+Private.h"
 
+#import "ORMStore.h"
+#import "ORMStore+Private.h"
 
 @interface NSObject ()
 - (id)initWithORMObject:(ORMObject *)anORMObject;
@@ -41,6 +42,7 @@
 
 @synthesize queue = _queue;
 
+#pragma mark Life-cycle
 - (id)init
 {
     return [self initWithSerialQueue:nil];
@@ -181,21 +183,7 @@
     } andWait:wait];
 }
 
-#pragma mark Object Management
-
-- (id)createObjectWithEntityDescription:(ORMEntityDescription *)entityDescription
-{
-    ORMObject *ORM = [[ORMObject alloc] initWithEntityDescription:entityDescription];
-    id obj = [[entityDescription.managedClass alloc] initWithORMObject:ORM];
-    [self.insertedObjects addObject:ORM];
-    return obj;
-}
-
-- (void)deleteObject:(NSObject *)object
-{
-    NSAssert([self.managedObjects objectForKey:object.ORM.objectID] != nil, @"Object '%@' not managed by this store.", object);
-    [self.deletedObjects addObject:object.ORM];
-}
+#pragma mark Object Life-cycle
 
 - (id)objectWithID:(ORMObjectID *)objectID
 {
@@ -214,6 +202,34 @@
     }
 }
 
+- (id)createObjectWithEntityDescription:(ORMEntityDescription *)entityDescription
+{
+    ORMObject *ORM = [[ORMObject alloc] initWithEntityDescription:entityDescription];
+    id obj = [[entityDescription.managedClass alloc] initWithORMObject:ORM];
+    [self.insertedObjects addObject:ORM];
+    return obj;
+}
+
+- (void)deleteObject:(NSObject *)object
+{
+    NSAssert([self.managedObjects objectForKey:object.ORM.objectID] != nil, @"Object '%@' not managed by this store.", object);
+    [self.deletedObjects addObject:object.ORM];
+}
+
+#pragma mark Object Property Loading
+
+- (void)loadValueWithAttributeDescription:(ORMAttributeDescription *)attributeDescription ofObject:(id)object
+{
+    NSError *error = nil;
+    ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:attributeDescription.entityDescription];
+    NSDictionary *properties = [connector propertiesOfEntityWithEntityID:[object ORM].objectID.entityID
+                                                              inDatabase:self.db
+                                                                   error:&error];
+    [[object ORM].persistentValues addEntriesFromDictionary:properties];
+}
+
+#pragma mark Object Enumeration
+
 - (void)enumerateObjectsOfClass:(Class)aClass
               matchingCondition:(NSString *)condition
                   withArguments:(NSDictionary *)arguments
@@ -228,16 +244,6 @@
         [[self.ORM persistentValues] addEntriesFromDictionary:properties];
         enumerator(object, stop);
     }];
-}
-
-- (void)loadValueWithAttributeDescription:(ORMAttributeDescription *)attributeDescription ofObject:(id)object
-{
-    NSError *error = nil;
-    ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:attributeDescription.entityDescription];
-    NSDictionary *properties = [connector propertiesOfEntityWithEntityID:[object ORM].objectID.entityID
-                                                              inDatabase:self.db
-                                                                   error:&error];
-    [[object ORM].persistentValues addEntriesFromDictionary:properties];
 }
 
 #pragma mark Apply or Reset Changes
@@ -319,6 +325,8 @@
     return success;
 }
 
+#pragma mark Manage Connector
+
 - (ORMEntitySQLConnector *)connectorWithEntityDescription:(ORMEntityDescription *)entityDescription
 {
     ORMEntitySQLConnector *connector = [self.entityConnectors objectForKey:entityDescription.name];
@@ -328,6 +336,11 @@
     }
     return connector;
 }
+
+@end
+
+
+@implementation ORMStore (Private)
 
 #pragma mark Database Transaction
 
