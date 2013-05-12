@@ -19,6 +19,9 @@ extern NSString * const ORMObjectDidChangeValuesNotification;
 #pragma mark Life-cycle
 - (id)initWithEntityDescription:(ORMEntityDescription *)entityDescription;
 
+#pragma mark Managed Object
+@property (nonatomic, readonly) id managedObject;
+
 #pragma mark Entity Description
 @property (nonatomic, readonly) ORMEntityDescription *entityDescription;
 

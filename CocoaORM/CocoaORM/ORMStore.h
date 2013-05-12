@@ -9,8 +9,12 @@
 // Cocoa
 #import <Foundation/Foundation.h>
 
-// CocoaORM
-#import "ORMObjectID.h"
+// 3rdParty
+#import <FMDB/FMDatabase.h>
+
+@class ORMObject;
+@class ORMObjectID;
+@class ORMEntityDescription;
 
 typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 
@@ -24,7 +28,8 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 - (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block andWait:(BOOL)wait;
 
 #pragma mark Object Management
-- (void)insertObject:(NSObject *)object;
+- (id)createObjectWithEntityDescription:(ORMEntityDescription *)entityDescription;
+
 - (void)deleteObject:(NSObject *)object;
 
 - (BOOL)existsObjectWithID:(ORMObjectID *)objectID;
@@ -39,5 +44,14 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
                   withArguments:(NSDictionary *)arguments
              fetchingProperties:(NSArray *)propertyNames
                      enumerator:(void(^)(id object, BOOL *stop))enumerator;
+
+#pragma mark - Private
+
+@property (nonatomic, readonly) FMDatabase *db;
+
+#pragma mark Database Transaction
+- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;
+- (void)commitTransactionInDatabaseAndWait:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;
+- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block andWait:(BOOL)wait;
 
 @end

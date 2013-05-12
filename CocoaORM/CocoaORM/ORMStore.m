@@ -12,11 +12,9 @@
 #import "ORMEntitySQLConnector.h"
 
 #import "ORMStore.h"
-#import "ORMStore+Private.h"
 
 @interface ORMStore ()
 @property (nonatomic, readonly) dispatch_queue_t queue;
-@property (nonatomic, readonly) FMDatabase *db;
 
 @property (nonatomic, readonly) NSMutableSet *insertedObjects;
 @property (nonatomic, readonly) NSMutableSet *changedObjects;
@@ -172,10 +170,12 @@
 
 #pragma mark Object Management
 
-- (void)insertObject:(NSObject *)object
+- (id)createObjectWithEntityDescription:(ORMEntityDescription *)entityDescription
 {
-    NSAssert(object.ORM.objectID == nil, @"Object '%@' already managed by a store.", object);
-    [self.insertedObjects addObject:object.ORM];
+    ORMObject *ORM = [[ORMObject alloc] initWithEntityDescription:entityDescription];
+    id obj = [[entityDescription.managedClass alloc] initWithORMObject:ORM];
+    [self.insertedObjects addObject:ORM];
+    return obj;
 }
 
 - (void)deleteObject:(NSObject *)object
@@ -322,13 +322,6 @@
     return success;
 }
 
-@end
-
-
-
-@implementation ORMStore (Private)
-
-@dynamic db;
 
 #pragma mark Database Transaction
 
@@ -381,3 +374,4 @@
 }
 
 @end
+

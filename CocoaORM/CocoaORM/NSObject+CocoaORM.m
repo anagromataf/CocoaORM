@@ -16,12 +16,10 @@
 #import <JRSwizzle/JRSwizzle.h>
 
 // CocoaORM
+#import "NSObject+CocoaORM.h"
 #import "ORMEntityDescription.h"
 #import "ORMEntitySQLConnector.h"
-#import "ORMStore+Private.h"
-
-#import "NSObject+CocoaORM.h"
-
+#import "ORMStore.h"
 
 #pragma mark - ORMObject
 
@@ -86,6 +84,7 @@ const char * NSObjectORMObjectKey = "NSObjectORMObjectKey";
     if (!ORM) {
         ORM = [[ORMObject alloc] initWithEntityDescription:[[self class] ORMEntityDescription]];
         objc_setAssociatedObject(self, NSObjectORMObjectKey, ORM, OBJC_ASSOCIATION_RETAIN);
+        [ORM performSelector:@selector(setManagedObject:) withObject:self];
     }
     return ORM;
 }
@@ -97,6 +96,7 @@ const char * NSObjectORMObjectKey = "NSObjectORMObjectKey";
     self = [self init];
     if (self) {
         objc_setAssociatedObject(self, NSObjectORMObjectKey, anORMObject, OBJC_ASSOCIATION_RETAIN);
+        [anORMObject performSelector:@selector(setManagedObject:) withObject:self];
     }
     return self;
 }

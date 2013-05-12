@@ -29,14 +29,12 @@
     
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
-        employee = [[Employee alloc] init];
+        employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
-        
+                
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
         };
@@ -67,13 +65,11 @@
     
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
-        employee = [[Employee alloc] init];
+        employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
@@ -110,13 +106,11 @@
     
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
-        employee = [[Employee alloc] init];
+        employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
@@ -154,13 +148,11 @@
     
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
-        employee = [[Employee alloc] init];
+        employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
@@ -202,13 +194,11 @@
     
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
-        Employee *employee = [[Employee alloc] init];
+        Employee *employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
@@ -231,13 +221,11 @@
     
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
-        Employee *employee = [[Employee alloc] init];
+        Employee *employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
         employee.firstName = @"John";
         employee.lastName = @"Example";
         employee.position = @"CEO";
-        
-        [self.store insertObject:employee];
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);

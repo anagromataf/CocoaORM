@@ -11,13 +11,15 @@
 #import "ORMEntityDescription.h"
 #import "ORMAttributeDescription.h"
 
-#import "ORMStore+Private.h"
+#import "ORMStore.h"
 
 #import "ORMObject.h"
 
 NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValuesNotification";
 
 @interface ORMObject ()
+@property (nonatomic, readwrite, weak) id managedObject;
+
 @property (nonatomic, strong) NSMutableDictionary *temporaryValues;
 
 @property (nonatomic, readonly) NSDictionary *attributeDescriptionsForGetters;

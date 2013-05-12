@@ -10,7 +10,6 @@
 
 // CocoaORM
 #import "CocoaORM.h"
-#import "ORMStore+Private.h"
 
 // Test Model
 #import "Person.h"

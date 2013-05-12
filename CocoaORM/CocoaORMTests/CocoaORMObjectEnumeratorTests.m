@@ -8,6 +8,20 @@
 
 #import "CocoaORMObjectEnumeratorTests.h"
 
+@interface Person (ORM)
++ (instancetype)createWithFirstName:(NSString *)firstName lastName:(NSString *)lastName inStore:(ORMStore *)store;
+@end
+
+@implementation Person (ORM)
++ (instancetype)createWithFirstName:(NSString *)firstName lastName:(NSString *)lastName inStore:(ORMStore *)store
+{
+    Person *person = [store createObjectWithEntityDescription:[self ORMEntityDescription]];
+    person.firstName = firstName;
+    person.lastName = lastName;
+    return person;
+}
+@end
+
 @interface CocoaORMObjectEnumeratorTests ()
 @property (nonatomic, strong) NSSet *objects;
 @end
@@ -22,24 +36,20 @@
         
         NSMutableSet *objects = [[NSMutableSet alloc] init];
         
-        Employee *employee = [[Employee alloc] initWithFirstName:@"John" lastName:@"Example"];
+        Employee *employee = [Employee createWithFirstName:@"John" lastName:@"Example" inStore:self.store];
         employee.position = @"CEO";
         employee.employeeID = @(12);
         
         [objects addObject:employee];
         
-        [objects addObject:[[Person alloc] initWithFirstName:@"A" lastName:@"a"]];
-        [objects addObject:[[Person alloc] initWithFirstName:@"B" lastName:@"b"]];
-        [objects addObject:[[Person alloc] initWithFirstName:@"C" lastName:@"c"]];
-        [objects addObject:[[Person alloc] initWithFirstName:@"D" lastName:@"d"]];
-        [objects addObject:[[Person alloc] initWithFirstName:@"E" lastName:@"e"]];
-        [objects addObject:[[Person alloc] initWithFirstName:@"F" lastName:@"f"]];
+        [objects addObject:[Person createWithFirstName:@"A" lastName:@"a" inStore:self.store]];
+        [objects addObject:[Person createWithFirstName:@"B" lastName:@"b" inStore:self.store]];
+        [objects addObject:[Person createWithFirstName:@"C" lastName:@"c" inStore:self.store]];
+        [objects addObject:[Person createWithFirstName:@"D" lastName:@"d" inStore:self.store]];
+        [objects addObject:[Person createWithFirstName:@"E" lastName:@"e" inStore:self.store]];
+        [objects addObject:[Person createWithFirstName:@"F" lastName:@"f" inStore:self.store]];
         
         self.objects = objects;
-        
-        [objects enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-            [self.store insertObject:obj];
-        }];
         
         return ^(NSError *error){
             STAssertNil(error, [error localizedDescription]);
@@ -69,7 +79,7 @@
 {
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
         
-        NSArray *lastNames = @[@"a", @"b", @"f"];
+//        NSArray *lastNames = @[@"a", @"b", @"f"];
         
         NSMutableSet *result = [[NSMutableSet alloc] init];
         
