@@ -13,7 +13,6 @@
 #import <FMDB/FMDatabase.h>
 
 // CocoaORM
-#import "ORMConstants.h"
 #import "ORMAttributeDescription.h"
 #import "ORMEntityDescription.h"
 #import "ORMObject.h"

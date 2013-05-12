@@ -27,13 +27,14 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 - (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block;
 - (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block andWait:(BOOL)wait;
 
-#pragma mark Object Management
+#pragma mark Object Life-cycle
 - (id)createObjectWithEntityDescription:(ORMEntityDescription *)entityDescription;
-
 - (void)deleteObject:(NSObject *)object;
 
-- (void)loadValueOfObject:(id)object withAttributeDescription:(ORMAttributeDescription *)attributeDescription;
+#pragma mark Object Property Loading
+- (void)loadValueWithAttributeDescription:(ORMAttributeDescription *)attributeDescription ofObject:(id)object;
 
+#pragma mark Object Enumeration
 - (void)enumerateObjectsOfClass:(Class)aClass
               matchingCondition:(NSString *)condition
                   withArguments:(NSDictionary *)arguments

@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ORMConstants.h"
-
 @class FMDatabase;
 @class ORMEntityDescription;
 

@@ -160,7 +160,7 @@ NSString * const ORMObjectDidChangeValuesNotification = @"ORMObjectDidChangeValu
 
 - (id)fetchValueForAttribute:(ORMAttributeDescription *)attributeDescription
 {
-    [self.store loadValueOfObject:self.managedObject withAttributeDescription:attributeDescription];
+    [self.store loadValueWithAttributeDescription:attributeDescription ofObject:self.managedObject];
     return [self.persistentValues objectForKey:attributeDescription.attributeName];
 }
 

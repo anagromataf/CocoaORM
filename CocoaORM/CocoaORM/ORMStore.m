@@ -186,21 +186,6 @@
     [self.deletedObjects addObject:object.ORM];
 }
 
-- (BOOL)existsObjectWithID:(ORMObjectID *)objectID
-{
-    if ([self.managedObjects objectForKey:objectID]) {
-        return YES;
-    } else {
-        NSError *error = nil;
-        
-        ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:objectID.entityDescription];
-        
-        return [connector existsEntityWithEntityID:objectID.entityID
-                                        inDatabase:self.db
-                                             error:&error];
-    }
-}
-
 - (id)objectWithID:(ORMObjectID *)objectID
 {
     ORMObject *ORM = [self.managedObjects objectForKey:objectID];
@@ -234,7 +219,7 @@
     }];
 }
 
-- (void)loadValueOfObject:(id)object withAttributeDescription:(ORMAttributeDescription *)attributeDescription
+- (void)loadValueWithAttributeDescription:(ORMAttributeDescription *)attributeDescription ofObject:(id)object
 {
     NSError *error = nil;
     ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:attributeDescription.entityDescription];
