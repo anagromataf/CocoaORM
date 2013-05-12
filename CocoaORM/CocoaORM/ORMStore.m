@@ -105,7 +105,7 @@
                                                                  error:&error];
                 
                 if (eid) {
-                    ORM.objectID = [[ORMObjectID alloc] initWithClass:ORM.entityDescription.managedClass primaryKey:eid];
+                    ORM.objectID = [[ORMObjectID alloc] initWithEntityDescription:ORM.entityDescription entityID:eid];
                     ORM.store = self;
                 } else {
                     *stop = YES;
@@ -191,7 +191,7 @@
     } else {
         NSError *error = nil;
         
-        ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[objectID.ORMClass ORMEntityDescription]];
+        ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:objectID.entityDescription];
         
         return [connector existsEntityWithEntityID:objectID.entityID
                                         inDatabase:self.db
@@ -203,7 +203,7 @@
 {
     ORMObject *ORM = [self.managedObjects objectForKey:objectID];
     if (ORM == nil) {
-        ORM = [[ORMObject alloc] initWithEntityDescription:[objectID.ORMClass ORMEntityDescription]];
+        ORM = [[ORMObject alloc] initWithEntityDescription:objectID.entityDescription];
         ORM.store = self;
         ORM.objectID = objectID;
         [self.managedObjects setObject:ORM forKey:objectID];
@@ -230,7 +230,7 @@
     NSError *error = nil;
     ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[aClass ORMEntityDescription]];
     [connector enumerateEntitiesInDatabase:self.db matchingCondition:condition withArguments:arguments fetchingProperties:propertyNames error:&error enumerator:^(ORMEntityID eid, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
-        ORMObjectID *objectID = [[ORMObjectID alloc] initWithClass:klass primaryKey:eid];
+        ORMObjectID *objectID = [[ORMObjectID alloc] initWithEntityDescription:[klass ORMEntityDescription] entityID:eid];
         NSObject *object = [self objectWithID:objectID];
         [[self.ORM persistentValues] addEntriesFromDictionary:properties];
         enumerator(object, stop);

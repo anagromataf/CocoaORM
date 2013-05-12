@@ -10,11 +10,12 @@
 
 @implementation ORMObjectID
 
-- (id)initWithClass:(Class)aClass primaryKey:(ORMEntityID)entityID
+- (id)initWithEntityDescription:(ORMEntityDescription *)entityDescription
+                       entityID:(ORMEntityID)entityID
 {
     self = [super init];
     if (self) {
-        _ORMClass = aClass;
+        _entityDescription = entityDescription;
         _entityID = entityID;
     }
     return self;
@@ -22,7 +23,8 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-    return [[ORMObjectID allocWithZone:zone] initWithClass:self.ORMClass primaryKey:self.entityID];
+    return [[ORMObjectID allocWithZone:zone] initWithEntityDescription:self.entityDescription
+                                                              entityID:self.entityID];
 }
 
 - (NSUInteger)hash
@@ -39,7 +41,7 @@
             return NO;
         }
         
-        if (self.ORMClass != other.ORMClass) {
+        if (self.entityDescription != other.entityDescription) {
             return NO;
         }
         
@@ -50,7 +52,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<ORMObjectID: %p %@ %lld>", self, self.ORMClass, self.entityID];
+    return [NSString stringWithFormat:@"<ORMObjectID: %p %@ %lld>", self, self.entityDescription.name, self.entityID];
 }
 
 @end
