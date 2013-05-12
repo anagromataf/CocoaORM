@@ -17,12 +17,13 @@
 @property (nonatomic, readonly) FMDatabase *db;
 @property (nonatomic, readonly) dispatch_queue_t queue;
 
+@property (nonatomic, readonly) NSMutableDictionary *entityConnectors;
+
 @property (nonatomic, readonly) NSMutableSet *insertedObjects;
 @property (nonatomic, readonly) NSMutableSet *changedObjects;
 @property (nonatomic, readonly) NSMutableSet *deletedObjects;
 
 @property (nonatomic, readonly) NSMapTable *managedObjects;
-@property (nonatomic, readonly) NSMutableSet *managedClasses;
 @end
 
 @implementation ORMStore
@@ -39,7 +40,7 @@
     self = [super init];
     if (self) {
         
-        _managedClasses = [[NSMutableSet alloc] init];
+        _entityConnectors = [[NSMutableDictionary alloc] init];
         
         _managedObjects = [NSMapTable strongToWeakObjectsMapTable];
         
@@ -97,7 +98,7 @@
         if (!_rollback) {
             [self.insertedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
                 
-                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:ORM.entityDescription];
+                ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:ORM.entityDescription];
                 
                 ORMEntityID eid = [connector insertEntityWithProperties:ORM.changedValues
                                                            intoDatabase:db
@@ -117,7 +118,7 @@
         if (!_rollback) {
             [self.changedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
                 
-                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:ORM.entityDescription];
+                ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:ORM.entityDescription];
                 
                 BOOL success = [connector updateEntityWithEntityID:ORM.objectID.entityID
                                                     withProperties:ORM.changedValues
@@ -133,7 +134,7 @@
         if (!_rollback) {
             [self.deletedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
                 
-                ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:ORM.entityDescription];
+                ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:ORM.entityDescription];
                 
                 BOOL success = [connector deleteEntityWithEntityID:ORM.objectID.entityID
                                                         inDatabase:db
@@ -192,7 +193,7 @@
     } else {
         NSError *error = nil;
         
-        ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:objectID.entityDescription];
+        ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:objectID.entityDescription];
         
         return [connector existsEntityWithEntityID:objectID.entityID
                                         inDatabase:self.db
@@ -234,7 +235,7 @@
                      enumerator:(void(^)(id object, BOOL *stop))enumerator
 {
     NSError *error = nil;
-    ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[aClass ORMEntityDescription]];
+    ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:[aClass ORMEntityDescription]];
     [connector enumerateEntitiesInDatabase:self.db matchingCondition:condition withArguments:arguments fetchingProperties:propertyNames error:&error enumerator:^(ORMEntityID eid, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
         ORMObjectID *objectID = [[ORMObjectID alloc] initWithEntityDescription:[klass ORMEntityDescription] entityID:eid];
         NSObject *object = [self objectWithID:objectID];
@@ -246,7 +247,7 @@
 - (void)loadValueOfObject:(id)object withAttributeDescription:(ORMAttributeDescription *)attributeDescription
 {
     NSError *error = nil;
-    ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:attributeDescription.entityDescription];
+    ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:attributeDescription.entityDescription];
     NSDictionary *properties = [connector propertiesOfEntityWithEntityID:[object ORM].objectID.entityID
                                                               inDatabase:self.db
                                                                    error:&error];
@@ -316,28 +317,26 @@
 
 - (BOOL)setupSchemataInDatabase:(FMDatabase *)database error:(NSError **)error
 {
-    NSMutableSet *classes = [[NSMutableSet alloc] init];
+    __block BOOL success = YES;
     [self.insertedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
-        if (![self.managedClasses containsObject:ORM.entityDescription.managedClass]) {
-            [classes addObject:ORM.entityDescription.managedClass];
+        
+        ORMEntityDescription *entityDescription = ORM.entityDescription;
+        ORMEntitySQLConnector *connector = [self.entityConnectors objectForKey:entityDescription.name];
+        if (!connector) {
+            connector = [[ORMEntitySQLConnector alloc] initWithEntityDescription:entityDescription];
+            [self.entityConnectors setObject:connector forKey:entityDescription.name];
+            success = [connector setupSchemataInDatabase:self.db error:error];
+            *stop = !success;
         }
     }];
-    
-    __block BOOL success = YES;
-    [classes enumerateObjectsUsingBlock:^(Class klass, BOOL *stop) {
-        NSAssert([klass isORMClass], @"Class %@ is not managed by CocoaORM.", klass);
-        ORMEntitySQLConnector *connector = [ORMEntitySQLConnector connectorWithEntityDescription:[klass ORMEntityDescription]];
-        success = [connector setupSchemataInDatabase:self.db error:error];
-        *stop = !success;
-    }];
-    
-    if (success) {
-        [self.managedClasses unionSet:classes];
-    }
     
     return success;
 }
 
+- (ORMEntitySQLConnector *)connectorWithEntityDescription:(ORMEntityDescription *)entityDescription
+{
+    return [self.entityConnectors objectForKey:entityDescription.name];
+}
 
 #pragma mark Database Transaction
 
