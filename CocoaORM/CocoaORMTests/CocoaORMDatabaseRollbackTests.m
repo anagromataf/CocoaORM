@@ -18,7 +18,7 @@
 {
     [super setUp];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
         BOOL success = YES;
@@ -49,7 +49,7 @@
 
 - (void)testRollbackUpdate
 {
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
         BOOL success = YES;

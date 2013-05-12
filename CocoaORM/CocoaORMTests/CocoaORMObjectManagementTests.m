@@ -27,7 +27,7 @@
 {
     __block Employee *employee = nil;
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
@@ -40,7 +40,7 @@
         };
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         STAssertEqualObjects(employee.ORM.changedValues, @{}, nil);
         
@@ -63,7 +63,7 @@
 {
     __block Employee *employee = nil;
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
@@ -76,12 +76,12 @@
         };
     }];
     
-    [self.store commitTransaction:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransaction:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         employee.fired = @YES;
         return nil;
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         STAssertEqualObjects(employee.ORM.changedValues, @{}, nil);
         
@@ -104,7 +104,7 @@
 {
     __block Employee *employee = nil;
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
@@ -117,13 +117,13 @@
         };
     }];
     
-    [self.store commitTransaction:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransaction:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         employee.fired = @YES;
         *rollback = YES;
         return nil;
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         STAssertEqualObjects(employee.ORM.changedValues, @{}, nil);
         
@@ -146,7 +146,7 @@
 {
     __block Employee *employee = nil;
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
@@ -161,14 +161,14 @@
     
     ORMEntityID eid = employee.ORM.objectID.entityID;
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         [self.store deleteObject:employee];
         
         return nil;
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
         NSDictionary *properties = [self.employeeConnector propertiesOfEntityWithEntityID:eid

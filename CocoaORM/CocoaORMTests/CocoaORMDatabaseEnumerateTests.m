@@ -19,7 +19,7 @@
 {
     [super setUp];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
         BOOL success = YES;
@@ -62,7 +62,7 @@
 
 - (void)testEnumerate
 {
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSMutableSet *primaryKeys = [[NSMutableSet alloc] init];
         NSMutableSet *classes = [[NSMutableSet alloc] init];
@@ -88,7 +88,7 @@
 
 - (void)testEnumerateAndStop
 {
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSMutableSet *primaryKeys = [[NSMutableSet alloc] init];
 
@@ -108,7 +108,7 @@
 
 - (void)testEnumerateWithProperties
 {
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSMutableSet *primaryKeys = [[NSMutableSet alloc] init];
         NSMutableSet *classes = [[NSMutableSet alloc] init];
@@ -136,7 +136,7 @@
 
 - (void)testEnumerateWithCondition
 {
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         NSError *error = nil;
         ORMEntityID eid = [self.personConnector insertEntityWithProperties:@{@"firstName":@"John",  @"lastName":@"Tester"}
                                                              intoDatabase:db
@@ -145,7 +145,7 @@
         return nil;
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         NSError *error = nil;
         BOOL success = [self.personConnector enumerateEntitiesInDatabase:db

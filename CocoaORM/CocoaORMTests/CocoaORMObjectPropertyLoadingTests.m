@@ -18,7 +18,7 @@
 {
     [super setUp];
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         Employee *employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
@@ -37,7 +37,7 @@
 
 - (void)testPropertyLoading
 {
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         [self.store enumerateObjectsOfClass:[Employee class]
                           matchingCondition:nil

@@ -81,24 +81,24 @@
 
 #pragma mark Transactions
 
-- (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block
+- (void)commitTransaction:(ORMStoreTransactionCompletionHandler(^)(BOOL *rollback))block
 {
     [self commitTransaction:block andWait:NO];
 }
 
-- (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block
+- (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHandler(^)(BOOL *rollback))block
 {
     [self commitTransaction:block andWait:YES];
 }
 
-- (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block andWait:(BOOL)wait
+- (void)commitTransaction:(ORMStoreTransactionCompletionHandler(^)(BOOL *rollback))block andWait:(BOOL)wait
 {
-    [self commitTransactionInDatabase:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self commitTransactionInDatabase:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         __block BOOL _rollback = NO;
         __block NSError *error = nil;
         
-        ORMStoreTransactionCompletionHalndler completionHalndler = block(&_rollback);
+        ORMStoreTransactionCompletionHandler completionHalndler = block(&_rollback);
         
         // Setup Schemata
         if (!_rollback) {
@@ -344,17 +344,17 @@
 
 #pragma mark Database Transaction
 
-- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;
+- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHandler(^)(FMDatabase *db, BOOL *rollback))block;
 {
     [self commitTransactionInDatabase:block andWait:NO];
 }
 
-- (void)commitTransactionInDatabaseAndWait:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;
+- (void)commitTransactionInDatabaseAndWait:(ORMStoreTransactionCompletionHandler(^)(FMDatabase *db, BOOL *rollback))block;
 {
     [self commitTransactionInDatabase:block andWait:YES];
 }
 
-- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block andWait:(BOOL)wait
+- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHandler(^)(FMDatabase *db, BOOL *rollback))block andWait:(BOOL)wait
 {
     void(^_block)() = ^{
         @autoreleasepool {
@@ -363,7 +363,7 @@
             [self.db beginTransaction];
             
             BOOL rollback = NO;
-            ORMStoreTransactionCompletionHalndler completionHalndler = block(self.db, &rollback);
+            ORMStoreTransactionCompletionHandler completionHalndler = block(self.db, &rollback);
             
             BOOL success = YES;
             

@@ -14,8 +14,8 @@
 @interface ORMStore (Private)
 
 #pragma mark Database Transaction
-- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;
-- (void)commitTransactionInDatabaseAndWait:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block;
-- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHalndler(^)(FMDatabase *db, BOOL *rollback))block andWait:(BOOL)wait;
+- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHandler(^)(FMDatabase *db, BOOL *rollback))block;
+- (void)commitTransactionInDatabaseAndWait:(ORMStoreTransactionCompletionHandler(^)(FMDatabase *db, BOOL *rollback))block;
+- (void)commitTransactionInDatabase:(ORMStoreTransactionCompletionHandler(^)(FMDatabase *db, BOOL *rollback))block andWait:(BOOL)wait;
 
 @end

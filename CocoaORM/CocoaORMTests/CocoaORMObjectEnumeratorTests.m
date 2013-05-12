@@ -32,7 +32,7 @@
 {
     [super setUp];
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         NSMutableSet *objects = [[NSMutableSet alloc] init];
         
@@ -61,7 +61,7 @@
 
 - (void)testEnumerator
 {
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         NSMutableSet *result = [[NSMutableSet alloc] init];
         
@@ -81,7 +81,7 @@
 
 - (void)testEnumeratorWithCondition
 {
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         NSArray *lastNames = @[@"a", @"b", @"f"];
         

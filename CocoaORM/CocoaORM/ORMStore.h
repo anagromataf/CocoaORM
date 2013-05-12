@@ -13,7 +13,7 @@
 @class ORMObjectID;
 @class ORMEntityDescription;
 
-typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
+typedef void(^ORMStoreTransactionCompletionHandler)(NSError *error);
 
 @interface ORMStore : NSObject
 
@@ -21,8 +21,8 @@ typedef void(^ORMStoreTransactionCompletionHalndler)(NSError *error);
 - (id)initWithSerialQueue:(dispatch_queue_t)queue;
 
 #pragma mark Transactions
-- (void)commitTransaction:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block;
-- (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHalndler(^)(BOOL *rollback))block;
+- (void)commitTransaction:(ORMStoreTransactionCompletionHandler(^)(BOOL *rollback))block;
+- (void)commitTransactionAndWait:(ORMStoreTransactionCompletionHandler(^)(BOOL *rollback))block;
 
 #pragma mark Object Life-cycle
 - (id)createObjectWithEntityDescription:(ORMEntityDescription *)entityDescription;

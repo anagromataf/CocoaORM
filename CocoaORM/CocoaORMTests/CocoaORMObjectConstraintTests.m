@@ -20,7 +20,7 @@
     
     self.personConnector = [ORMEntitySQLConnector connectorWithEntityDescription:[Person ORMEntityDescription]];
     
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         Employee *employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
@@ -39,7 +39,7 @@
 
 - (void)testConstraint
 {
-    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHalndler(BOOL *rollback) {
+    [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
         Employee *employee = [self.store createObjectWithEntityDescription:[Employee ORMEntityDescription]];
         
@@ -56,7 +56,7 @@
         };
     }];
     
-    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHalndler(FMDatabase *db, BOOL *rollback) {
+    [self.store commitTransactionInDatabaseAndWait:^ORMStoreTransactionCompletionHandler(FMDatabase *db, BOOL *rollback) {
         
         __block NSUInteger count = 0;
         
