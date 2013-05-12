@@ -33,15 +33,6 @@
     return self;
 }
 
-- (BOOL)isEqual:(id)object
-{
-    if ([object isKindOfClass:[ORMEntityDescription class]]) {
-        ORMEntityDescription *other = object;
-        return [self.name isEqual:[other name]];
-    }
-    return NO;
-}
-
 #pragma mark Entity
 
 - (NSString *)name
@@ -120,6 +111,22 @@
     } else {
         return self.uniqueConstraints;
     }
+}
+
+#pragma mark NSObject
+
+- (NSUInteger)hash
+{
+    return [self.name hash];
+}
+
+- (BOOL)isEqual:(id)object
+{
+    if ([object isKindOfClass:[ORMEntityDescription class]]) {
+        ORMEntityDescription *other = object;
+        return [self.name isEqual:[other name]];
+    }
+    return NO;
 }
 
 @end
