@@ -219,16 +219,6 @@
 }
 
 - (void)enumerateObjectsOfClass:(Class)aClass
-                     enumerator:(void(^)(id object, BOOL *stop))enumerator
-{
-    [self enumerateObjectsOfClass:aClass
-                matchingCondition:nil
-                    withArguments:nil
-               fetchingProperties:nil
-                       enumerator:enumerator];
-}
-
-- (void)enumerateObjectsOfClass:(Class)aClass
               matchingCondition:(NSString *)condition
                   withArguments:(NSDictionary *)arguments
              fetchingProperties:(NSArray *)propertyNames
