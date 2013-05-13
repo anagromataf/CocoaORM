@@ -39,11 +39,11 @@
 {
     [self.store commitTransactionAndWait:^ORMStoreTransactionCompletionHandler(BOOL *rollback) {
         
-        [self.store enumerateObjectsOfClass:[Employee class]
-                          matchingCondition:nil
-                              withArguments:nil
-                         fetchingProperties:nil
-                                 enumerator:^(Employee *employee, BOOL *stop) {
+        [self.store enumerateObjectsWithEntityDescription:[Employee ORMEntityDescription]
+                                        matchingCondition:nil
+                                            withArguments:nil
+                                       fetchingProperties:nil
+                                               enumerator:^(Employee *employee, BOOL *stop) {
             STAssertNotNil(employee, nil);
             STAssertEqualObjects(employee.position, @"CEO", nil);
             STAssertEqualObjects(employee.firstName, @"John", nil);

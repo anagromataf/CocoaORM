@@ -32,10 +32,10 @@ typedef void(^ORMStoreTransactionCompletionHandler)(NSError *error);
 - (void)loadValueWithAttributeDescription:(ORMAttributeDescription *)attributeDescription ofObject:(id)object;
 
 #pragma mark Object Enumeration
-- (void)enumerateObjectsOfClass:(Class)aClass
-              matchingCondition:(NSString *)condition
-                  withArguments:(NSDictionary *)arguments
-             fetchingProperties:(NSArray *)propertyNames
-                     enumerator:(void(^)(id object, BOOL *stop))enumerator;
+- (void)enumerateObjectsWithEntityDescription:(ORMEntityDescription *)entityDescription
+                            matchingCondition:(NSString *)condition
+                                withArguments:(NSDictionary *)arguments
+                           fetchingProperties:(NSArray *)propertyNames
+                                   enumerator:(void(^)(id object, BOOL *stop))enumerator;
 
 @end
