@@ -100,12 +100,6 @@
         
         ORMStoreTransactionCompletionHandler completionHalndler = block(&_rollback);
         
-        // Setup Schemata
-        if (!_rollback) {
-            if (![self setupSchemataInDatabase:db error:&error]) {
-                _rollback = YES;
-            }
-        }
         
         // Insert Objects into Database
         if (!_rollback) {
@@ -230,14 +224,14 @@
 
 #pragma mark Object Enumeration
 
-- (void)enumerateObjectsOfClass:(Class)aClass
-              matchingCondition:(NSString *)condition
-                  withArguments:(NSDictionary *)arguments
-             fetchingProperties:(NSArray *)propertyNames
-                     enumerator:(void(^)(id object, BOOL *stop))enumerator
+- (void)enumerateObjectsWithEntityDescription:(ORMEntityDescription *)entityDescription
+                            matchingCondition:(NSString *)condition
+                                withArguments:(NSDictionary *)arguments
+                           fetchingProperties:(NSArray *)propertyNames
+                                   enumerator:(void(^)(id object, BOOL *stop))enumerator
 {
     NSError *error = nil;
-    ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:[aClass ORMEntityDescription]];
+    ORMEntitySQLConnector *connector = [self connectorWithEntityDescription:entityDescription];
     [connector enumerateEntitiesInDatabase:self.db matchingCondition:condition withArguments:arguments fetchingProperties:propertyNames error:&error enumerator:^(ORMEntityID eid, __unsafe_unretained Class klass, NSDictionary *properties, BOOL *stop) {
         ORMObjectID *objectID = [[ORMObjectID alloc] initWithEntityDescription:[klass ORMEntityDescription] entityID:eid];
         NSObject *object = [self objectWithID:objectID];
@@ -305,26 +299,6 @@
     [self.changedObjects addObject:aNotification.object];
 }
 
-#pragma mark Setup Schemata
-
-- (BOOL)setupSchemataInDatabase:(FMDatabase *)database error:(NSError **)error
-{
-    __block BOOL success = YES;
-    [self.insertedObjects enumerateObjectsUsingBlock:^(ORMObject *ORM, BOOL *stop) {
-        
-        ORMEntityDescription *entityDescription = ORM.entityDescription;
-        ORMEntitySQLConnector *connector = [self.entityConnectors objectForKey:entityDescription.name];
-        if (!connector) {
-            connector = [[ORMEntitySQLConnector alloc] initWithEntityDescription:entityDescription];
-            [self.entityConnectors setObject:connector forKey:entityDescription.name];
-            success = [connector setupSchemataInDatabase:self.db error:error];
-            *stop = !success;
-        }
-    }];
-    
-    return success;
-}
-
 #pragma mark Manage Connector
 
 - (ORMEntitySQLConnector *)connectorWithEntityDescription:(ORMEntityDescription *)entityDescription
@@ -333,6 +307,11 @@
     if (!connector) {
         connector = [[ORMEntitySQLConnector alloc] initWithEntityDescription:entityDescription];
         [self.entityConnectors setObject:connector forKey:entityDescription.name];
+        
+        NSError *error = nil;
+        if (![connector setupSchemataInDatabase:self.db error:&error]) {
+            NSLog(@"Failed to setup schemata in datatbase: %@", [error localizedDescription]);
+        }
     }
     return connector;
 }

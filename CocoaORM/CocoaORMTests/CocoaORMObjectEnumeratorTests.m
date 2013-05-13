@@ -65,10 +65,10 @@
         
         NSMutableSet *result = [[NSMutableSet alloc] init];
         
-        [self.store enumerateObjectsOfClass:[Person class]
-                          matchingCondition:nil
-                              withArguments:nil
-                         fetchingProperties:nil
+        [self.store enumerateObjectsWithEntityDescription:[Person ORMEntityDescription]
+                                        matchingCondition:nil
+                                            withArguments:nil
+                                       fetchingProperties:nil
                                  enumerator:^(id object, BOOL *stop) {
             [result addObject:object];
         }];
@@ -87,11 +87,11 @@
         
         NSMutableSet *result = [[NSMutableSet alloc] init];
         
-        [self.store enumerateObjectsOfClass:[Person class]
-                          matchingCondition:@"lastName IN ('a', 'b', 'f')"
-                              withArguments:nil
-                         fetchingProperties:nil
-                                 enumerator:^(id object, BOOL *stop) {
+        [self.store enumerateObjectsWithEntityDescription:[Person ORMEntityDescription]
+                                        matchingCondition:@"lastName IN ('a', 'b', 'f')"
+                                            withArguments:nil
+                                       fetchingProperties:nil
+                                               enumerator:^(id object, BOOL *stop) {
             [result addObject:object];
         }];
         
